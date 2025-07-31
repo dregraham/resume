@@ -1,0 +1,25 @@
+{
+  "name": "color-voting-api",
+  "version": "1.0.0",
+  "description": "A color voting application that allows users to select their favorite colors and submit votes.",
+  "main": "src/ColorVotingAPI.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "author": "Dre Graham",
+  "license": "MIT",
+  "dependencies": {
+    "live-server": "^1.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-scripts": "^0.0.0"
+  },
+  "keywords": [
+    "color",
+    "voting",
+    "application"
+  ]
+}
