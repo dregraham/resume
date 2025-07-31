@@ -1,0 +1,92 @@
+{
+  "main": {
+    "name":"Dre Graham",
+    "description":"Welcome to my website! I am an aspiring Cloud Solutions Engineer and am using this website to showcase my talent. Feel free to click around and have fun!",
+    "image":"profilepic.jpg",
+    "bio":"I'm currently pursuing a B.S. in Cloud Computing from Western Governors University when I'm not traveling with my wife or hiking with my 3 dogs. I have a passion for cloud technologies and aspire to become a Cloud Architect/Engineer. ",
+    "contactmessage":"Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
+    "email": "andre.graham709@gmail.com",
+    "github":"https://github.com/dregraham/resume-test",
+    "address":{
+      "city":"St. Louis",
+      "state":"Missouri"
+    },
+    "website": "https://dregraham.com",
+    "resumedownload":"https://github.com/dregraham/",
+    "social":[
+      {
+        "name":"linkedin",
+        "url":"https://www.linkedin.com/in/dregraham/",
+        "className":"fa fa-linkedin"
+      },
+      {
+        "name":"github",
+        "url":"https://github.com/dregraham",
+        "className":"fa fa-github"
+      }
+    ]
+  },
+  "resume":{
+    "skillmessage":"Cloud Models and Technologies",
+    "education":[
+      {
+        "school":"Western Governors University",
+        "degree":"B.S. in Cloud Computing",
+        "graduated":"December 2025",
+        "description":"Completed hands-on coursework in Cloud architecture, systems administration, networking, and cybersecurity. Gained experience with AWS and Azure, Linux and Windows server management, resource automation and scaling, and implementing DevOps practices including CI/CD and IaC. Applied ITIL and Agile methodologies in projects involving secure, scalable cloud deployments, database management, and system automation."
+      }
+    ],
+    "work":[
+      {
+        "company":"Auctane",
+        "title":"Technical Escalations Specialist, L3",
+        "years":"May 2019 - Present",
+        "description":"As a Technical Escalations Specialist L3, I lead complex technical escalations and serve as the highest tier of support. Building upon my experience with cloud monitoring tools such as Kibana, CloudWatch, DynamoDB, and SUMO, I architect comprehensive solutions for enterprise-scale challenges. I mentor L1-L2 specialists while collaborating directly with engineering teams to resolve critical system issues and develop permanent fixes. My expertise spans advanced SQL optimization, complex database architecture, and cloud-based monitoring systems, allowing me to drive technical innovation and process improvements across the entire Support organization."
+      }
+    ],
+    "skills":[
+      {
+        "name":"AWS",
+        "level":"90%"
+      },
+      {
+        "name":"Azure",
+        "level":"90%"
+      },
+      {
+        "name":"GCP",
+        "level":"50%"
+      },
+      {
+        "name":"GitHub",
+        "level":"90%"
+      },
+      {
+        "name":"SQL",
+        "level":"90%"
+      }
+    ]
+  },
+  "projects":{
+    "projectdetails": [
+      {
+        "title":"Color Voting API",
+        "category":"A React API built with AWS Amplify. It allows users to vote on colors.",
+        "image":"favorite_color_api.png",
+        "url":"https://dre-graham.com/color-voting-api/index.html"
+      },
+      {
+        "title":"AI Project",
+        "category":"A project I used AI to complete.",
+        "image":"coming_soon.jpg",
+        "url":""
+      },
+      {
+        "title":"Multi-Cloud Deployment",
+        "category":"A cloud deployment project that includes multiple cloud providers.",
+        "image":"coming_soon.jpg",
+        "url":""
+      }
+    ]
+  }
+}
