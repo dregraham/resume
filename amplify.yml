@@ -3,11 +3,12 @@ frontend:
   phases:
     build:
       commands:
+        - npm install
         - npm run build
   artifacts:
-    baseDirectory: .next
+    baseDirectory: build
     files:
       - '**/*'
   cache:
     paths:
-      - .npm/**/*
+      - node_modules/**/*
