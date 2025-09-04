@@ -13,8 +13,8 @@
   "license": "MIT",
   "dependencies": {
     "live-server": "^1.2.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1"
   },
   "keywords": [
@@ -22,5 +22,10 @@
     "voting",
     "application"
   ],
+  "eslintConfig": {
+    "root": true,
+    "extends": ["react-app", "react-app/jest"]
+  
+},
   "homepage": "/color-voting-api"
 }
