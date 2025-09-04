@@ -1,10 +1,21 @@
 version: 1
 frontend:
   phases:
+    preBuild:
+      commands:
+        - npm ci
+        - cd color-voting-api && npm ci && cd ..
     build:
       commands:
-        - npm install
+        # Root site build
         - npm run build
+        # Sub-app build
+        - cd color-voting-api && npm run build && cd ..
+        # Copy sub-app build into root build output
+        - mkdir -p build/color-voting-api
+        - cp -R color-voting-api/build/* build/color-voting-api/
+        # (Optional) list what was copied
+        - echo "Contents of build/color-voting-api:" && ls -1 build/color-voting-api | head
   artifacts:
     baseDirectory: build
     files:
@@ -12,3 +23,4 @@ frontend:
   cache:
     paths:
       - node_modules/**/*
+      - color-voting-api/node_modules/**/*
