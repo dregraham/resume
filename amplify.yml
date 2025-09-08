@@ -1,6 +1,6 @@
 version: 1
 applications:
-  # A) Main resume site at repo root
+  # Main resume site at repo root
   - appRoot: .
     frontend:
       phases:
@@ -11,28 +11,7 @@ applications:
           commands:
             - npm run build
       artifacts:
-        # pick ONE that matches your root app
         baseDirectory: build   # CRA
-        # baseDirectory: .next  # Next.js
-        # baseDirectory: dist   # Vite
-        files:
-          - '**/*'
-      cache:
-        paths:
-          - node_modules/**/*
-
-  # B) Color voting app in subfolder
-  - appRoot: color-voting-api
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm install
-        build:
-          commands:
-            - npm run build
-      artifacts:
-        baseDirectory: build
         files:
           - '**/*'
       cache:
