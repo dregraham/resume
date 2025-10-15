@@ -1,12 +1,12 @@
 {
   "main": {
     "name": "Dre Graham",
-    "description": "Welcome to my website! I am an aspiring Cloud Solutions Engineer and am using this website to showcase my talent. Feel free to click around and have fun!",
+    "description": "Welcome to my website! I am a Cloud Solutions Engineer and am using this website to showcase my talent. Feel free to click around and have fun!",
     "image": "profilepic.jpg",
-    "bio": "I'm currently pursuing a B.S. in Cloud Computing from Western Governors University when I'm not traveling with my wife or hiking with my 3 dogs. I have a passion for cloud technologies and aspire to become a Cloud Architect/Engineer. ",
+    "bio": "Cloud Computing graduate from WGU with over 10 years of IT experience.\nI enjoy traveling with my wife and hiking with our three dogs.\nWhen I’m not outdoors, I’m brainstorming new ideas for moving on-prem systems to the cloud.",
     "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
     "email": "andre.graham709@gmail.com",
-    "github": "https://github.com/dregraham/resume-test",
+    "github": "https://github.com/dregraham",
     "address": {
       "city": "St. Louis",
       "state": "Missouri"
@@ -28,6 +28,17 @@
   },
   "resume": {
     "skillmessage": "Cloud Models and Technologies",
+    "skills": [
+      {
+      "name": "AWS"
+    },
+    {
+      "name": "Azure"
+    },
+    {
+      "name": "GCP"
+    }
+  ],
     "education": [
       {
         "school": "Western Governors University",
@@ -42,28 +53,6 @@
         "title": "Technical Escalations Specialist, L3",
         "years": "May 2019 - Present",
         "description": "As a Technical Escalations Specialist L3, I lead complex technical escalations and serve as the highest tier of support. Building upon my experience with tools such as Kibana, Kubernetes, CloudWatch, DynamoDB, and SUMO, I architect comprehensive solutions for enterprise-scale challenges. I mentor L1-L2 specialists while collaborating directly with engineering teams to resolve critical system issues and develop permanent fixes. My expertise spans advanced SQL optimization, complex database architecture, and cloud-based monitoring systems, allowing me to drive technical innovation and process improvements across the entire Support organization."
-      }
-    ],
-    "skills": [
-      {
-        "name": "AWS",
-        "level": "90%"
-      },
-      {
-        "name": "Azure",
-        "level": "90%"
-      },
-      {
-        "name": "GCP",
-        "level": "50%"
-      },
-      {
-        "name": "GitHub",
-        "level": "90%"
-      },
-      {
-        "name": "SQL",
-        "level": "90%"
       }
     ]
   },
