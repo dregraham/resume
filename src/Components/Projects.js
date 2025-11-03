@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Zmage from "react-zmage";
+// Removed unused import: Zmage
 
 let id = 0;
 class projects extends Component {
