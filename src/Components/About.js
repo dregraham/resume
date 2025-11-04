@@ -14,7 +14,7 @@ class About extends Component {
   // Removed unused variable: zip
   // Removed unused variable: phone
     const email = this.props.data.email;
-    const resumeDownload = this.props.data.resumedownload;
+  const resumeDownload = "/Andre_Graham_Resume.pdf";
 
     return (
       <section id="about">
@@ -45,7 +45,7 @@ class About extends Component {
                 </div>
                 <div className="columns download">
                   <p>
-                    <a href={resumeDownload} className="button" download>
+                    <a href="/Andre Graham Resume.pdf" className="button" download="Andre Graham Resume.pdf">
                       <i className="fa fa-download"></i>Download My Resume
                     </a>
                   </p>
