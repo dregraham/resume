@@ -12,7 +12,7 @@
       "state": "Missouri"
     },
     "website": "https://dregraham.com",
-    "resumedownload": "./Andre_Graham_Resume.pdf",
+    "resumedownload": "Andre_Graham_Resume.pdf",
     "social": [
       {
         "name": "linkedin",
@@ -60,7 +60,7 @@
     "projectdetails": [
       {
         "title": "Color Voting API",
-        "category": "A React API built with AWS Amplify. It allows users to vote on colors.",
+  "category": "A React API for color voting. It allows users to vote on colors.",
         "image": "favorite_color_api.png",
         "url": ""
       },

@@ -7,7 +7,7 @@ This monorepo contains two main React projects:
 
 ## Architecture & Data Flow
 - Both apps use React (see `src/` in each project).
-- `resume/` is deployed via AWS Amplify; DNS is managed by Route53.
+DNS is managed by Route53.
 - `color-voting-api/` is designed for static hosting (GitHub Pages, Netlify, etc.) and expects all client routes to serve `index.html` (see `public/404.html` for routing fallback).
 - Color voting backend is handled by AWS Lambda/API Gateway (not included in repo).
 

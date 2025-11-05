@@ -8,13 +8,10 @@ class About extends Component {
     const name = this.props.data.name;
     const profilepic = "images/" + this.props.data.image;
     const bio = this.props.data.bio;
-  // Removed unused variable: street
     const city = this.props.data.address.city;
     const state = this.props.data.address.state;
-  // Removed unused variable: zip
-  // Removed unused variable: phone
     const email = this.props.data.email;
-  const resumeDownload = "/Andre_Graham_Resume.pdf";
+    const resumeDownload = this.props.data.resumedownload;
 
     return (
       <section id="about">
@@ -45,7 +42,7 @@ class About extends Component {
                 </div>
                 <div className="columns download">
                   <p>
-                    <a href="/Andre Graham Resume.pdf" className="button" download="Andre Graham Resume.pdf">
+                    <a href={resumeDownload} className="button" download>
                       <i className="fa fa-download"></i>Download My Resume
                     </a>
                   </p>
