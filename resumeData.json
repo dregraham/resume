@@ -1,0 +1,81 @@
+{
+  "main": {
+    "name": "Dre Graham",
+    "description": "Welcome to my website! I am an aspiring Cloud Engineer and am using this website to showcase my talent. Feel free to just click around or reach out to connect!",
+    "image": "profilepic.jpg",
+    "bio": "Cloud Computing graduate with strong technical support experience across AWS and Azure environments. I specialize in troubleshooting, automation, and observability. Skilled at leveraging diagnostic tools (CloudWatch, Sumo Logic, Kibana) and scripting (Python, PowerShell, SQL) to resolve complex issues and maintain uptime across distributed systems. Experienced collaborating cross-functionally with engineering, product, and security teams to enhance reliability and streamline escalation workflows. Passionate about cloud operations, data-driven problem solving, and growing into infrastructure automation and DevOps engineering.",
+    "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
+    "email": "andre.graham709@gmail.com",
+    "github": "https://github.com/dregraham",
+    "address": {
+      "city": "St. Louis",
+      "state": "Missouri"
+    },
+    "website": "https://dregraham.com",
+    "resumedownload": "Andre_Graham_Resume.pdf",
+    "social": [
+      {
+        "name": "linkedin",
+        "url": "https://www.linkedin.com/in/dregraham/",
+        "className": "fa fa-linkedin"
+      },
+      {
+        "name": "github",
+        "url": "https://github.com/dregraham",
+        "className": "fa fa-github"
+      }
+    ]
+  },
+  "resume": {
+    "skillmessage": "Cloud Models and Technologies",
+    "skills": [
+      {
+      "name": "AWS"
+    },
+    {
+      "name": "Azure"
+    },
+    {
+      "name": "GCP"
+    }
+  ],
+    "education": [
+      {
+        "school": "Western Governors University",
+        "degree": "B.S. in Cloud Computing",
+        "graduated": "December 2025",
+        "description": "Completed hands-on coursework in Cloud architecture, systems administration, networking, and cybersecurity. Gained experience with AWS and Azure, Linux and Windows server management, resource automation and scaling, and implementing DevOps practices including CI/CD and IaC. Applied ITIL and Agile methodologies in projects involving secure, scalable cloud deployments, database management, and system automation."
+      }
+    ],
+    "work": [
+      {
+        "company": "Auctane",
+        "title": "Technical Escalations Specialist, L3",
+        "years": "May 2019 - Present",
+        "description": "As a Technical Escalations Specialist L3, I lead complex technical escalations and serve as the highest tier of support. Building upon my experience with tools such as Kibana, Kubernetes, CloudWatch, DynamoDB, and SUMO, I architect comprehensive solutions for enterprise-scale challenges. I mentor L1-L2 specialists while collaborating directly with engineering teams to resolve critical system issues and develop permanent fixes. My expertise spans advanced SQL optimization, complex database architecture, and cloud-based monitoring systems, allowing me to drive technical innovation and process improvements across the entire Support organization."
+      }
+    ]
+  },
+  "projects": {
+    "projectdetails": [
+      {
+        "title": "Color Voting API",
+  "category": "A React API for color voting. It allows users to vote on colors.",
+        "image": "favorite_color_api.png",
+        "url": ""
+      },
+      {
+        "title": "AI Project",
+        "category": "A project I used AI to complete.",
+        "image": "coming_soon.jpg",
+        "url": ""
+      },
+      {
+        "title": "Multi-Cloud Deployment",
+        "category": "A cloud deployment project that includes multiple cloud providers.",
+        "image": "coming_soon.jpg",
+        "url": ""
+      }
+    ]
+  }
+}
