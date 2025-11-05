@@ -14,7 +14,7 @@ class About extends Component {
   // Removed unused variable: zip
   // Removed unused variable: phone
     const email = this.props.data.email;
-  const resumeDownload = "/Andre_Graham_Resume.pdf";
+  // Removed unused variable: resumeDownload
 
     return (
       <section id="about">
