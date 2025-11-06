@@ -1,12 +1,11 @@
-# Dre's Resume Project
+# My Resume Project
 
 ### 
 
 
 ## Deployment
 **React** was used for background elements: [https://github.com/lindelof/particles-bg](https://github.com/lindelof/particles-bg). 
-DNS was provided by **Route53**.
-AWS Amplify was initially used for deployment but I wanted more control over the CI/CD process so I transitioned to GitHub Pages.
+DNS was provided by **Route53** and **GitHub Pages** is used for CI/CD
 
 ## Credits
 This project uses [https://github.com/tbakerx/react-resume-template](https://github.com/tbakerx/react-resume-template) with some modifications. Thanks to the [author](https://github.com/tbakerx).
