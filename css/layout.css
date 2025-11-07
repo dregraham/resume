@@ -94,30 +94,9 @@ header .social li {
    margin: 0 15px;
    padding: 0;
 }
-header .social li a { color: #fff; }
+header .social li a { color: #ffffff; }
 header .social li a:hover { color: #0762f9; }
 
-/* scrolldown link */
-header .scrolldown a {
-   position: absolute;
-   bottom: 30px;
-   left: 50%;
-   margin-left: -29px;
-   color: #000000;
-   display: block;
-   height: 42px;
-   width: 42px;
-   font-size: 42px;
-   line-height: 42px;
-   color: #000000;
-   border-radius: 100%;
-
-   -webkit-transition: all .3s ease-in-out;
-   -moz-transition: all .3s ease-in-out;
-   -o-transition: all .3s ease-in-out;
-   transition: all .3s ease-in-out;
-}
-header .scrolldown a:hover { color: #000000; }
 
 /* primary navigation
 --------------------------------------------------------------------- */
@@ -427,7 +406,7 @@ ul#nav li.current a { color: #df4bf6; }
    padding-bottom: 60px;
 }
 #projects h1 {
-   font: 50px 'desyrelregular', serif;
+   font: 80px 'desyrelregular', serif;
       letter-spacing: 3px;
       color: #000000;
       margin-bottom: 25px;
@@ -981,33 +960,7 @@ footer .social-links li {
 
 footer .social-links li:first-child { margin-left: 0; }
 
-/* Go To Top Button */
-#go-top {
-	position: absolute;
-	top: -24px;
-   left: 50%;
-   margin-left: -30px;
-}
-#go-top a {
-	text-decoration: none;
-	border: 0 none;
-	display: block;
-	width: 60px;
-	height: 60px;
-	background-color: #FFFFFF;
-
-	-webkit-transition: all 0.2s ease-in-out;
-   -moz-transition: all 0.2s ease-in-out;
-   -o-transition: all 0.2s ease-in-out;
-   -ms-transition: all 0.2s ease-in-out;
-   transition: all 0.2s ease-in-out;
-
-   color: opacity(0%);
-   font-size: 21px;
-   line-height: 60px;
- 	border-radius: 100%;
-}
-#go-top a:hover { background-color: #000000; }
+/* scrolldown and go-top styles removed per request */
 
 
 .social .btn:first-child{
