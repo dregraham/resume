@@ -3,7 +3,7 @@
     "name": "Dre Graham",
     "description": "Welcome to my website! I am an aspiring Cloud Engineer and am using this website to showcase my talent. Feel free to just click around or reach out to connect!",
     "image": "profilepic.jpg",
-    "bio": "Cloud Computing graduate with strong technical support experience across AWS and Azure environments. I specialize in troubleshooting, automation, and observability. Skilled at leveraging diagnostic tools (CloudWatch, Sumo Logic, Kibana) and scripting (Python, PowerShell, SQL) to resolve complex issues and maintain uptime across distributed systems. Experienced collaborating cross-functionally with engineering, product, and security teams to enhance reliability and streamline escalation workflows. Passionate about cloud operations, data-driven problem solving, and growing into infrastructure automation and DevOps engineering.",
+    "bio": "Cloud Computing graduate with strong Technical Support experience across AWS and Azure environments. I specialize in troubleshooting, automation, and observability. Skilled at leveraging diagnostic tools (CloudWatch, Sumo Logic, Kibana) and scripting (Python, PowerShell, SQL) to resolve complex issues and maintain uptime across distributed systems. Experienced collaborating cross-functionally with engineering, product, and security teams to enhance reliability and streamline escalation workflows. Passionate about cloud operations, data-driven problem solving, and growing into infrastructure automation and DevOps engineering.",
     "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
     "email": "andre.graham709@gmail.com",
     "github": "https://github.com/dregraham",
@@ -27,16 +27,15 @@
     ]
   },
   "resume": {
-    "skillmessage": "Cloud Models and Technologies",
     "skills": [
       {
-        "name": "AWS (S3, EC2, Lambda, CloudFormation, Terraform)", "level": "80%"
+        "name": "AWS (S3, DynamoDB, CloudWatch, EC2, Lambda, CloudFormation/Terraform)", "level": "80%"
     },
     {
-      "name": "Azure (Azure Functions, Azure DevOps, Azure SQL Database)", "level": "40%"
+      "name": "Azure (Azure Functions, DevOps, CosmosDB)", "level": "40%"
     },
     {
-      "name": "GCP (Cloud Functions, Cloud Run, Firestore)", "level": "20%"
+      "name": "GCP (Cloud Functions, Cloud Run, Cloud Storage)", "level": "20%"
     }
   ],
     "education": [
