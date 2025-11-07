@@ -1,0 +1,9 @@
+[
+  { "name": "RDS", "status": "Healthy" },
+  { "name": "Aurora", "status": "Healthy" },
+  { "name": "Redshift", "status": "Degraded" },
+  { "name": "DynamoDB", "status": "Healthy" },
+  { "name": "Glue", "status": "Down" },
+  { "name": "Athena", "status": "Healthy" },
+  { "name": "ElastiCache", "status": "Degraded" }
+]

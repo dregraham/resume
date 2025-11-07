@@ -7,19 +7,21 @@ jQuery(document).ready(function($) {
       e.preventDefault();
       var target = this.hash,
         $target = $(target);
-
-      $("html, body")
-        .stop()
-        .animate(
-          {
-            scrollTop: $target.offset().top
-          },
-          800,
-          "swing",
-          function() {
-            window.location.hash = target;
-          }
-        );
+      if ($target.length) {
+        $("html, body")
+          .stop()
+          .animate(
+            {
+              scrollTop: $target.offset().top
+            },
+            800,
+            "swing",
+            function() {
+              window.location.hash = target;
+            }
+          );
+      }
+      // If target doesn't exist, do nothing (prevents error)
     });
 
     var sections = $("section");

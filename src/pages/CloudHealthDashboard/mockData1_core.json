@@ -1,0 +1,7 @@
+[
+  { "name": "EC2", "status": "Healthy" },
+  { "name": "S3", "status": "Healthy" },
+  { "name": "DynamoDB", "status": "Degraded" },
+  { "name": "Lambda", "status": "Healthy" },
+  { "name": "CloudWatch", "status": "Down" }
+]

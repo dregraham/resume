@@ -1,0 +1,9 @@
+[
+  { "name": "EC2", "status": "Degraded" },
+  { "name": "ECS", "status": "Healthy" },
+  { "name": "EKS", "status": "Healthy" },
+  { "name": "S3", "status": "Down" },
+  { "name": "Elastic Load Balancing", "status": "Healthy" },
+  { "name": "VPC", "status": "Healthy" },
+  { "name": "CloudFront", "status": "Degraded" }
+]

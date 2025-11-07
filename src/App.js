@@ -9,6 +9,11 @@ import Resume from "./Components/Resume";
 import Contact from "./Components/Contact";
 import Projects from "./Components/Projects";
 
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CloudHealthDashboard from './pages/CloudHealthDashboard/CloudHealthDashboard';
+import LogAnalyzerToolkit from './pages/LogAnalyzerToolkit/LogAnalyzerToolkit';
+import DynamoDBInventoryManager from './pages/DynamoDBInventoryManager/DynamoDBInventoryManager';
+
 
 class App extends Component {
   constructor(props) {
@@ -46,14 +51,26 @@ class App extends Component {
       return <div>Loading...</div>;
     }
     return (
-      <div className="App">
-        <Header data={this.state.resumeData.main} />
-        <About data={this.state.resumeData.main} />
-        <Resume data={this.state.resumeData.resume} />
-        <Projects data={this.state.resumeData.projects} />
-        <Contact data={this.state.resumeData.main} />
-        <Footer data={this.state.resumeData.main} />
-      </div>
+      <Router>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Header data={this.state.resumeData.main} />
+                <About data={this.state.resumeData.main} />
+                <Resume data={this.state.resumeData.resume} />
+                <Projects data={this.state.resumeData.projects} />
+                <Contact data={this.state.resumeData.main} />
+              </>
+            } />
+            <Route path="/projects" element={<Projects data={this.state.resumeData.projects} />} />
+            <Route path="/projects/cloud-health-dashboard" element={<CloudHealthDashboard />} />
+            <Route path="/projects/log-analyzer-toolkit" element={<LogAnalyzerToolkit />} />
+            <Route path="/projects/dynamodb-inventory-manager" element={<DynamoDBInventoryManager />} />
+          </Routes>
+          <Footer data={this.state.resumeData.main} />
+        </div>
+      </Router>
     );
   }
 }
