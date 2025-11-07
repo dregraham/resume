@@ -25,6 +25,10 @@ e. Others
 /* ------------------------------------------------------------------ */
 /* a. Webfonts and Icon fonts
  ------------------------------------------------------------------ */
+/* Custom color for icon-down-circle */
+.icon-down-circle {
+   color: #2563eb !important;
+}
 
 @import url("fonts.css");
 @import url("fontello/css/fontello.css");
