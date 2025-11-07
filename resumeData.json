@@ -28,16 +28,15 @@
   },
   "resume": {
     "skills": [
-      {
-        "name": "AWS (S3, DynamoDB, CloudWatch, EC2, Lambda, CloudFormation/Terraform)", "level": "80%"
-    },
-    {
-      "name": "Azure (Azure Functions, DevOps, CosmosDB)", "level": "40%"
-    },
-    {
-      "name": "GCP (Cloud Functions, Cloud Run, Cloud Storage)", "level": "20%"
-    }
-  ],
+  { "name": "AWS (EC2, Lambda, S3, DynamoDB, CloudWatch, IaC)", "level": "85%" },
+  { "name": "Azure & GCP (Functions, DevOps, CosmosDB, Cloud Run)", "level": "60%" },
+  { "name": "Programming & Scripting (Python, PowerShell, JavaScript, React, Bash, HTML/CSS, JSON/YAML)", "level": "85%" },
+  { "name": "Infrastructure as Code & CI/CD (Terraform, CloudFormation, GitHub Actions, Azure DevOps)", "level": "75%" },
+  { "name": "Monitoring & Observability (CloudWatch, Sumo Logic, Kibana)", "level": "85%" },
+  { "name": "Databases (SQL Server, DynamoDB, Cosmos DB, RDS)", "level": "70%" },
+  { "name": "Cross-Platform Systems (Linux, Windows, Networking, Security)", "level": "70%" }
+]
+,
     "education": [
       {
         "school": "Western Governors University",
@@ -57,7 +56,7 @@
         "company": "Auctane",
         "title": "Technical Support Specialist, L2",
         "years": "June 2017 - May 2019",
-        "description": "Provided advanced technical support for shipping and logistics software, specializing in troubleshooting complex issues related to API integrations, database performance, and cloud infrastructure. Utilized tools such as Kibana, DynamoDB, and CloudWatch to diagnose and resolve customer problems efficiently. Collaborated closely with engineering teams to identify root causes and implement long-term solutions. Assisted in creating knowledge base articles and training materials to enhance team capabilities."
+        "description": "Provided advanced technical support for ShipWorks shipping software, specializing in troubleshooting complex issues related to API integrations, database performance, and system infrastructure. Utilized tools such as Kibana, SUMO, and CloudWatch to diagnose and resolve customer problems efficiently. Collaborated closely with Product and Engineering teams to identify root causes and implement long-term solutions. Assisted in creating knowledge base articles and training materials using Confluence and Paligo to enhance Support SLA metrics and streamline troubleshooting efforts."
       },
       {
         "company": "Auctane",

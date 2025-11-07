@@ -1029,3 +1029,19 @@ footer .social-links li:first-child { margin-left: 0; }
 .github-btn{
    background-color: #000000 !important;
 }
+
+/* Certification label adjustments */
+.cert-label {
+   font-size: 0.8rem; /* previously inline 0.7rem */
+   line-height: 1.25;
+   color: #222;
+   font-family: 'opensans-semibold', sans-serif;
+   letter-spacing: .5px;
+   text-rendering: optimizeLegibility;
+}
+@media (min-width: 768px) {
+   .cert-label { font-size: 0.85rem; }
+}
+@media (min-width: 1200px) {
+   .cert-label { font-size: 0.9rem; }
+}
