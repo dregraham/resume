@@ -1,0 +1,8 @@
+[
+  { "name": "IAM", "status": "Healthy" },
+  { "name": "Cognito", "status": "Degraded" },
+  { "name": "KMS", "status": "Healthy" },
+  { "name": "GuardDuty", "status": "Healthy" },
+  { "name": "WAF", "status": "Down" },
+  { "name": "Shield", "status": "Healthy" }
+]

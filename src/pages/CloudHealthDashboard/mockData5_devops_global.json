@@ -1,0 +1,11 @@
+[
+  { "name": "CodePipeline", "status": "Healthy" },
+  { "name": "CodeBuild", "status": "Healthy" },
+  { "name": "CodeDeploy", "status": "Degraded" },
+  { "name": "CodeCommit", "status": "Healthy" },
+  { "name": "CloudFormation", "status": "Down" },
+  { "name": "Systems Manager", "status": "Healthy" },
+  { "name": "Route 53", "status": "Healthy" },
+  { "name": "CloudFront", "status": "Degraded" },
+  { "name": "Global Accelerator", "status": "Healthy" }
+]

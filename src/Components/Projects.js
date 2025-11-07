@@ -1,5 +1,6 @@
+
 import React, { Component } from "react";
-// Removed unused import: Zmage
+import { Link } from 'react-router-dom';
 
 let id = 0;
 class projects extends Component {
@@ -11,13 +12,15 @@ class projects extends Component {
       return (
         <div key={id++} className="columns projects-item">
           <div className="item-wrap">
-        <a href={project.url} target="_blank" rel="noopener noreferrer">
-          <img alt={project.title} src={projectImage} />
-        </a>
-        <div style={{ textAlign: "center" }}>
-          {project.title}
-          <div style={{ fontSize: "0.9em", color: "#888" }}>{project.category}</div>
-        </div>
+            <div style={{ textAlign: "center", marginBottom: 8 }}>
+              <Link to={project.url} style={{ fontWeight: 'bold', color: '#000000ff', textDecoration: 'none' }}>{project.title}</Link>
+            </div>
+            <Link to={project.url}>
+              <img alt={project.title} src={projectImage} />
+            </Link>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "0.9em", color: "#888" }}>{project.category}</div>
+            </div>
           </div>
         </div>
       );

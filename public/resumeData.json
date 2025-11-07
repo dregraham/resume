@@ -71,22 +71,22 @@
   "projects": {
     "projectdetails": [
       {
-        "title": "Color Voting API",
-  "category": "A React API for color voting. It allows users to vote on colors.",
-        "image": "favorite_color_api.png",
-        "url": ""
+        "title": "Cloud Health Dashboard",
+        "category": "A dashboard for monitoring cloud health and metrics.",
+        "image": "CloudHealthBackground.jpg",
+        "url": "/projects/cloud-health-dashboard"
       },
       {
-        "title": "AI Project",
-        "category": "A project I used AI to complete.",
-        "image": "coming_soon.jpg",
-        "url": ""
+        "title": "Log Analyzer Toolkit",
+        "category": "A toolkit for analyzing and visualizing log data.",
+        "image": "analyze.jpg",
+        "url": "/projects/log-analyzer-toolkit"
       },
       {
-        "title": "Multi-Cloud Deployment",
-        "category": "A cloud deployment project that includes multiple cloud providers.",
+        "title": "DynamoDB Inventory Manager",
+        "category": "A manager for tracking inventory using DynamoDB.",
         "image": "coming_soon.jpg",
-        "url": ""
+        "url": "/projects/dynamodb-inventory-manager"
       }
     ]
   }
