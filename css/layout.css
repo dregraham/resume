@@ -777,13 +777,34 @@ call-to-action .button {
 /* ------------------------------------------------------------------ */
 
 #contact {
-   /* Background: make image cover viewport width without repeating */
-   background: url(../images/contact-bg.jpg) center center / cover no-repeat fixed;
-   /* Optional dark overlay for text contrast using pseudo-element (see below) */
-   position: relative;
-   padding-top: 96px;
-   padding-bottom: 102px;
-   color:#000000;
+    /* Background: make image cover viewport width without repeating */
+    background: url(../images/contact-bg.jpg) center center / cover no-repeat fixed;
+    /* Break out attachment and size so we can override on mobile */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* Optional dark overlay for text contrast using pseudo-element (see below) */
+    position: relative;
+    padding-top: 96px;
+    padding-bottom: 102px;
+    color:#000000;
+    min-height: 520px; /* ensure visible area even on short mobile viewports */
+}
+/* Mobile + tablet fallback: many mobile browsers ignore or glitch with background-attachment: fixed */
+@media (max-width: 1024px) {
+   #contact {
+      background-attachment: scroll; /* allow image to render normally */
+      background-position: center top; /* show top focal area */
+   }
+}
+@media (max-width: 640px) {
+   #contact {
+      padding-top: 72px;
+      padding-bottom: 84px;
+      min-height: 480px;
+   }
+   #contact h1 { font-size: 40px; }
+   #contact p.lead { font-size: 16px; line-height: 30px; }
 }
 #contact::before {
    content: "";
