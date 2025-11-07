@@ -777,12 +777,22 @@ call-to-action .button {
 /* ------------------------------------------------------------------ */
 
 #contact {
-   background-image: url(../images/contact-bg.jpg);
-
+   /* Background: make image cover viewport width without repeating */
+   background: url(../images/contact-bg.jpg) center center / cover no-repeat fixed;
+   /* Optional dark overlay for text contrast using pseudo-element (see below) */
+   position: relative;
    padding-top: 96px;
    padding-bottom: 102px;
-   color:#000000
+   color:#000000;
 }
+#contact::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background: rgba(0,0,0,0.35); /* subtle darkening for legibility */
+   pointer-events: none;
+}
+#contact > * { position: relative; z-index: 1; }
 #contact .section-head { margin-bottom: 42px; }
 
 #contact a, #contact a:visited  { color: #0762f9; }
