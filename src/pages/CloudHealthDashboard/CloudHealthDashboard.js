@@ -1,4 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeHighlight from 'rehype-highlight';
+import 'github-markdown-css';
+import 'highlight.js/styles/github.css';
 import "./CloudDashboard.css";
 import SimpleNav from "../../Components/SimpleNav";
 import coreData from "./mockData1_core.json";
@@ -6,6 +13,17 @@ import computeNetworkData from "./mockData2_compute_network.json";
 import securityData from "./mockData3_security_identity.json";
 import databaseData from "./mockData4_database_analytics.json";
 import devopsData from "./mockData5_devops_global.json";
+
+const getNodeText = (node) => {
+  if (!node) return "";
+  if (node.type === "text" && typeof node.value === "string") {
+    return node.value;
+  }
+  if (!Array.isArray(node.children)) {
+    return "";
+  }
+  return node.children.map(getNodeText).join("");
+};
 
 
 export default function CloudHealthDashboard() {
@@ -15,6 +33,34 @@ export default function CloudHealthDashboard() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
+  // README markdown preview state (full file, GitHub-like styling)
+  const [readmeMarkdown, setReadmeMarkdown] = useState(null);
+  const [readmeLoading, setReadmeLoading] = useState(true);
+  const [readmeError, setReadmeError] = useState(null);
+  const [isReadmeExpanded, setIsReadmeExpanded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    const url = "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/CloudHealthDashboard/README.md";
+    fetch(url)
+      .then(r => {
+        if (!r.ok) throw new Error("Failed to fetch README");
+        return r.text();
+      })
+      .then(text => {
+        if (!cancelled) {
+          setReadmeMarkdown(text);
+          setReadmeLoading(false);
+        }
+      })
+      .catch(err => {
+        if (!cancelled) {
+          setReadmeError(err.message || 'Error loading README');
+          setReadmeLoading(false);
+        }
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const handleDatasetChange = (e) => {
     const value = e.target.value;
@@ -227,6 +273,96 @@ export default function CloudHealthDashboard() {
           </div>
         </div>
       )}
+
+      {/* === README PREVIEW === */}
+      <section className="readme-preview-section">
+        <h3>CloudHealthDashboard README Preview</h3>
+        <div className={`readme-preview-box markdown-body ${isReadmeExpanded ? 'expanded' : 'collapsed'}`}>
+          {readmeLoading && <p style={{margin:0}}>Loading README...</p>}
+          {readmeError && <p style={{color:'#d73a49', margin:0}}>Failed to load README: {readmeError}</p>}
+          {!readmeLoading && !readmeError && readmeMarkdown && (
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[
+                rehypeSlug,
+                [rehypeAutolinkHeadings, {
+                  behavior: 'append',
+                  properties: {
+                    className: ['heading-anchor-link']
+                  },
+                  content: (node) => ([
+                    {
+                      type: 'element',
+                      tagName: 'span',
+                      properties: { className: ['sr-only'] },
+                      children: [
+                        { type: 'text', value: `Permalink to ${getNodeText(node)}`.trim() }
+                      ]
+                    },
+                    {
+                      type: 'element',
+                      tagName: 'span',
+                      properties: { className: ['heading-anchor'], 'aria-hidden': 'true' },
+                      children: [{ type: 'text', value: '#' }]
+                    }
+                  ])
+                }],
+                rehypeHighlight
+              ]}
+              components={{
+                a: ({node, children, ...props}) => (
+                  <a {...props} target="_blank" rel="noopener noreferrer">
+                    {children}
+                  </a>
+                ),
+                img: ({node, ...props}) => (
+                  <img style={{ maxWidth: '100%', height: 'auto' }} {...props} alt={props.alt || ''} />
+                ),
+                code: ({inline, className, children, ...props}) => (
+                  <code
+                    className={className}
+                    style={{
+                      background: inline ? '#f6f8fa' : '#f6f8fa',
+                      padding: inline ? '2px 4px' : '12px 16px',
+                      display: inline ? 'inline' : 'block',
+                      borderRadius: 6,
+                      fontSize: '0.85rem',
+                      border: '1px solid #d0d7de',
+                      color: '#24292f'
+                    }}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                )
+              }}
+            >
+              {readmeMarkdown}
+            </ReactMarkdown>
+          )}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+          {!readmeLoading && !readmeError && readmeMarkdown && (
+            <button
+              type="button"
+              className="readme-toggle"
+              onClick={() => setIsReadmeExpanded(prev => !prev)}
+            >
+              {isReadmeExpanded ? 'Collapse README' : 'Expand Full README'}
+            </button>
+          )}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '0.75rem' }}>
+          <a
+            href="https://github.com/dregraham/resume/blob/main/src/pages/CloudHealthDashboard/README.md"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="readme-preview-link"
+          >
+            README on GitHub ↗
+          </a>
+        </div>
+      </section>
     </>
   );
 }

@@ -62,6 +62,169 @@
   margin-top: 2rem;
 }
 
+.readme-preview-section {
+  max-width: 1000px;
+  margin: 3rem auto 5rem auto;
+  padding: 2rem 2rem 2.5rem;
+  background: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  text-align: left;
+}
+
+.readme-preview-section h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #24292f;
+  margin: 0 0 1.5rem 0;
+}
+
+.readme-preview-box {
+  max-height: 340px;
+  overflow: auto;
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  padding: 1.25rem 1.15rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #24292f;
+  scrollbar-width: thin;
+  border-radius: 6px;
+}
+
+.readme-preview-box.collapsed {
+  max-height: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+.readme-preview-box.collapsed::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 72px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+  pointer-events: none;
+}
+
+.readme-preview-box.expanded {
+  max-height: none;
+  overflow: visible;
+}
+
+.readme-toggle {
+  background: #24292f;
+  color: #ffffff;
+  border: 1px solid #1b1f23;
+  border-radius: 999px;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.readme-toggle:hover,
+.readme-toggle:focus {
+  background: #1f2328;
+  transform: translateY(-1px);
+}
+
+.readme-preview-box::-webkit-scrollbar { width: 10px; }
+.readme-preview-box::-webkit-scrollbar-track { background: #f6f8fa; }
+.readme-preview-box::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 6px; }
+.readme-preview-box::-webkit-scrollbar-thumb:hover { background: #b6c2ca; }
+
+.readme-preview-box img { max-width: 100%; height: auto; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.heading-anchor-link {
+  margin-left: 0.35rem;
+  color: #1f6feb;
+  text-decoration: none;
+  visibility: hidden;
+}
+
+.heading-anchor {
+  font-weight: 500;
+}
+
+.markdown-body h1:hover .heading-anchor-link,
+.markdown-body h2:hover .heading-anchor-link,
+.markdown-body h3:hover .heading-anchor-link,
+.markdown-body h4:hover .heading-anchor-link,
+.markdown-body h5:hover .heading-anchor-link,
+.markdown-body h6:hover .heading-anchor-link {
+  visibility: visible;
+}
+
+/* Tech Stack table styling */
+.markdown-body table {
+  background: #161b22;
+  color: #f6f8fa;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(240, 246, 252, 0.16);
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  color: #f6f8fa;
+  border-color: rgba(240, 246, 252, 0.2);
+  background-color: transparent;
+}
+
+.markdown-body table tr {
+  background-color: #161b22;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #1c2129;
+}
+
+.markdown-body table a {
+  color: #79c0ff;
+}
+
+.markdown-body p,
+.markdown-body li {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+}
+
+.readme-preview-link {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  background: #24292f;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.readme-preview-link:hover, .readme-preview-link:focus {
+  background: #1b1f23;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
 /* Service cards */
 .service-card {
   background: #fff;
