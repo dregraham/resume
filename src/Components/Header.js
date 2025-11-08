@@ -8,9 +8,10 @@ const SECTIONS = ["home", "about", "resume", "projects", "contact"];
 class Header extends Component {
   constructor(props) {
     super(props);
-    this.state = { activeSection: "home" };
+    this.state = { activeSection: "home", suppressUntil: 0 };
     this.handleNavClick = this.handleNavClick.bind(this);
     this.onScroll = this.onScroll.bind(this);
+    this.scrollToSection = this.scrollToSection.bind(this);
   }
 
   componentDidMount() {
@@ -19,15 +20,15 @@ class Header extends Component {
     this.onScroll();
     // Scroll to hash on initial mount if present
     setTimeout(() => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        const el = document.getElementById(hash);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-          this.setState({ activeSection: hash });
-        }
+      let raw = window.location.hash;
+      let section = raw.replace(/^#\/?/, '') || 'home';
+      if (section.startsWith('file:')) section = section.replace(/^file:/, '');
+      if (section && document.getElementById(section)) {
+        this.setState({ activeSection: section, suppressUntil: Date.now() + 800 });
+        // Use smooth scroll even on initial hash load for consistency
+        this.scrollToSection(section, false);
       }
-    }, 100);
+    }, 120);
   }
 
   componentWillUnmount() {
@@ -36,41 +37,49 @@ class Header extends Component {
   }
 
   handleHashChange = () => {
-    const hash = window.location.hash.replace('#', '') || 'home';
-    this.setState({ activeSection: hash });
-    // Scroll to section if hash changes
-    const el = document.getElementById(hash);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    const raw = window.location.hash;
+    let section = raw.replace(/^#\/?/, '').split('/')[0] || 'home';
+    if (section.startsWith('file:')) section = section.replace(/^file:/, '');
+    if (!document.getElementById(section)) return; // ignore invalid hashes
+    this.setState({ activeSection: section, suppressUntil: Date.now() + 800 });
+    this.scrollToSection(section);
   };
 
   handleNavClick(e, section) {
     e.preventDefault();
+    if (!document.getElementById(section)) return;
     window.location.hash = `#${section}`;
-    this.setState({ activeSection: section });
+    this.setState({ activeSection: section, suppressUntil: Date.now() + 800 });
+    this.scrollToSection(section);
+  }
+
+  scrollToSection(section, immediate = false) {
     const el = document.getElementById(section);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.pageYOffset - 65;
+    window.scrollTo({ top, behavior: immediate ? 'auto' : 'smooth' });
   }
 
   onScroll() {
-    // Find the section closest to the top
-    let closest = 'home';
-    let minDist = Number.POSITIVE_INFINITY;
+    if (Date.now() < this.state.suppressUntil) return; // suppress shortly after programmatic scroll
+    const offset = 65;
+    let bestSection = this.state.activeSection;
+    let bestDistance = Number.POSITIVE_INFINITY;
     SECTIONS.forEach(section => {
       const el = document.getElementById(section);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top >= 0 && rect.top < minDist) {
-          minDist = rect.top;
-          closest = section;
-        }
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      const distance = Math.abs(rect.top - offset);
+      if (rect.bottom > offset + 20 && rect.top < window.innerHeight - 40 && distance < bestDistance) {
+        bestDistance = distance;
+        bestSection = section;
       }
     });
-    if (this.state.activeSection !== closest) {
-      this.setState({ activeSection: closest });
+    if (window.location.hash.startsWith('#/projects') || window.location.hash === '#projects') {
+      bestSection = 'projects';
+    }
+    if (bestSection !== this.state.activeSection) {
+      this.setState({ activeSection: bestSection });
     }
   }
 
@@ -121,21 +130,39 @@ class Header extends Component {
             <h1 className="responsive-headline">{name}</h1>
             <h3>{description}</h3>
             <hr />
-            <ul className="social">
-              <a href={github} className="button btn github-btn" target="_blank" rel="noopener noreferrer">
-                <i className="fa fa-github"></i>Github
-              </a>
-              <a href="https://www.linkedin.com/in/dregraham/" className="button btn github-btn" target="_blank" rel="noopener noreferrer" style={{ marginLeft: "1rem" }}>
-                <i className="fa fa-linkedin" style={{ color: "#0A66C2" }}></i> LinkedIn
-              </a>
+            <ul className="social" style={{ listStyle: 'none', display: 'flex', justifyContent: 'center', gap: '24px', padding: 0 }}>
+              <li>
+                <a
+                  href={github}
+                  className="button btn github-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="GitHub Profile"
+                  title="View my GitHub repositories"
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <i className="fa fa-github" aria-hidden="true" style={{ fontSize: '24px' }}></i>
+                  <span style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px' }}>GitHub</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/in/dregraham/"
+                  className="button btn linkedin-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="LinkedIn Profile"
+                  title="Connect with me on LinkedIn"
+                  style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                >
+                  <i className="fa fa-linkedin" aria-hidden="true" style={{ color: "#0A66C2", fontSize: '24px' }}></i>
+                  <span style={{ fontSize: '14px', fontWeight: 600, letterSpacing: '0.5px' }}>LinkedIn</span>
+                </a>
+              </li>
             </ul>
           </div>
         </div>
-        <p className="scrolldown">
-          <a className="smoothscroll" href="#about" onClick={e => this.handleNavClick(e, 'about')}>
-            <i className="icon-down-circle"></i>
-          </a>
-        </p>
+           {/* scrolldown removed per request */}
       </header>
     );
   }

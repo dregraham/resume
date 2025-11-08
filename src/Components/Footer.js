@@ -31,11 +31,7 @@ class Footer extends Component {
           </ul>
         </div>
 
-        <div id="go-top">
-        <a className="smoothscroll" title="Back to Top" href="#home">
-          <i className="icon-up-open"></i>
-        </a>
-        </div>
+         {/* go-top removed per request */}
       </div>
       </footer>
     );

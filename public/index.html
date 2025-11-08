@@ -9,13 +9,29 @@
     <link href="%PUBLIC_URL%/images/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
     <link href="%PUBLIC_URL%/images/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
     <link color="#5bbad5" href="%PUBLIC_URL%/images/icons/safari-pinned-tab.svg" rel="mask-icon" />
-    <link rel="stylesheet" href="%PUBLIC_URL%/css/default.css">
+  <link rel="stylesheet" href="%PUBLIC_URL%/css/default.css">
+  <!-- Explicit Font Awesome include (redundant with @import, ensures load on some hosts) -->
+  <link rel="stylesheet" href="%PUBLIC_URL%/css/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/css/layout.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/css/media-queries.css">
     <link rel="stylesheet" href="%PUBLIC_URL%/css/magnific-popup.css">
 
 
     <title>Dre Graham</title>
+
+    <script>
+      // Restore original path from GitHub Pages SPA redirect (404.html)
+      (function() {
+        var params = new URLSearchParams(window.location.search);
+        var p = params.get('p');
+        var q = params.get('q');
+        if (p) {
+          var newUrl = p + (q ? q : '') + window.location.hash;
+          window.history.replaceState(null, '', newUrl);
+        }
+      })();
+    </script>
+
   </head>
 
   <body>

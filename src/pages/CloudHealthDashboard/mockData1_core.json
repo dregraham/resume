@@ -1,7 +1,47 @@
 [
-  { "name": "EC2", "status": "Healthy" },
-  { "name": "S3", "status": "Healthy" },
-  { "name": "DynamoDB", "status": "Degraded" },
-  { "name": "Lambda", "status": "Healthy" },
-  { "name": "CloudWatch", "status": "Down" }
+  {
+    "name": "EC2",
+    "status": "Healthy",
+    "description": "Elastic Compute Cloud — virtual servers in the cloud.",
+    "backend": "Simulates EC2 instance state checks and CloudWatch alarms for CPU utilization and scheduled events.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["CPUUtilization", "NetworkIn", "StatusCheckFailed"]
+  },
+  {
+    "name": "S3",
+    "status": "Healthy",
+    "description": "Simple Storage Service — scalable object storage.",
+    "backend": "Tracks bucket accessibility, replication status, and object-level request latency.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["BucketSizeBytes", "4xxErrors", "5xxErrors"]
+  },
+  {
+    "name": "DynamoDB",
+    "status": "Degraded",
+    "description": "Managed NoSQL database service.",
+    "backend": "Simulates throughput and latency checks against provisioned table capacity.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["ConsumedReadCapacity", "ThrottledRequests"]
+  },
+  {
+    "name": "Lambda",
+    "status": "Healthy",
+    "description": "Serverless compute engine for event-driven workloads.",
+    "backend": "Monitors invocation errors, cold start duration, and concurrency limits.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["Invocations", "Errors", "Duration"]
+  },
+  {
+    "name": "CloudWatch",
+    "status": "Down",
+    "description": "Monitoring and observability service.",
+    "backend": "Simulates metric ingestion failures and delayed alarm notifications.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["MetricIngestionRate", "AlarmTransitions"]
+  }
 ]

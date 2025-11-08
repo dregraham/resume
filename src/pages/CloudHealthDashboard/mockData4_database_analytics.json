@@ -1,9 +1,47 @@
 [
-  { "name": "RDS", "status": "Healthy" },
-  { "name": "Aurora", "status": "Healthy" },
-  { "name": "Redshift", "status": "Degraded" },
-  { "name": "DynamoDB", "status": "Healthy" },
-  { "name": "Glue", "status": "Down" },
-  { "name": "Athena", "status": "Healthy" },
-  { "name": "ElastiCache", "status": "Degraded" }
+  {
+    "name": "RDS",
+    "status": "Healthy",
+    "description": "Relational Database Service — managed SQL databases.",
+    "backend": "Monitors CPU utilization, connection count, and read replica lag.",
+    "region": "us-west-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["CPUUtilization", "FreeStorageSpace", "ReplicaLag"]
+  },
+  {
+    "name": "Aurora",
+    "status": "Healthy",
+    "description": "High-performance MySQL and PostgreSQL compatible database engine.",
+    "backend": "Simulates writer/reader node health and cluster replication latency.",
+    "region": "us-west-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["DatabaseConnections", "Latency"]
+  },
+  {
+    "name": "Redshift",
+    "status": "Degraded",
+    "description": "Data warehouse for analytical workloads.",
+    "backend": "Simulates query latency, node performance, and WLM queue depth.",
+    "region": "us-west-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["QueryDuration", "CPUUtilization", "WLMQueueLength"]
+  },
+  {
+    "name": "Athena",
+    "status": "Healthy",
+    "description": "Serverless query service for analyzing data in S3.",
+    "backend": "Simulates query concurrency and average execution time.",
+    "region": "us-west-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["QueryCount", "AverageLatency"]
+  },
+  {
+    "name": "Glue",
+    "status": "Down",
+    "description": "Serverless data integration service for ETL jobs.",
+    "backend": "Monitors job success rates, crawler duration, and failure alerts.",
+    "region": "us-west-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["JobRuns", "FailedJobs"]
+  }
 ]
