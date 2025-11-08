@@ -70,21 +70,21 @@
     "projectdetails": [
       {
         "title": "Cloud Health Dashboard",
-        "category": "A dashboard for monitoring cloud health and metrics.",
+        "category": "A simulated dashboard for monitoring cloud health and metrics.",
         "image": "CloudHealthBackground.jpg",
         "url": "/projects/cloud-health-dashboard"
+      },
+      {
+        "title": "Multi-Cloud Automation (IaC)",
+        "category": "Demonstrates infrastructure as code deployments across AWS and Azure using Terraform.",
+        "image": "aws_azure_iac.png",
+        "url": "/projects/multicloud-iac"
       },
       {
         "title": "Log Analyzer Toolkit",
         "category": "A toolkit for analyzing and visualizing log data.",
         "image": "analyze.jpg",
         "url": "/projects/log-analyzer-toolkit"
-      },
-      {
-        "title": "DynamoDB Inventory Manager",
-        "category": "A manager for tracking inventory using DynamoDB.",
-        "image": "coming_soon.jpg",
-        "url": "/projects/dynamodb-inventory-manager"
       }
     ]
   }
