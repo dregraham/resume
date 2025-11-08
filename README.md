@@ -3,9 +3,20 @@
 Welcome to my **Cloud Engineer Portfolio Repository**.  
 This repo contains the source code for my professional projects, portfolio website, and cloud demonstrations — all built to showcase my hands-on experience with **AWS, Azure, Python, and React**.
 
+
+## 📂 Source Code Tour
+
+1. `src/pages/CloudHealthDashboard/CloudHealthDashboard.js` – Full featured React dashboard (mock AWS health console). Pairs with dataset JSON files and dark-theme CSS for status visualization.
+2. `src/pages/CloudHealthDashboard/backend/lambda_handler.py` – Illustrative Python AWS Lambda handler showing a serverless data shape returned to the front end.
+3. `src/pages/DynamoDBInventoryManager/DynamoDBInventoryManager.js` – Work-in-progress scaffold meant for demonstrating DynamoDB-oriented UI & access pattern concepts.
+4. `src/pages/LogAnalyzerToolkit/LogAnalyzerToolkit.js` – Stub reserved for log parsing / insight tooling; shows planned expansion structure.
+
+Additional index & guidance: `src/pages/README.md`.
+
+
 ---
 
-## ☁️ Featured Project: Cloud Health Dashboard
+### 🧾 License
 
 ### 📊 Overview
 The **Cloud Health Dashboard** is a React-based simulation of the **AWS Service Health Console**.  
@@ -39,7 +50,7 @@ This project showcases my ability to:
 [CloudHealthDashboard](https://github.com/dregraham/resume/tree/main/src/pages/CloudHealthDashboard)
 
 💻 **Live Preview:**  
-[www.dregraham.com/projects/cloud-health-dashboard](https://dregraham.com/projects/cloud-health-dashboard)
+[www.dregraham.com/projects/cloud-health-dashboard](https://dregraham.com/#/projects/cloud-health-dashboard)
 
 📜 **Full README for the Project:**  
 [Cloud Health Dashboard Documentation](https://github.com/dregraham/resume/blob/main/src/pages/CloudHealthDashboard/README.md)
