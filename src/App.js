@@ -15,6 +15,7 @@ import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import CloudHealthDashboard from './pages/CloudHealthDashboard/CloudHealthDashboard';
 import LogAnalyzerToolkit from './pages/LogAnalyzerToolkit/LogAnalyzerToolkit';
 import DynamoDBInventoryManager from './pages/DynamoDBInventoryManager/DynamoDBInventoryManager';
+import MultiCloudIAC from './pages/multicloud-iac/MultiCloudIAC';
 
 
 class App extends Component {
@@ -140,6 +141,7 @@ class App extends Component {
             <Route path="/projects/cloud-health-dashboard" element={<CloudHealthDashboard />} />
             <Route path="/projects/log-analyzer-toolkit" element={<LogAnalyzerToolkit />} />
             <Route path="/projects/dynamodb-inventory-manager" element={<DynamoDBInventoryManager />} />
+            <Route path="/projects/multicloud-iac" element={<MultiCloudIAC />} />
           </Routes>
           <Footer data={this.state.resumeData.main} />
           </ErrorBoundary>

@@ -1,10 +1,6 @@
 provider "azurerm" {
   features {}
-}
-
-resource "azurerm_resource_group" "iac_demo" {
-  name     = "iac-demo-rg"
-  location = "East US"
+  resource_provider_registrations = "none"
 }
 
 resource "azurerm_storage_account" "iacdemo" {
@@ -13,11 +9,14 @@ resource "azurerm_storage_account" "iacdemo" {
   location                 = azurerm_resource_group.iac_demo.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  static_website {
-    index_document = "index.html"
-  }
+}
+
+# Static website configuration (separate resource)
+resource "azurerm_storage_account_static_website" "iacdemo_site" {
+  storage_account_id = azurerm_storage_account.iacdemo.id
+  index_document      = "index.html"
 }
 
 output "azure_site_url" {
-  value = azurerm_storage_account.iacdemo.primary_web_endpoint
+  value = azurerm_storage_account_static_website.iacdemo_site.primary_web_endpoint
 }
