@@ -14,10 +14,6 @@ This repo contains the source code for my professional projects, portfolio websi
 Additional index & guidance: `src/pages/README.md`.
 
 
----
-
-### 🧾 License
-
 ### 📊 Overview
 The **Cloud Health Dashboard** is a React-based simulation of the **AWS Service Health Console**.  
 It demonstrates how a front-end interface can visualize service uptime, region health, and metric data across multiple AWS services using mock JSON data and simulated Lambda (boto3) interactions.
