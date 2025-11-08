@@ -1,0 +1,26 @@
+name: Terraform Plan Test
+on:
+  workflow_dispatch:   # manual run only
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cloud: [aws, azure]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform -chdir=infra/${{ matrix.cloud }} init
+
+      - name: Terraform Validate
+        run: terraform -chdir=infra/${{ matrix.cloud }} validate
+
+      - name: Terraform Plan
+        run: terraform -chdir=infra/${{ matrix.cloud }} plan
