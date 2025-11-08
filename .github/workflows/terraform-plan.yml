@@ -16,10 +16,12 @@ jobs:
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.5   # or whichever version you use locally
 
       # Set up environment variables for credentials
       - name: Set environment variables
-        run: echo "Setting up cloud credentials..."
+        run: echo "Cloud credentials loaded."
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -28,6 +30,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+      # Terraform Init
       - name: Terraform Init
         run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} init
         env:
@@ -38,6 +41,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+      # Terraform Validate
       - name: Terraform Validate
         run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} validate
         env:
@@ -48,8 +52,9 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+      # Terraform Plan
       - name: Terraform Plan
-        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} plan
+        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} plan -out=tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -58,6 +63,7 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+      # Terraform Outputs
       - name: Show Terraform Outputs
         run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} output
         env:
