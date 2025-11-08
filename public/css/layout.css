@@ -94,30 +94,9 @@ header .social li {
    margin: 0 15px;
    padding: 0;
 }
-header .social li a { color: #fff; }
+header .social li a { color: #ffffff; }
 header .social li a:hover { color: #0762f9; }
 
-/* scrolldown link */
-header .scrolldown a {
-   position: absolute;
-   bottom: 30px;
-   left: 50%;
-   margin-left: -29px;
-   color: #000000;
-   display: block;
-   height: 42px;
-   width: 42px;
-   font-size: 42px;
-   line-height: 42px;
-   color: #000000;
-   border-radius: 100%;
-
-   -webkit-transition: all .3s ease-in-out;
-   -moz-transition: all .3s ease-in-out;
-   -o-transition: all .3s ease-in-out;
-   transition: all .3s ease-in-out;
-}
-header .scrolldown a:hover { color: #000000; }
 
 /* primary navigation
 --------------------------------------------------------------------- */
@@ -302,33 +281,52 @@ ul#nav li.current a { color: #df4bf6; }
 }
 .bars li {
    position: relative;
-  	margin-bottom: 60px;
-  	background: #333;
-  	height: 42px;
-  	border-radius: 0px;
+   margin-bottom: 30px;
+   background: transparent;
+   height: auto;
+   border-radius: 0;
 }
-.bars li em {
-	font: 15px 'opensans-bold', sans-serif;
+.bars li .skill-header {
+   display: flex;
+   flex-direction: column;
+   gap: 2px;
+   margin-bottom: 6px;
+}
+.bars li .skill-header .skill-name {
+   font: 15px 'opensans-bold', sans-serif;
    color: #313131;
-	text-transform: uppercase;
+   text-transform: uppercase;
    letter-spacing: 2px;
-	font-weight: normal;
+}
+.bars li .skill-header .skill-details {
+   font: 11px 'opensans-regular', sans-serif;
+   color: #555;
+   line-height: 1.3;
+   word-break: break-word;
+   white-space: normal;
+}
+.bars li .skill-track {
    position: relative;
-	top: -36px;
+   background: #333;
+   height: 36px;
+   border-radius: 3px;
+   overflow: hidden;
+   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
 }
-.bar-expand {
+.bars li .skill-track .bar-expand {
    position: absolute;
-   left: 0;
-   top: 0;
-
+   inset: 0;
    margin: 0;
-   padding-right: 24px;
-  	background: #313131;
-   display: inline-block;
-  	height: 42px;
-   line-height: 42px;
-   border-radius: 0px;
+   background: #313131;
+   line-height: 36px;
+   border-radius: 0;
+   transition: width .7s cubic-bezier(.4,.0,.2,1);
+   display: block;
 }
+/* Provide distinct background hues for different skills via generated classes if present */
+.bars li .skill-track .bar-expand.aws { background:#9fc3d3; color:#111; }
+.bars li .skill-track .bar-expand.azure { background:#9d72cc; }
+.bars li .skill-track .bar-expand.gcp { background:#563c5f; }
 /*
 .git {
   	-moz-animation: git 2s ease;
@@ -427,7 +425,7 @@ ul#nav li.current a { color: #df4bf6; }
    padding-bottom: 60px;
 }
 #projects h1 {
-   font: 50px 'desyrelregular', serif;
+   font: 80px 'desyrelregular', serif;
       letter-spacing: 3px;
       color: #000000;
       margin-bottom: 25px;
@@ -798,12 +796,43 @@ call-to-action .button {
 /* ------------------------------------------------------------------ */
 
 #contact {
-   background-image: url(../images/contact-bg.jpg);
-
-   padding-top: 96px;
-   padding-bottom: 102px;
-   color:#000000
+    /* Background: make image cover viewport width without repeating */
+    background: url(../images/contact-bg.jpg) center center / cover no-repeat fixed;
+    /* Break out attachment and size so we can override on mobile */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* Optional dark overlay for text contrast using pseudo-element (see below) */
+    position: relative;
+    padding-top: 96px;
+    padding-bottom: 102px;
+    color:#000000;
+    min-height: 520px; /* ensure visible area even on short mobile viewports */
 }
+/* Mobile + tablet fallback: many mobile browsers ignore or glitch with background-attachment: fixed */
+@media (max-width: 1024px) {
+   #contact {
+      background-attachment: scroll; /* allow image to render normally */
+      background-position: center top; /* show top focal area */
+   }
+}
+@media (max-width: 640px) {
+   #contact {
+      padding-top: 72px;
+      padding-bottom: 84px;
+      min-height: 480px;
+   }
+   #contact h1 { font-size: 40px; }
+   #contact p.lead { font-size: 16px; line-height: 30px; }
+}
+#contact::before {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background: rgba(0,0,0,0.35); /* subtle darkening for legibility */
+   pointer-events: none;
+}
+#contact > * { position: relative; z-index: 1; }
 #contact .section-head { margin-bottom: 42px; }
 
 #contact a, #contact a:visited  { color: #0762f9; }
@@ -981,33 +1010,7 @@ footer .social-links li {
 
 footer .social-links li:first-child { margin-left: 0; }
 
-/* Go To Top Button */
-#go-top {
-	position: absolute;
-	top: -24px;
-   left: 50%;
-   margin-left: -30px;
-}
-#go-top a {
-	text-decoration: none;
-	border: 0 none;
-	display: block;
-	width: 60px;
-	height: 60px;
-	background-color: #FFFFFF;
-
-	-webkit-transition: all 0.2s ease-in-out;
-   -moz-transition: all 0.2s ease-in-out;
-   -o-transition: all 0.2s ease-in-out;
-   -ms-transition: all 0.2s ease-in-out;
-   transition: all 0.2s ease-in-out;
-
-   color: opacity(0%);
-   font-size: 21px;
-   line-height: 60px;
- 	border-radius: 100%;
-}
-#go-top a:hover { background-color: #000000; }
+/* scrolldown and go-top styles removed per request */
 
 
 .social .btn:first-child{
@@ -1025,4 +1028,20 @@ footer .social-links li:first-child { margin-left: 0; }
 }
 .github-btn{
    background-color: #000000 !important;
+}
+
+/* Certification label adjustments */
+.cert-label {
+   font-size: 0.8rem; /* previously inline 0.7rem */
+   line-height: 1.25;
+   color: #222;
+   font-family: 'opensans-semibold', sans-serif;
+   letter-spacing: .5px;
+   text-rendering: optimizeLegibility;
+}
+@media (min-width: 768px) {
+   .cert-label { font-size: 0.85rem; }
+}
+@media (min-width: 1200px) {
+   .cert-label { font-size: 0.9rem; }
 }

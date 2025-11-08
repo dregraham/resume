@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      // GitHub Pages SPA redirect (rafrex method)
+      // When a direct deep link (e.g. /projects/cloud-health-dashboard) 404s,
+      // this page rewrites the URL into a query so index.html can reconstruct it.
+      var path = window.location.pathname;
+      var search = window.location.search;
+      var hash = window.location.hash;
+      // Encode the full path as a query so index.html can parse and restore
+      var target = '/' + '?p=' + encodeURIComponent(path) + (search ? '&q=' + encodeURIComponent(search) : '') + hash;
+      window.location.replace(target);
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>

@@ -1,71 +1,303 @@
+/* ===============================
+   Cloud Health Dashboard Styles
+   Modern Portfolio Look — White & Black Theme
+   =============================== */
 
+/* Base container */
 .dashboard-container {
+  background-color: #ffffff;
   padding: 4rem 2rem;
-  background-color: #f9fafb;
+  max-width: 1200px;
+  margin: 0 auto;
   text-align: center;
-  border-radius: 0;
+  color: #111;
+  font-family: 'opensans-regular', sans-serif;
 }
 
-.dashboard-title {
-  font-size: 2rem;
+/* Section titles */
+.dashboard-container h2 {
+  font-size: 4rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin-bottom: 3rem;
+  color: #111;
+  letter-spacing: -0.5px;
 }
 
-.dashboard-subtitle {
-  color: #555;
-  margin-bottom: 2rem;
-}
-
-.refresh-button {
-  background-color: #2563eb;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
+/* Info section (left side) */
+.dashboard-container .info-section {
+  background: #fafafa;
+  border: 1px solid #111;
   border-radius: 6px;
-  cursor: pointer;
+  padding: 1.5rem 2rem;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Refresh button */
+.refresh-button {
+  background: #111;
+  color: #fff;
+  font-weight: 600;
   font-size: 1rem;
-  margin-bottom: 2rem;
+  border: 2px solid #111;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.refresh-button:disabled {
-  background-color: #93c5fd;
-  cursor: not-allowed;
+.refresh-button:hover {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
 }
 
+/* Dashboard grid */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.25rem;
-  max-width: 900px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
 }
 
+/* Service cards */
 .service-card {
-  background: white;
-  border-radius: 0;
+  background: #fff;
+  border: 1.5px solid #111;
+  border-radius: 10px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s;
+  text-align: left;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
 }
 
 .service-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.service-card.healthy span {
-  color: #16a34a;
-}
-
-.service-card.degraded span {
-  color: #f59e0b;
-}
-
-.service-card.down span {
-  color: #dc2626;
-}
-.service-name {
+/* Service header */
+.service-card .service-name {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #111;
   margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+/* Status indicator */
+.service-card .status {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.service-card.healthy .status { color: #16a34a; }
+.service-card.degraded .status { color: #eab308; }
+.service-card.down .status { color: #dc2626; }
+
+/* Description text */
+.service-card p {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Backend details */
+.service-card .backend {
+  background: #fafafa;
+  border: 1px solid #111;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #222;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Optional section containers */
+.section-box {
+  border: 2px solid #111;
+  border-radius: 8px;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 2rem 1rem;
+  }
+
+  .dashboard-container h2 {
+    font-size: 1.5rem;
+  }
+}
+/* ===============================
+   Modal Pop-Out with Tabs
+   =============================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border: 2px solid #111;
+  border-radius: 10px;
+  max-width: 650px;
+  width: 90%;
+  padding: 2rem;
+  position: relative;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.3s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+  cursor: pointer;
+}
+
+.tab-nav {
+  display: flex;
+  justify-content: space-around;
+  margin: 1.5rem 0 1rem 0;
+  border-bottom: 1px solid #111;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.tab-button:hover {
+  border-color: #ccc;
+}
+
+.tab-button.active {
+  border-color: #111;
+}
+
+.tab-content {
+  padding-top: 0.5rem;
+  color: #222;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===============================
+   Dataset Dropdown Styling
+   =============================== */
+
+.dataset-selector {
+  text-align: center;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dataset-selector label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+}
+
+.dataset-selector select {
+  font-family: inherit;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #111;
+  background-color: #fff;
+  color: #111;
+  cursor: pointer;
+  min-width: 240px;
+  text-align: center;
+  transition: box-shadow 0.2s ease;
+}
+
+.dataset-selector select:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+/* ===============================
+   Typography & Readability Enhancements
+   =============================== */
+
+/* Center all section titles */
+.dashboard-container h2,
+.modal-content h2 {
+  text-align: center;
+}
+
+/* Slightly larger body text for service details */
+.service-card p,
+.service-card .backend,
+.tab-content p,
+.tab-content ul,
+.modal-content p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #111;
+}
+
+/* Adjust modal content for readability */
+.modal-content {
+  font-size: 1.05rem;
+}
+
+/* Make metric lists in modal clearer */
+.tab-content ul {
+  list-style-type: disc;
+  margin: 0.75rem 0 0.75rem 1.5rem;
+}
+
+/* Optional: add subtle spacing under section titles */
+.dashboard-container h2 {
+  margin-bottom: 2rem;
+}
+.modal-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+
+/* ===============================
+   End of Cloud Health Dashboard Styles
+   =============================== */

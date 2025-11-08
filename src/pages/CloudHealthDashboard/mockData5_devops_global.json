@@ -1,11 +1,65 @@
 [
-  { "name": "CodePipeline", "status": "Healthy" },
-  { "name": "CodeBuild", "status": "Healthy" },
-  { "name": "CodeDeploy", "status": "Degraded" },
-  { "name": "CodeCommit", "status": "Healthy" },
-  { "name": "CloudFormation", "status": "Down" },
-  { "name": "Systems Manager", "status": "Healthy" },
-  { "name": "Route 53", "status": "Healthy" },
-  { "name": "CloudFront", "status": "Degraded" },
-  { "name": "Global Accelerator", "status": "Healthy" }
+  {
+    "name": "CodePipeline",
+    "status": "Healthy",
+    "description": "Automates CI/CD workflows.",
+    "backend": "Tracks pipeline executions, build success rate, and stage durations.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["PipelineExecutions", "FailedStages"]
+  },
+  {
+    "name": "CodeBuild",
+    "status": "Healthy",
+    "description": "Continuous integration builds in isolated environments.",
+    "backend": "Monitors build duration, queue size, and failure rate.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["BuildsCompleted", "AverageBuildTime"]
+  },
+  {
+    "name": "CodeDeploy",
+    "status": "Degraded",
+    "description": "Automates application deployments to any instance.",
+    "backend": "Simulates deployment states, error codes, and rollback metrics.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["DeploymentCount", "FailedDeployments"]
+  },
+  {
+    "name": "CloudFormation",
+    "status": "Healthy",
+    "description": "Infrastructure as Code — manage AWS resources with templates.",
+    "backend": "Tracks stack creation events and drift detection scans.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["StacksCreated", "DriftDetections"]
+  },
+  {
+    "name": "Route 53",
+    "status": "Healthy",
+    "description": "Domain Name System — reliable global routing.",
+    "backend": "Monitors DNS propagation latency and zone health.",
+    "region": "Global",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["HealthCheckStatus", "DNSQueryVolume"]
+  },
+  {
+    "name": "Systems Manager",
+    "status": "Degraded",
+    "description": "Operational insights and configuration automation.",
+    "backend": "Simulates patch compliance checks and agent connectivity.",
+    "region": "us-east-1",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["ManagedInstances", "ComplianceScore"]
+  },
+  {
+    "name": "Global Accelerator",
+    "status": "Healthy",
+    "description": "Optimizes network paths for global users.",
+    "backend": "Tracks endpoint availability and traffic routing efficiency.",
+    "region": "Global",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["HealthyEndpoints", "TrafficThroughput"]
+  }
 ]

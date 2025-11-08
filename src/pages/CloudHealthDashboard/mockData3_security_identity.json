@@ -1,8 +1,47 @@
 [
-  { "name": "IAM", "status": "Healthy" },
-  { "name": "Cognito", "status": "Degraded" },
-  { "name": "KMS", "status": "Healthy" },
-  { "name": "GuardDuty", "status": "Healthy" },
-  { "name": "WAF", "status": "Down" },
-  { "name": "Shield", "status": "Healthy" }
+  {
+    "name": "IAM",
+    "status": "Healthy",
+    "description": "Identity and Access Management — secure control of AWS resources.",
+    "backend": "Validates user key rotation, MFA enforcement, and policy compliance.",
+    "region": "Global",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["ActiveKeys", "MFAUsage"]
+  },
+  {
+    "name": "Cognito",
+    "status": "Degraded",
+    "description": "User authentication and identity federation service.",
+    "backend": "Simulates login throughput and user pool availability metrics.",
+    "region": "us-east-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["SignInSuccessRate", "PoolLatency"]
+  },
+  {
+    "name": "KMS",
+    "status": "Healthy",
+    "description": "Key Management Service — manages encryption keys securely.",
+    "backend": "Monitors key usage and rotation schedules.",
+    "region": "us-east-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["KeyUsageCount", "FailedDecrypts"]
+  },
+  {
+    "name": "GuardDuty",
+    "status": "Healthy",
+    "description": "Threat detection and continuous monitoring service.",
+    "backend": "Tracks new findings, anomaly detection, and alert events.",
+    "region": "us-east-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["FindingsCreated", "HighSeverityCount"]
+  },
+  {
+    "name": "WAF",
+    "status": "Down",
+    "description": "Web Application Firewall — filters malicious web traffic.",
+    "backend": "Simulates blocked requests and rule evaluation delays.",
+    "region": "us-east-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["BlockedRequests", "RuleEvaluationTime"]
+  }
 ]

@@ -30,7 +30,7 @@ class projects extends Component {
       <section id="projects">
         <div className="row">
           <div className="twelve columns collapsed">
-            <h1>Check Out Some of My Projects</h1>
+            <h1>Projects</h1>
 
             <div
               id="projects-wrapper"

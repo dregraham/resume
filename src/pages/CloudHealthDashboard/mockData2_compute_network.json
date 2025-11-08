@@ -1,9 +1,47 @@
 [
-  { "name": "EC2", "status": "Degraded" },
-  { "name": "ECS", "status": "Healthy" },
-  { "name": "EKS", "status": "Healthy" },
-  { "name": "S3", "status": "Down" },
-  { "name": "Elastic Load Balancing", "status": "Healthy" },
-  { "name": "VPC", "status": "Healthy" },
-  { "name": "CloudFront", "status": "Degraded" }
+  {
+    "name": "ECS",
+    "status": "Healthy",
+    "description": "Elastic Container Service — managed container orchestration.",
+    "backend": "Checks cluster health, task status, and deployment events.",
+    "region": "us-west-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["RunningTasksCount", "CPUUtilization", "MemoryUtilization"]
+  },
+  {
+    "name": "EKS",
+    "status": "Degraded",
+    "description": "Elastic Kubernetes Service — managed Kubernetes clusters.",
+    "backend": "Simulates node readiness, API server latency, and pod scheduling delays.",
+    "region": "us-west-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["NodeHealth", "APILatency", "PodCount"]
+  },
+  {
+    "name": "CloudFront",
+    "status": "Healthy",
+    "description": "Content Delivery Network — global edge caching service.",
+    "backend": "Monitors cache hit ratio, edge latency, and error response rates.",
+    "region": "Global",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["Requests", "BytesDownloaded", "4xxErrorRate"]
+  },
+  {
+    "name": "Elastic Load Balancing",
+    "status": "Healthy",
+    "description": "Distributes traffic across targets to improve availability.",
+    "backend": "Simulates target group health checks and connection latency.",
+    "region": "us-west-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["HealthyHostCount", "TargetResponseTime"]
+  },
+  {
+    "name": "VPC",
+    "status": "Degraded",
+    "description": "Virtual Private Cloud — isolated network environments.",
+    "backend": "Tests subnet routing, NAT gateway reachability, and network ACL rules.",
+    "region": "us-west-2",
+    "lastChecked": "2025-11-07T14:23:00Z",
+    "metrics": ["PacketLoss", "NetworkLatency"]
+  }
 ]

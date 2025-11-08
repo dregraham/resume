@@ -1,55 +1,58 @@
 import React, { useState } from "react";
-import './CloudDashboard.css';
-import SimpleNav from '../../Components/SimpleNav';
+import "./CloudDashboard.css";
+import SimpleNav from "../../Components/SimpleNav";
+import coreData from "./mockData1_core.json";
+import computeNetworkData from "./mockData2_compute_network.json";
+import securityData from "./mockData3_security_identity.json";
+import databaseData from "./mockData4_database_analytics.json";
+import devopsData from "./mockData5_devops_global.json";
+
 
 export default function CloudHealthDashboard() {
-  // Service definitions with backend details
-  const initialServices = [
-    {
-      name: "EC2",
-      status: "Healthy",
-      description: "Amazon EC2 provides scalable compute capacity in the cloud.",
-      backend: "Lambda (Python/boto3): DescribeInstances, filter by status. Checks for running/stopped instances, scheduled events, and instance health metrics."
-    },
-    {
-      name: "S3",
-      status: "Healthy",
-      description: "Amazon S3 stores and retrieves any amount of data.",
-      backend: "Lambda (Python/boto3): ListBuckets, check bucket status. Monitors bucket accessibility, error rates, and storage metrics."
-    },
-    {
-      name: "DynamoDB",
-      status: "Degraded",
-      description: "Amazon DynamoDB is a NoSQL database.",
-      backend: "Lambda (Python/boto3): ListTables, scan for errors. Tracks table throughput, throttling, and error conditions."
-    },
-    {
-      name: "Lambda",
-      status: "Healthy",
-      description: "AWS Lambda runs code without provisioning servers.",
-      backend: "Lambda (Python/boto3): ListFunctions, check error rates. Monitors invocation errors, concurrency, and function health."
-    },
-    {
-      name: "CloudWatch",
-      status: "Down",
-      description: "Amazon CloudWatch monitors resources and applications.",
-      backend: "Lambda (Python/boto3): GetMetricData, check alarms. Evaluates alarm states, metric anomalies, and alerting."
-    }
-  ];
-
-  const [services, setServices] = useState(initialServices);
+  const [selectedDataset, setSelectedDataset] = useState("core");
+  const [services, setServices] = useState(coreData);
   const [loading, setLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [activeTab, setActiveTab] = useState("overview");
 
-  // Health check simulation
+  const handleDatasetChange = (e) => {
+    const value = e.target.value;
+    setSelectedDataset(value);
+
+    switch (value) {
+      case "core":
+        setServices(coreData);
+        break;
+      case "compute_network":
+        setServices(computeNetworkData);
+        break;
+      case "security_identity":
+        setServices(securityData);
+        break;
+      case "database_analytics":
+        setServices(databaseData);
+        break;
+      case "devops_global":
+        setServices(devopsData);
+        break;
+      default:
+        setServices(coreData);
+        break;
+    }
+  };
+
   const refreshStatus = () => {
     setLoading(true);
     setTimeout(() => {
       const updated = services.map((s) => ({
         ...s,
-        status: ["Healthy", "Degraded", "Down"][Math.floor(Math.random() * 3)]
+        status: ["Healthy", "Degraded", "Down"][Math.floor(Math.random() * 3)],
+        lastChecked: new Date().toISOString()
       }));
       setServices(updated);
       setLoading(false);
+      setLastUpdated(new Date().toLocaleTimeString());
     }, 1000);
   };
 
@@ -57,146 +60,173 @@ export default function CloudHealthDashboard() {
     <>
       <SimpleNav />
       <div style={{ height: 36 }} />
-      <section id="top" className="dashboard-container" style={{ fontFamily: "'opensans-regular', sans-serif", color: '#313131', maxWidth: 1200, margin: '0 auto', padding: '32px 0', background: '#f9fafb', borderRadius: 0 }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '48px', alignItems: 'flex-start' }}>
-          {/* Left column: How This Works */}
-          <div style={{ flex: '1 1 420px', minWidth: 340, maxWidth: 520, display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}>
-            <h2 style={{
-              fontFamily: "'opensans-bold', sans-serif",
-              fontSize: 30,
-              lineHeight: '34px',
-              margin: '0 0 14px 0',
-              letterSpacing: '-1px',
-              color: '#2563eb',
-              textAlign: 'center'
-            }}>How This Works</h2>
-            <div style={{
-              background: '#fff',
-              boxShadow: '0 2px 12px rgba(37,99,235,0.07)',
-              padding: '24px 24px 28px 24px',
-              color: '#222',
-              borderRadius: 0,
-              textAlign: 'left',
-              border: '1.5px solid #e5e7eb',
-              fontFamily: "'opensans-regular', sans-serif",
-              marginBottom: 24
-            }}>
-              <div style={{ color: '#2563eb', fontSize: 17, lineHeight: '26px', fontFamily: "'opensans-regular', sans-serif", marginBottom: 18, fontWeight: 500 }}>
-                This dashboard simulates AWS service health checks using mock <code style={{ color: '#11ABB0', fontWeight: 700 }}>boto3</code> data.<br />
-                <span style={{ color: '#11ABB0', fontWeight: 700 }}>Backend:</span> AWS Lambda (Python/boto3) queries service health and returns JSON.<br />
-                <span style={{ color: '#11ABB0', fontWeight: 700 }}>Frontend:</span> React dashboard rotates service status using mock JSON files. Click <strong>Run Health Check</strong> to update statuses.
+
+      <section id="top" className="dashboard-container">
+        {/* === HOW IT WORKS === */}
+        <div className="section-box info-section">
+          <h2>How This Works</h2>
+          <p>
+            The <strong>Cloud Health Dashboard</strong> simulates an AWS Service
+            Health Console. Each card represents a service, showing region,
+            metrics, and health state. 
+			<br/>
+			Click a card to open an interactive
+            pop-out view with tabs for Overview, Metrics, and Backend Logs.
+          </p>
+
+          {/* Dataset Selector */}
+ <div className="dataset-section">
+  <hr className="dataset-divider" />
+  <div className="dataset-selector">
+    <label htmlFor="dataset-select">Select Dataset:</label>
+    <select
+      id="dataset-select"
+      value={selectedDataset}
+      onChange={handleDatasetChange}
+    >
+      <option value="core">Core Services</option>
+      <option value="compute_network">Compute & Network</option>
+      <option value="security_identity">Security & Identity</option>
+      <option value="database_analytics">Database & Analytics</option>
+      <option value="devops_global">DevOps & Global</option>
+    </select>
+  </div>
+</div>
+
+
+          <div style={{ textAlign: "center", marginTop: "2rem" }}>
+            <button
+              onClick={refreshStatus}
+              disabled={loading}
+              className="refresh-button"
+            >
+              {loading ? "Checking..." : "Run Health Check"}
+            </button>
+          </div>
+
+          {lastUpdated && (
+            <p style={{ textAlign: "center", color: "#555", marginTop: "1rem" }}>
+              Last Updated: {lastUpdated}
+            </p>
+          )}
+        </div>
+
+        {/* === DASHBOARD GRID === */}
+        <div className="dashboard-grid">
+          {services.map((svc, idx) => (
+            <div
+              key={idx}
+              className={`service-card ${svc.status.toLowerCase()}`}
+              onClick={() => {
+                setSelectedService(svc);
+                setActiveTab("overview");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="service-name">
+                <span>{svc.name}</span>
+                <span className="status">{svc.status}</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button
-                  onClick={refreshStatus}
-                  disabled={loading}
-                  className="refresh-button"
-                  style={{
-                    background: 'linear-gradient(90deg, #2563eb 0%, #11ABB0 100%)',
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: 20,
-                    border: 'none',
-                    borderRadius: 6,
-                    padding: '16px 32px',
-                    boxShadow: '0 6px 24px rgba(37,99,235,0.18)',
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    transition: 'background 0.2s, box-shadow 0.2s',
-                    letterSpacing: '1px',
-                    outline: 'none',
-                    textTransform: 'uppercase',
-                    borderBottom: '4px solid #11ABB0',
-                    boxSizing: 'border-box',
-                    filter: loading ? 'grayscale(0.5)' : 'none'
-                  }}
-                >
-                  {loading ? 'Checking...' : 'Run Health Check'}
-                </button>
+              <p>{svc.description}</p>
+              <div className="backend">
+                <strong>Region:</strong> {svc.region}
+                <br />
+                <strong>Metrics:</strong>{" "}
+                {svc.metrics && svc.metrics.join(", ")}
               </div>
             </div>
-          </div>
-          {/* Right column: Button and service cards */}
-          <div style={{ flex: '2 1 600px', minWidth: 340, width: '100%', background: 'transparent' }}>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '28px',
-              width: '100%',
-              alignItems: 'stretch',
-              justifyContent: 'center',
-            }}>
-              {services.map((svc, idx) => (
-                <div
-                  key={idx}
-                  className={`service-card-modern ${svc.status.toLowerCase()}`}
-                  style={{
-                    background: '#fff',
-                    border: '1.5px solid #e5e7eb',
-                    borderTop: `5px solid ${svc.status === 'Healthy' ? '#11ABB0' : svc.status === 'Degraded' ? '#eab308' : '#ef4444'}`,
-                    borderRadius: 10,
-                    boxShadow: '0 2px 12px rgba(37,99,235,0.07)',
-                    padding: '0 0 18px 0',
-                    minHeight: 180,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'flex-start',
-                    alignItems: 'stretch',
-                    transition: 'box-shadow 0.2s',
-                  }}
+          ))}
+        </div>
+      </section>
+
+      {/* === POP-OUT MODAL WITH TABS === */}
+      {selectedService && (
+        <div
+          className="modal-overlay"
+          onClick={() => setSelectedService(null)}
+        >
+          <div
+            className="modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="modal-close"
+              onClick={() => setSelectedService(null)}
+            >
+              &times;
+            </button>
+
+            <h2>{selectedService.name}</h2>
+            <p
+              className={`status ${selectedService.status.toLowerCase()}`}
+              style={{ fontWeight: "bold", marginBottom: "1rem" }}
+            >
+              {selectedService.status}
+            </p>
+
+            {/* Tab Navigation */}
+            <div className="tab-nav">
+              {["overview", "metrics", "backend"].map((tab) => (
+                <button
+                  key={tab}
+                  className={`tab-button ${
+                    activeTab === tab ? "active" : ""
+                  }`}
+                  onClick={() => setActiveTab(tab)}
                 >
-                  <div style={{
-                    background: 'transparent',
-                    padding: '18px 18px 0 18px',
-                    borderRadius: '10px 10px 0 0',
-                    fontWeight: 700,
-                    fontSize: 18,
-                    color: '#2563eb',
-                    marginBottom: 2,
-                  }}>{svc.name}</div>
-                  <div style={{
-                    fontSize: 14,
-                    color: '#444',
-                    fontWeight: 500,
-                    padding: '0 18px 0 18px',
-                    marginBottom: 8,
-                  }}>{svc.description}</div>
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 10,
-                    padding: '0 18px 0 18px',
-                    marginBottom: 8,
-                  }}>
-                    <span style={{
-                      fontWeight: 700,
-                      color: svc.status === 'Healthy' ? '#11ABB0' : svc.status === 'Degraded' ? '#eab308' : '#ef4444',
-                      fontSize: 15,
-                      letterSpacing: 0.5,
-                      textTransform: 'uppercase',
-                    }}>{svc.status}</span>
-                  </div>
-                  <div style={{
-                    background: '#f3f4f6',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 6,
-                    margin: '0 18px',
-                    padding: '10px 12px',
-                    fontSize: 13,
-                    color: '#222',
-                    fontWeight: 500,
-                    minHeight: 48,
-                  }}>
-                    <span style={{ color: '#2563eb', fontWeight: 700 }}>Health Details:</span><br />
-                    {svc.backend}
-                  </div>
-                </div>
+                  {tab === "overview"
+                    ? "Overview"
+                    : tab === "metrics"
+                    ? "Metrics"
+                    : "Backend Logs"}
+                </button>
               ))}
+            </div>
+
+            {/* Tab Content */}
+            <div className="tab-content">
+              {activeTab === "overview" && (
+                <>
+                  <p>{selectedService.description}</p>
+                  <p>
+                    <strong>Region:</strong> {selectedService.region}
+                  </p>
+                  <p>
+                    <strong>Last Checked:</strong>{" "}
+                    {new Date(
+                      selectedService.lastChecked
+                    ).toLocaleTimeString()}
+                  </p>
+                </>
+              )}
+
+              {activeTab === "metrics" && (
+                <>
+                  <strong>Monitored Metrics:</strong>
+                  <ul>
+                    {selectedService.metrics?.map((m, i) => (
+                      <li key={i}>{m}</li>
+                    ))}
+                  </ul>
+                </>
+              )}
+
+              {activeTab === "backend" && (
+                <>
+                  <strong>Service Insights:</strong>
+                  <p>{selectedService.backend}</p>
+                  <p style={{ marginTop: "1rem", fontSize: "0.9rem" }}>
+                    Simulated Lambda function (boto3) calls this service to
+                    gather performance metrics and alarm states. This mirrors
+                    how AWS CloudWatch and Health APIs monitor regional service
+                    health.
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
-        <div id="bottom"></div>
-      </section>
+      )}
     </>
   );
 }
-										<i className="icon-up-circle"></i>

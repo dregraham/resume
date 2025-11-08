@@ -27,7 +27,7 @@ e. Others
  ------------------------------------------------------------------ */
 /* Custom color for icon-down-circle */
 .icon-down-circle {
-   color: #2563eb !important;
+   color: #700000 !important;
 }
 
 @import url("fonts.css");
@@ -468,7 +468,7 @@ input[type="submit"],
 input[type="reset"],
 input[type="button"] {
    font: 16px/30px 'opensans-bold', sans-serif;
-   background: #11ABB0;
+   background: #000000;
    display: inline-block;
 	text-decoration: none;
    letter-spacing: 0;
