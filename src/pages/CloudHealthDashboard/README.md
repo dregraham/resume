@@ -24,17 +24,24 @@ Users can:
 ---
 
 ## 🧱 Project Structure
+
+```
 src/
 └── pages/
-└── CloudHealthDashboard/
-├── CloudDashboard.css
-├── CloudHealthDashboard.js
-├── mockData1_core.json
-├── mockData2_compute_network.json
-├── mockData3_security_identity.json
-├── mockData4_database_analytics.json
-└── mockData5_devops_global.json
+    └── CloudHealthDashboard/
+        ├── backend/
+        │   ├── lambda_handler.py
+        │   └── requirements.txt
+        ├── CloudDashboard.css
+        ├── CloudHealthDashboard.js
+        ├── README.md
+        ├── mockData1_core.json
+        ├── mockData2_compute_network.json
+        ├── mockData3_security_identity.json
+        ├── mockData4_database_analytics.json
+        └── mockData5_devops_global.json
 
+```
 
 Each `mockDataX.json` file represents a category of AWS services and includes:
 - `status` (Healthy, Degraded, Down)
