@@ -1,4 +1,5 @@
 name: MultiCloud Terraform Deployment
+
 on:
   push:
     branches: [ main ]
@@ -10,22 +11,23 @@ jobs:
     strategy:
       matrix:
         cloud: [aws, azure]
+
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        run: terraform -chdir=infra/${{ matrix.cloud }} init
+        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} init
 
       - name: Terraform Validate
-        run: terraform -chdir=infra/${{ matrix.cloud }} validate
+        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} validate
 
       - name: Terraform Plan
-        run: terraform -chdir=infra/${{ matrix.cloud }} plan -out=tfplan
+        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} plan -out=tfplan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform -chdir=infra/${{ matrix.cloud }} apply -auto-approve tfplan
+        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} apply -auto-approve tfplan
