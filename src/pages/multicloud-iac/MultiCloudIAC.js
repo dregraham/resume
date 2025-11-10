@@ -27,6 +27,13 @@ export default function MultiCloudIAC() {
   const [readmeLoading, setReadmeLoading] = useState(true);
   const [readmeError, setReadmeError] = useState(null);
   const [isReadmeExpanded, setIsReadmeExpanded] = useState(false);
+  const [deploymentStatus, setDeploymentStatus] = useState({
+    aws: false,
+    azure: false
+  });
+  const [hasDeploymentAttempt, setHasDeploymentAttempt] = useState(false);
+
+
 
   // === Fetch README.md dynamically from GitHub (RAW link) ===
   useEffect(() => {
@@ -60,36 +67,66 @@ export default function MultiCloudIAC() {
     setLogs([]);
     setShowOutputs(false);
     setStatus("running");
-
-    const steps =
-      action === "create"
-        ? [
-            "Initializing Terraform...",
-            "Validating configuration...",
-            "Planning changes...",
-            "Applying to AWS and Azure...",
-            "Provisioning EC2 + VM resources...",
-            "Capturing metadata to S3 / Blob...",
-            "Infrastructure deployed successfully.",
-          ]
-        : [
-            "Loading current state...",
-            "Destroying resources...",
-            "Cleaning Terraform state...",
-            "All environments removed.",
-          ];
-
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 700));
-      setLogs((prev) => [...prev, steps[i]]);
-    }
+    setHasDeploymentAttempt(true);
 
     if (action === "create") {
-      setShowOutputs(true);
-      startCountdown(60);
+      // AWS deployment simulation - high success rate for demo
+      const awsSuccess = Math.random() > 0.05; // 95% success rate
+      
+      const steps = [
+        "Initializing Terraform...",
+        "Validating configuration files...",
+        "Planning infrastructure changes...",
+        "Starting AWS deployment...",
+      ];
+
+      // AWS deployment simulation
+      for (let i = 0; i < steps.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setLogs((prev) => [...prev, steps[i]]);
+      }
+
+      if (awsSuccess) {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setLogs((prev) => [...prev, "✓ AWS: VPC and EC2 instance created successfully"]);
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        setLogs((prev) => [...prev, "✓ AWS: S3 metadata uploaded to bucket"]);
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        setLogs((prev) => [...prev, "🎉 AWS infrastructure deployment completed!"]);
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 800));
+        setLogs((prev) => [...prev, "✗ AWS: Deployment failed - insufficient permissions"]);
+      }
+
+      // Update deployment status (only AWS for now)
+      setDeploymentStatus({ aws: awsSuccess, azure: false });
+
+      if (awsSuccess) {
+        setShowOutputs(true);
+        startCountdown(120); // 2 minutes
+      } else {
+        // Show outputs section even on failure to display the failure message
+        setShowOutputs(true);
+      }
     } else {
+      // Destroy sequence
+      const steps = [
+        "Loading current Terraform state...",
+        "Destroying AWS resources...",
+        "Destroying Azure resources...",
+        "Cleaning up Terraform state files...",
+        "All environments removed successfully.",
+      ];
+
+      for (let i = 0; i < steps.length; i++) {
+        await new Promise((resolve) => setTimeout(resolve, 600));
+        setLogs((prev) => [...prev, steps[i]]);
+      }
+
       setTimer(null);
       setShowOutputs(false);
+      setDeploymentStatus({ aws: false, azure: false });
+      setHasDeploymentAttempt(false);
     }
 
     setStatus("idle");
@@ -218,7 +255,7 @@ export default function MultiCloudIAC() {
         </section>
 
         {/* === TERRAFORM SIMULATION === */}
-        <section className="text-white py-24">
+        <section className="text-white py-16">
           <div className="max-w-5xl mx-auto px-6 text-center">
             <h2 className="text-3xl font-semibold mb-4">
               Terraform Lifecycle Simulation
@@ -257,13 +294,20 @@ export default function MultiCloudIAC() {
               )}
             </div>
 
-            {showOutputs && (
-              <div className="mt-10">
-                <CloudOutputs />
-              </div>
-            )}
           </div>
         </section>
+
+        {/* === INFRASTRUCTURE OUTPUTS === */}
+        {showOutputs && (
+          <section className="bg-white py-8" style={{ backgroundColor: "#ffffff" }}>
+            <div className="max-w-5xl mx-auto px-6">
+              <CloudOutputs 
+                deploymentStatus={deploymentStatus} 
+                hasDeploymentAttempt={hasDeploymentAttempt}
+              />
+            </div>
+          </section>
+        )}
 
         {/* === README PREVIEW === */}
         <section className="readme-preview-section">
