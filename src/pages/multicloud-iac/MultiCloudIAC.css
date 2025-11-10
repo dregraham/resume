@@ -1,3 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* existing global styles below */
+
 /* ===============================
 Project: Multi-Cloud Infrastructure as Code Dashboard
    Modern Portfolio Look — White & Black Theme

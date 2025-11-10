@@ -85,12 +85,6 @@
         "category": "A toolkit for analyzing and visualizing log data.",
         "image": "analyze.jpg",
         "url": "/projects/log-analyzer-toolkit"
-      },
-      {
-        "title": "DynamoDB Inventory Manager",
-        "category": "A manager for tracking inventory using DynamoDB.",
-        "image": "coming_soon.jpg",
-        "url": "/projects/dynamodb-inventory-manager"
       }
     ]
   }

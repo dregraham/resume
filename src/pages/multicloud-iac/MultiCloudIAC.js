@@ -146,7 +146,7 @@ export default function MultiCloudIAC() {
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4"
           >
-            Multi-Cloud Infrastructure-as-Code Demo
+            Multi-Cloud IaC Automation (AWS & Azure)
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -267,7 +267,7 @@ export default function MultiCloudIAC() {
 
         {/* === README PREVIEW === */}
         <section className="readme-preview-section">
-          <h3>MultiCloud IaC README Preview</h3>
+          <h3>MultiCloudIAC README Preview</h3>
           <div
             className={`readme-preview-box markdown-body ${
               isReadmeExpanded ? "expanded" : "collapsed"
