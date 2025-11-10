@@ -239,7 +239,10 @@ ul#nav li.current a { color: #df4bf6; }
    padding-bottom: 6px;
 }
 #resume h3 {
-   font: 25px/30px 'opensans-bold', sans-serif;
+   margin-top: 20px;
+   font: 20px/25px 'opensans-bold', sans-serif;
+   text-transform: uppercase;   
+   letter-spacing: 1px ;
 }
 
 #resume .header-col { padding-top: 9px; }
@@ -293,7 +296,7 @@ ul#nav li.current a { color: #df4bf6; }
    margin-bottom: 6px;
 }
 .bars li .skill-header .skill-name {
-   font: 15px 'opensans-bold', sans-serif;
+   font: 10px 'opensans-bold', sans-serif;
    color: #313131;
    text-transform: uppercase;
    letter-spacing: 2px;
@@ -323,7 +326,7 @@ ul#nav li.current a { color: #df4bf6; }
    transition: width .7s cubic-bezier(.4,.0,.2,1);
    display: block;
 }
-/* Provide distinct background hues for different skills via generated classes if present */
+
 .bars li .skill-track .bar-expand.aws { background:#9fc3d3; color:#111; }
 .bars li .skill-track .bar-expand.azure { background:#9d72cc; }
 .bars li .skill-track .bar-expand.gcp { background:#563c5f; }
@@ -425,14 +428,13 @@ ul#nav li.current a { color: #df4bf6; }
    padding-bottom: 60px;
 }
 #projects h1 {
-   font: 80px 'desyrelregular', serif;
+   font: 50px 'desyrelregular', serif;
       letter-spacing: 3px;
       color: #000000;
       margin-bottom: 25px;
       text-align: center;
 }
 
-/* projects Content */
 #projects-wrapper .columns { margin-bottom: 36px; }
 .projects-item .item-wrap {
    background: #fff;
@@ -471,7 +473,7 @@ ul#nav li.current a { color: #df4bf6; }
 }
 .projects-item .item-wrap .link-icon {
    display: block;
-   color: #fff;
+   color: #000000;
    height: 30px;
    width: 30px;
    font-size: 18px;
@@ -499,7 +501,7 @@ ul#nav li.current a { color: #df4bf6; }
 .projects-item .projects-item-meta { padding: 18px }
 .projects-item .projects-item-meta h5 {
    font: 14px/21px 'opensans-bold', sans-serif;
-   color: #fff;
+   color: #000000;
 }
 .projects-item .projects-item-meta p {
    font: 12px/18px 'opensans-light', sans-serif;
