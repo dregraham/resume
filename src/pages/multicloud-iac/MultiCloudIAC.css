@@ -249,7 +249,7 @@ Project: Multi-Cloud Infrastructure as Code Dashboard
 
 /* Service header */
 .service-card .service-name {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #111;
   margin-bottom: 0.5rem;
@@ -262,7 +262,7 @@ Project: Multi-Cloud Infrastructure as Code Dashboard
 .service-card .status {
   font-weight: 700;
   text-transform: uppercase;
-  font-size: 1rem;
+  font-size: 1.25rem;
   letter-spacing: 0.5px;
 }
 
@@ -273,7 +273,7 @@ Project: Multi-Cloud Infrastructure as Code Dashboard
 /* Description text */
 .service-card p {
   color: #333;
-  font-size: 1rem;
+  font-size: 1.25rem;
   line-height: 1.5;
   margin-bottom: 1rem;
 }
@@ -284,7 +284,7 @@ Project: Multi-Cloud Infrastructure as Code Dashboard
   border: 1px solid #111;
   border-radius: 6px;
   padding: 0.75rem 1rem;
-  font-size: 0.85rem;
+  font-size: 1rem;
   color: #222;
   font-weight: 500;
   line-height: 1.4;

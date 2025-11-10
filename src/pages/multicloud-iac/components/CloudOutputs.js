@@ -109,7 +109,9 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
           {
             label: "Logs Bucket",
             value: data.aws.logs_bucket,
-            description: "S3 bucket for metadata"
+            description: "S3 bucket for metadata",
+            isLink: true,
+            linkUrl: AWS_TERRAFORM_OUTPUT_URL
           }
         ]
       });
@@ -197,14 +199,6 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
       padding: 0,
       margin: 0
     }}>
-      <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
-        <h2 style={{ fontSize: "1.5rem", marginBottom: "0.25rem", color: "#1f2937" }}>
-          Infrastructure Deployment Outputs
-        </h2>
-        <p style={{ fontSize: "0.9rem", color: "#6b7280", margin: 0 }}>
-          Live Terraform outputs from AWS infrastructure deployment
-        </p>
-      </div>
       <div
         style={{
           display: "grid",
@@ -226,9 +220,9 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
               minHeight: "300px"
             }}
           >
-            <header style={{ marginBottom: "0.75rem" }}>
+            <div style={{ marginBottom: "0.75rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.25rem" }}>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{cloud.provider}</h3>
+                <div style={{ fontSize: "1.1rem", fontWeight: 600, margin: 0 }}>{cloud.provider}</div>
                 <span style={{
                   display: "inline-block",
                   padding: "0.25rem 0.6rem",
@@ -263,7 +257,7 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
                   Created: {new Date(cloud.lastUpdated).toLocaleString()}
                 </div>
               )}
-            </header>
+            </div>
             <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
               {cloud.items.map((item, index) => (
                 <li key={item.label} style={{ marginBottom: index === cloud.items.length - 1 ? "0" : "0.75rem" }}>
@@ -288,21 +282,81 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
                       {item.description}
                     </span>
                   </div>
-                  <code style={{ 
-                    background: "rgba(15, 23, 42, 0.7)", 
-                    padding: "0.3rem 0.5rem", 
-                    borderRadius: "4px", 
-                    display: "block",
-                    fontSize: "0.8rem",
-                    color: "#10b981",
-                    fontFamily: "'JetBrains Mono', 'Consolas', monospace",
-                    wordBreak: "break-all"
-                  }}>
-                    {item.value}
-                  </code>
+                  {item.isLink ? (
+                    <a 
+                      href={item.linkUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ 
+                        background: "rgba(15, 23, 42, 0.7)", 
+                        padding: "0.3rem 0.5rem", 
+                        borderRadius: "4px", 
+                        display: "block",
+                        fontSize: "0.8rem",
+                        color: "#10b981",
+                        fontFamily: "'Inter', 'JetBrains Mono', 'Consolas', monospace",
+                        wordBreak: "break-all",
+                        textDecoration: "none",
+                        border: "1px solid rgba(16, 185, 129, 0.3)",
+                        transition: "all 0.2s ease"
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.background = "rgba(16, 185, 129, 0.2)";
+                        e.target.style.borderColor = "#10b981";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.background = "rgba(15, 23, 42, 0.7)";
+                        e.target.style.borderColor = "rgba(16, 185, 129, 0.3)";
+                      }}
+                    >
+                      {item.value} ↗
+                    </a>
+                  ) : (
+                    <code style={{ 
+                      background: "rgba(15, 23, 42, 0.7)", 
+                      padding: "0.3rem 0.5rem", 
+                      borderRadius: "4px", 
+                      display: "block",
+                      fontSize: "0.8rem",
+                      color: "#10b981",
+                      fontFamily: "'Inter', 'JetBrains Mono', 'Consolas', monospace",
+                      wordBreak: "break-all"
+                    }}>
+                      {item.value}
+                    </code>
+                  )}
                 </li>
               ))}
             </ul>
+            
+            {/* Add inspection link for AWS */}
+            {cloud.provider === "AWS" && (
+              <div style={{ 
+                marginTop: "1rem", 
+                paddingTop: "0.75rem", 
+                borderTop: "1px solid rgba(107, 114, 128, 0.3)"
+              }}>
+                <a
+                  href={AWS_TERRAFORM_OUTPUT_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: "0.8rem",
+                    color: "#10b981",
+                    textDecoration: "none",
+                    fontWeight: 500,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.4rem"
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V12H19V19Z" />
+                  </svg>
+                  View Raw Terraform Output (JSON)
+                </a>
+              </div>
+            )}
           </article>
         ))}
       </div>
