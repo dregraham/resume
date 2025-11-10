@@ -24,3 +24,20 @@ yarn-error.log*
 #.amplify
 #amplify_outputs*
 #amplifyconfiguration*
+
+# Terraform artifacts (DO NOT COMMIT)
+**/.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+crash.log
+
+# Provider plugin directories
+**/registry.terraform.io/
+
+# Local CLI bundles
+awscliv2.zip
+
+# Node / build (existing patterns keep if already present)
+node_modules/
+dist/
