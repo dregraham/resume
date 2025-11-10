@@ -1,0 +1,466 @@
+/* ===============================
+Project: Multi-Cloud Infrastructure as Code Dashboard
+   Modern Portfolio Look — White & Black Theme
+   =============================== */
+
+/* Base container */
+.dashboard-container {
+  background-color: #ffffff;
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  color: #111;
+  font-family: 'opensans-regular', sans-serif;
+}
+
+/* Section titles */
+.dashboard-container h2 {
+  font-size: 4rem;
+  font-weight: 700;
+  margin-bottom: 3rem;
+  color: #111;
+  letter-spacing: -0.5px;
+}
+
+/* Info section (left side) */
+.dashboard-container .info-section {
+  background: #fafafa;
+  border: 1px solid #111;
+  border-radius: 6px;
+  padding: 1.5rem 2rem;
+  text-align: left;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Refresh button */
+.refresh-button {
+  background: #111;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: 2px solid #111;
+  border-radius: 6px;
+  padding: 0.75rem 2rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.refresh-button:hover {
+  background: #fff;
+  color: #111;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* Dashboard grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.readme-preview-section {
+  max-width: 1000px;
+  margin: 3rem auto 5rem auto;
+  padding: 2rem 2rem 2.5rem;
+  background: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  text-align: left;
+}
+
+.readme-preview-section h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #24292f;
+  margin: 0 0 1.5rem 0;
+}
+
+.readme-preview-box {
+  max-height: 340px;
+  overflow: auto;
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  padding: 1.25rem 1.15rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: #24292f;
+  scrollbar-width: thin;
+  border-radius: 6px;
+}
+
+.readme-preview-box.collapsed {
+  max-height: 360px;
+  overflow: hidden;
+  position: relative;
+}
+
+.readme-preview-box.collapsed::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 72px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+  pointer-events: none;
+}
+
+.readme-preview-box.expanded {
+  max-height: none;
+  overflow: visible;
+}
+
+.readme-toggle {
+  background: #24292f;
+  color: #ffffff;
+  border: 1px solid #1b1f23;
+  border-radius: 999px;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.readme-toggle:hover,
+.readme-toggle:focus {
+  background: #1f2328;
+  transform: translateY(-1px);
+}
+
+.readme-preview-box::-webkit-scrollbar { width: 10px; }
+.readme-preview-box::-webkit-scrollbar-track { background: #f6f8fa; }
+.readme-preview-box::-webkit-scrollbar-thumb { background: #d0d7de; border-radius: 6px; }
+.readme-preview-box::-webkit-scrollbar-thumb:hover { background: #b6c2ca; }
+
+.readme-preview-box img { max-width: 100%; height: auto; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.heading-anchor-link {
+  margin-left: 0.35rem;
+  color: #1f6feb;
+  text-decoration: none;
+  visibility: hidden;
+}
+
+.heading-anchor {
+  font-weight: 500;
+}
+
+.markdown-body h1:hover .heading-anchor-link,
+.markdown-body h2:hover .heading-anchor-link,
+.markdown-body h3:hover .heading-anchor-link,
+.markdown-body h4:hover .heading-anchor-link,
+.markdown-body h5:hover .heading-anchor-link,
+.markdown-body h6:hover .heading-anchor-link {
+  visibility: visible;
+}
+
+/* Tech Stack table styling */
+.markdown-body table {
+  background: #161b22;
+  color: #f6f8fa;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(240, 246, 252, 0.16);
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  color: #f6f8fa;
+  border-color: rgba(240, 246, 252, 0.2);
+  background-color: transparent;
+}
+
+.markdown-body table tr {
+  background-color: #161b22;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #1c2129;
+}
+
+.markdown-body table a {
+  color: #79c0ff;
+}
+
+.markdown-body p,
+.markdown-body li {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.markdown-body strong {
+  font-weight: 600;
+}
+
+.readme-preview-link {
+  display: inline-block;
+  padding: 0.75rem 1.25rem;
+  background: #24292f;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+.readme-preview-link:hover, .readme-preview-link:focus {
+  background: #1b1f23;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+}
+/* Service cards */
+.service-card {
+  background: #fff;
+  border: 1.5px solid #111;
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: left;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Service header */
+.service-card .service-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Status indicator */
+.service-card .status {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+}
+
+.service-card.healthy .status { color: #16a34a; }
+.service-card.degraded .status { color: #eab308; }
+.service-card.down .status { color: #dc2626; }
+
+/* Description text */
+.service-card p {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* Backend details */
+.service-card .backend {
+  background: #fafafa;
+  border: 1px solid #111;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #222;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* Optional section containers */
+.section-box {
+  border: 2px solid #111;
+  border-radius: 8px;
+  padding: 2rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 2rem 1rem;
+  }
+
+  .dashboard-container h2 {
+    font-size: 1.5rem;
+  }
+}
+/* ===============================
+   Modal Pop-Out with Tabs
+   =============================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  border: 2px solid #111;
+  border-radius: 10px;
+  max-width: 650px;
+  width: 90%;
+  padding: 2rem;
+  position: relative;
+  text-align: left;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: popIn 0.3s ease;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111;
+  cursor: pointer;
+}
+
+.tab-nav {
+  display: flex;
+  justify-content: space-around;
+  margin: 1.5rem 0 1rem 0;
+  border-bottom: 1px solid #111;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+  border-bottom: 3px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.tab-button:hover {
+  border-color: #ccc;
+}
+
+.tab-button.active {
+  border-color: #111;
+}
+
+.tab-content {
+  padding-top: 0.5rem;
+  color: #222;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===============================
+   Dataset Dropdown Styling
+   =============================== */
+
+.dataset-selector {
+  text-align: center;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dataset-selector label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #111;
+}
+
+.dataset-selector select {
+  font-family: inherit;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #111;
+  background-color: #fff;
+  color: #111;
+  cursor: pointer;
+  min-width: 240px;
+  text-align: center;
+  transition: box-shadow 0.2s ease;
+}
+
+.dataset-selector select:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+/* ===============================
+   Typography & Readability Enhancements
+   =============================== */
+
+/* Center all section titles */
+.dashboard-container h2,
+.modal-content h2 {
+  text-align: center;
+}
+
+/* Slightly larger body text for service details */
+.service-card p,
+.service-card .backend,
+.tab-content p,
+.tab-content ul,
+.modal-content p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: #111;
+}
+
+/* Adjust modal content for readability */
+.modal-content {
+  font-size: 1.05rem;
+}
+
+/* Make metric lists in modal clearer */
+.tab-content ul {
+  list-style-type: disc;
+  margin: 0.75rem 0 0.75rem 1.5rem;
+}
+
+/* Optional: add subtle spacing under section titles */
+.dashboard-container h2 {
+  margin-bottom: 2rem;
+}
+.modal-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+
+/* ===============================
+   End of Cloud Health Dashboard Styles
+   =============================== */
