@@ -4,6 +4,17 @@ Welcome to my **Cloud Engineer Portfolio Repository**.
 This repo contains the source code for my professional projects, portfolio website, and cloud demonstrations — all built to showcase my hands-on experience with **AWS, Azure, Python, and React**.
 
 
+## ⚙️ Terraform Automation
+
+- `.github/workflows/terraform-aws-deploy.yml` lets me run `plan`, `apply`, or `destroy` against `src/pages/multicloud-iac/infra/aws` with remote state and locking.
+- Remote state expects an S3 bucket (versioned and encrypted) and a DynamoDB table with a `LockID` string key; point secrets/variables `TF_STATE_BUCKET` and `TF_LOCK_TABLE` at those names.
+- The workflow reads AWS credentials from repository secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`) and gates destructive runs behind the `aws-terraform` environment for manual approval.
+- From the Actions tab choose **Terraform AWS Deploy**, supply the region/action, approve the environment gate, and the job will handle `terraform init`, plan upload, and the final `apply`/`destroy`.
+- `.github/workflows/terraform-aws-on-demand.yml` is the button-triggered path: it applies Terraform, waits ~2 minutes, then destroys the stack using a per-request state key so multiple demos can run safely in parallel.
+- `aws/terraform-dispatch-lambda/` contains an AWS Lambda helper that the front end calls; it fires a GitHub `repository_dispatch` event with the request ID and state key, keeping PATs off the client.
+- The React page reads `REACT_APP_TERRAFORM_TRIGGER_URL`, optional `REACT_APP_TERRAFORM_TRIGGER_API_KEY`, and `REACT_APP_TERRAFORM_REGION` to reach that Lambda/API Gateway; the Lambda needs `GITHUB_WORKFLOW_TOKEN`, `TF_STATE_BUCKET`, and `TF_LOCK_TABLE` already configured in Actions.
+
+
 ## 📂 Source Code Tour
 
 1. `src/pages/CloudHealthDashboard/CloudHealthDashboard.js` – Full featured React dashboard (mock AWS health console). Pairs with dataset JSON files and dark-theme CSS for status visualization.

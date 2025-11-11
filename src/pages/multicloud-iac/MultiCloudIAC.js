@@ -34,6 +34,10 @@ export default function MultiCloudIAC() {
   });
   const [hasDeploymentAttempt, setHasDeploymentAttempt] = useState(false);
   const [expandedSteps, setExpandedSteps] = useState({});
+  const [apiError, setApiError] = useState(null);
+  const [lastRequestId, setLastRequestId] = useState(null);
+  const [lastStateKey, setLastStateKey] = useState(null);
+  const terraformRegion = process.env.REACT_APP_TERRAFORM_REGION || "us-east-2";
 
 
 
@@ -64,93 +68,201 @@ export default function MultiCloudIAC() {
     };
   }, []);
 
-  // === Terraform simulation logic ===
-  const terraformRun = useCallback(async (action) => {
-    setLogs([]);
-    setShowOutputs(false);
+  const dispatchTerraformWorkflow = useCallback(async ({
+    mode = "provision",
+    requestId,
+    stateKey,
+    region = terraformRegion
+  } = {}) => {
+    const endpoint = process.env.REACT_APP_TERRAFORM_TRIGGER_URL;
+    if (!endpoint) {
+      throw new Error(
+        "Terraform trigger URL is not configured. Set REACT_APP_TERRAFORM_TRIGGER_URL in your environment."
+      );
+    }
+
+    const apiKey = process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY;
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    if (apiKey) {
+      headers["x-api-key"] = apiKey;
+    }
+
+    const generatedId =
+      typeof window !== "undefined" && window.crypto && window.crypto.randomUUID
+        ? window.crypto.randomUUID()
+        : `mc-${Date.now()}`;
+
+    const effectiveRequestId = requestId || generatedId;
+    const effectiveStateKey = stateKey || `multicloud-iac/aws/${effectiveRequestId}.tfstate`;
+
+    let response;
+    try {
+      response = await fetch(endpoint, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          mode,
+          requestId: effectiveRequestId,
+          stateKey: effectiveStateKey,
+          region
+        })
+      });
+    } catch (err) {
+      console.error("Failed to reach Terraform trigger endpoint", err);
+      throw new Error("Unable to reach Terraform trigger endpoint.");
+    }
+
+    if (!response.ok) {
+      let message = `Trigger request failed with status ${response.status}`;
+      try {
+        const errorPayload = await response.json();
+        if (errorPayload && typeof errorPayload.message === "string") {
+          message = errorPayload.message;
+        }
+      } catch (parseErr) {
+        console.warn("Failed to parse trigger error payload", parseErr);
+      }
+      throw new Error(message);
+    }
+
+    const responseText = await response.text();
+    let payload = {};
+    if (responseText) {
+      try {
+        payload = JSON.parse(responseText);
+      } catch (parseErr) {
+        console.warn("Trigger response was not valid JSON", parseErr);
+      }
+    }
+
+    return {
+      requestId: payload.requestId || effectiveRequestId,
+      stateKey: payload.stateKey || effectiveStateKey
+    };
+  }, [terraformRegion]);
+
+  const startCountdown = useCallback((seconds) => setTimer(seconds), []);
+
+  const triggerDestroyWorkflow = useCallback(async (reason = "auto") => {
+    if (!lastRequestId || !lastStateKey) {
+      setLogs((prev) => [
+        ...prev,
+        "No active Terraform environment found. Nothing to destroy."
+      ]);
+      return;
+    }
+
     setStatus("running");
-    setHasDeploymentAttempt(true);
+    setApiError(null);
+    setLogs((prev) => [
+      ...prev,
+      reason === "auto"
+        ? "Auto-destroy timer reached zero. Triggering Terraform destroy..."
+        : "Destroy requested. Dispatching Terraform destroy workflow..."
+    ]);
 
-    if (action === "create") {
-      // AWS deployment simulation - high success rate for demo
-      const awsSuccess = Math.random() > 0.05; // 95% success rate
-      
-      const steps = [
-        "Initializing Terraform...",
-        "Validating configuration files...",
-        "Planning infrastructure changes...",
-        "Starting AWS deployment...",
-      ];
-
-      // AWS deployment simulation
-      for (let i = 0; i < steps.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLogs((prev) => [...prev, steps[i]]);
-      }
-
-      if (awsSuccess) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLogs((prev) => [...prev, "✓ AWS: VPC and EC2 instance created successfully"]);
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLogs((prev) => [...prev, "✓ AWS: S3 metadata uploaded to bucket"]);
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLogs((prev) => [...prev, "🎉 AWS infrastructure deployment completed!"]);
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLogs((prev) => [...prev, "✗ AWS: Deployment failed - insufficient permissions"]);
-      }
-
-      // Update deployment status (only AWS for now)
-      setDeploymentStatus({ aws: awsSuccess, azure: false });
-
-      if (awsSuccess) {
-        setShowOutputs(true);
-        startCountdown(120); // 2 minutes
-      } else {
-        // Show outputs section even on failure to display the failure message
-        setShowOutputs(true);
-      }
-    } else {
-      // Destroy sequence
-      const steps = [
-        "Loading current Terraform state...",
-        "Destroying AWS resources...",
-        "Destroying Azure resources...",
-        "Cleaning up Terraform state files...",
-        "All environments removed successfully.",
-      ];
-
-      for (let i = 0; i < steps.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLogs((prev) => [...prev, steps[i]]);
-      }
-
+    try {
+      await dispatchTerraformWorkflow({
+        mode: "destroy",
+        requestId: lastRequestId,
+        stateKey: lastStateKey,
+        region: terraformRegion
+      });
+      setLogs((prev) => [
+        ...prev,
+        "Terraform destroy workflow dispatched to GitHub Actions."
+      ]);
+    } catch (error) {
+      console.error("Destroy dispatch failed", error);
+      setApiError(error.message);
+      setLogs((prev) => [...prev, "✗ Failed to trigger destroy workflow."]);
+    } finally {
+      setStatus("idle");
       setTimer(null);
       setShowOutputs(false);
       setDeploymentStatus({ aws: false, azure: false });
       setHasDeploymentAttempt(false);
+      setLastRequestId(null);
+      setLastStateKey(null);
+    }
+  }, [dispatchTerraformWorkflow, lastRequestId, lastStateKey, terraformRegion]);
+
+  // === Terraform simulation logic ===
+  const terraformRun = useCallback(async (action) => {
+    if (action !== "create") {
+      return;
     }
 
+    setLogs(["Dispatching Terraform workflow via secure backend..."]);
+    setShowOutputs(false);
+    setStatus("running");
+    setApiError(null);
+    setHasDeploymentAttempt(true);
+
+    let dispatchResult;
+    try {
+      dispatchResult = await dispatchTerraformWorkflow({
+        mode: "provision",
+        region: terraformRegion
+      });
+      setLastRequestId(dispatchResult.requestId);
+      setLastStateKey(dispatchResult.stateKey);
+      setLogs((prev) => [
+        ...prev,
+        `GitHub Actions workflow queued (request ${dispatchResult.requestId}).`,
+        "Terraform will provision resources and automatically destroy them after approximately two minutes."
+      ]);
+    } catch (error) {
+      console.error("Terraform dispatch failed", error);
+      setApiError(error.message);
+      setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
+      setStatus("idle");
+      setDeploymentStatus({ aws: false, azure: false });
+      return;
+    }
+
+    const steps = [
+      "Initializing Terraform...",
+      "Validating configuration files...",
+      "Planning infrastructure changes...",
+      "Starting AWS deployment..."
+    ];
+
+    for (let i = 0; i < steps.length; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      setLogs((prev) => [...prev, steps[i]]);
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    setLogs((prev) => [...prev, "✓ AWS: VPC and EC2 instance created successfully"]);
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    setLogs((prev) => [...prev, "✓ AWS: S3 metadata uploaded to bucket"]);
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    setLogs((prev) => [...prev, "🎉 AWS infrastructure deployment completed!"]);
+
+    setDeploymentStatus({ aws: true, azure: false });
+    setShowOutputs(true);
+    startCountdown(120);
     setStatus("idle");
-  }, []);
+  }, [dispatchTerraformWorkflow, startCountdown, terraformRegion]);
 
   // === Timer countdown ===
   useEffect(() => {
     if (timer === null) return;
     if (timer === 0) {
-      terraformRun("destroy");
+      triggerDestroyWorkflow("auto");
       return;
     }
     const countdown = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
     return () => clearInterval(countdown);
-  }, [timer, terraformRun]);
-
-  const startCountdown = (seconds) => setTimer(seconds);
+  }, [timer, triggerDestroyWorkflow]);
   const handleDestroyClick = () => {
-    setTimer(null);
-    terraformRun("destroy");
+    triggerDestroyWorkflow("manual");
   };
 
   // === Highlight Card (for infrastructure steps) ===
@@ -363,7 +475,7 @@ export default function MultiCloudIAC() {
               </button>
               <button
                 onClick={handleDestroyClick}
-                disabled={status === "running" || (!showOutputs && !timer)}
+                disabled={status === "running" || (!lastRequestId && !timer)}
                 className="bg-rose-500 hover:bg-rose-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
               >
                 {timer !== null
@@ -371,6 +483,17 @@ export default function MultiCloudIAC() {
                   : "Destroy Environment"}
               </button>
             </div>
+
+            {lastRequestId && (
+              <p className="text-emerald-300 text-sm mb-2">
+                Workflow Request ID: <span className="font-mono">{lastRequestId}</span>
+              </p>
+            )}
+            {apiError && (
+              <p className="text-rose-400 text-sm mb-4">
+                {apiError}
+              </p>
+            )}
 
             <div className="bg-black text-green-400 font-inter text-sm p-5 rounded-lg max-w-3xl mx-auto min-h-[180px] overflow-y-auto border border-gray-700 will-change-contents" style={{ fontFamily: 'Inter, monospace' }}>
               {logs.length === 0 ? (
