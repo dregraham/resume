@@ -248,9 +248,6 @@ export default function MultiCloudIAC() {
         {/* === HOW THE INFRASTRUCTURE IS CREATED === */}
         <section className="bg-white py-24">
           <div className="max-w-5xl mx-auto px-6">
-            <h2 className="text-3xl font-semibold text-center text-gray-900 mb-10 font-inter uppercase tracking-wide">
-              How It Works
-            </h2>
             <div className="space-y-6">
               {[
                 {
