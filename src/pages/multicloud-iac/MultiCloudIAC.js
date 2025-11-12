@@ -1,63 +1,3 @@
-
-Fix Create Environment button functionality
-Nov 12
-·
-dregraham/resume
-·
-main
-·
-+17
--4
-
-Archive
-
-Share
-
-Create PR
-
-
-user attachment image
-user attachment image
-I am having trouble with the "Create Environment" button on my multicloudiac.js page at https://dregraham.com/#/projects/multicloud-iac. Here is what happens: 
-
-The page loads and I immediately see the Terraform fetched and  a run "queued". However, it never moves out of this stage and the user only sees "STATUS: QUEUED" with a runid. 
-
-Here is what I want: 
-
-When the Create Environment button is clicked, the terraform creates the environment and waits 2 minutes before it is destroyed (or the user can click the "Destroy Environment" button to escape the "waiting period".). I have included a screenshot of the DeveloperTools and a screenshot of what the UI looks like. Also, when I have DeveloperTools open the page will not reload.
-Copy
-
-Version 1
-
-Version 2
-
-Version 3
-
-Version 4
-Summary
-
-Updated Terraform polling logic to align with backend status names, recognizing applied/destroyed as successful terminal states and clearing timers for other outcomes so the UI advances correctly.
-
-Testing
-
-⚠️ npm test -- --watchAll=false *(fails: Cannot find module 'react-router-dom' from 'src/Components/Projects.js')*
-
-
-File (1)
-
-src/pages/multicloud-iac/MultiCloudIAC.js
-+17
--4
-
-
-
-Diff
-Logs
-
-src/pages/multicloud-iac/MultiCloudIAC.js
-+17
--4
-
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import SimpleNav from "../../Components/SimpleNav";
 import CloudOutputs from "./components/CloudOutputs";
@@ -81,7 +21,6 @@ const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_API_KEY;
 const REQUESTED_CLOUDS = ["aws"];
 const POLL_INTERVAL_MS = 5000;
 const AUTODESTROY_SECONDS = 120;
-const FINAL_STATES = new Set(["succeeded", "failed", "errored", "cancelled", "destroyed"]);
 const FINAL_STATES = new Set([
   "applied",
   "destroyed",
