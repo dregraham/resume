@@ -17,6 +17,7 @@ jobs:
       RUN_ID: ${{ github.event.client_payload.runId }}
       ACTION: ${{ github.event.client_payload.action }}
       CLOUDS: ${{ github.event.client_payload.clouds }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
