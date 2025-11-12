@@ -12,22 +12,16 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-latest
+    env:
+      RUN_TABLE: multicloud_iac_runs
+      AWS_REGION: us-east-2
+      RUN_ID: ${{ github.event.client_payload.runId }}
+      ACTION: ${{ github.event.client_payload.action }}
+      CLOUDS: ${{ github.event.client_payload.clouds }}
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Load Terraform .env
-        run: |
-          echo "Loading .env.terraform variables"
-          export $(grep -v '^#' .env.terraform | xargs -d '\n')
-          echo "RUN_TABLE=$RUN_TABLE" >> $GITHUB_ENV
-          echo "AWS_REGION=$AWS_REGION" >> $GITHUB_ENV
-          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
-          echo "ACTION=$ACTION" >> $GITHUB_ENV
-          echo "CLOUDS=$CLOUDS" >> $GITHUB_ENV
-          echo "Loaded environment:"
-          cat .env.terraform
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -41,61 +35,72 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      # --- Update DynamoDB status to "in_progress"
       - name: Mark run in_progress
         run: |
-          echo "Marking run ${RUN_ID} as in_progress..."
           aws dynamodb update-item \
             --table-name "$RUN_TABLE" \
             --key '{"runId":{"S":"'$RUN_ID'"}}' \
-            --update-expression 'SET #s=:s' \
+            --update-expression 'SET #s = :s' \
             --expression-attribute-names '{"#s":"status"}' \
             --expression-attribute-values '{":s":{"S":"in_progress"}}'
 
+      # --- Terraform Init
       - name: Terraform Init
         working-directory: terraform
         run: terraform init -input=false
 
-      - name: Terraform Plan (apply only)
+      # --- Terraform Plan (apply only)
+      - name: Terraform Plan
         if: env.ACTION == 'apply'
         working-directory: terraform
-        run: terraform plan -input=false -no-color -out=tfplan |& tee ../plan.txt || echo "PLAN_FAILED" >> ../plan.txt
+        run: |
+          terraform plan -input=false -no-color -out=tfplan | tee ../plan.txt || echo "PLAN_FAILED" >> ../plan.txt
 
-      - name: Terraform Apply (apply only)
+      # --- Terraform Apply (apply only)
+      - name: Terraform Apply
         if: env.ACTION == 'apply'
         working-directory: terraform
-        run: terraform apply -input=false -no-color -auto-approve |& tee ../apply.txt || echo "APPLY_FAILED" >> ../apply.txt
+        run: |
+          terraform apply -input=false -no-color -auto-approve | tee ../apply.txt || echo "APPLY_FAILED" >> ../apply.txt
 
-      - name: Terraform Destroy (destroy only)
+      # --- Terraform Destroy (destroy only)
+      - name: Terraform Destroy
         if: env.ACTION == 'destroy'
         working-directory: terraform
-        run: terraform destroy -input=false -no-color -auto-approve |& tee ../destroy.txt || echo "DESTROY_FAILED" >> ../destroy.txt
+        run: |
+          terraform destroy -input=false -no-color -auto-approve | tee ../destroy.txt || echo "DESTROY_FAILED" >> ../destroy.txt
 
+      # --- Determine final status
       - name: Determine final status
         run: |
-          echo "Determining final status..."
           if [ "$ACTION" = "apply" ]; then
-            if grep -q APPLY_FAILED apply.txt; then 
+            if grep -q APPLY_FAILED apply.txt; then
               echo "FINAL_STATUS=failed" >> $GITHUB_ENV
-            else 
+            else
               echo "FINAL_STATUS=applied" >> $GITHUB_ENV
             fi
           else
-            if grep -q DESTROY_FAILED destroy.txt; then 
+            if grep -q DESTROY_FAILED destroy.txt; then
               echo "FINAL_STATUS=failed" >> $GITHUB_ENV
-            else 
+            else
               echo "FINAL_STATUS=destroyed" >> $GITHUB_ENV
             fi
+          fi
 
-      - name: Update final status in DynamoDB
+      # --- Upload logs & final status to DynamoDB
+      - name: Upload logs and final status
         run: |
-          echo "Updating run ${RUN_ID} to final status: ${FINAL_STATUS}"
+          LOG_DATA=$(cat plan.txt apply.txt destroy.txt 2>/dev/null || echo "No logs")
+          TRUNCATED=$(echo "$LOG_DATA" | head -c 380000)
           aws dynamodb update-item \
             --table-name "$RUN_TABLE" \
             --key '{"runId":{"S":"'$RUN_ID'"}}' \
-            --update-expression 'SET #s=:s' \
+            --update-expression 'SET #s = :s, logs = :l' \
             --expression-attribute-names '{"#s":"status"}' \
-            --expression-attribute-values '{":s":{"S":"'$FINAL_STATUS'"}}'
+            --expression-attribute-values '{":s":{"S":"'$FINAL_STATUS'"}, ":l":{"S":"'"${TRUNCATED}"'"}}'
 
+      # --- Mark failure if non-zero exit
       - name: Mark failure on non-zero
         if: failure()
         run: echo "Workflow encountered errors; status recorded."
