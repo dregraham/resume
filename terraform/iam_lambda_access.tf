@@ -23,9 +23,9 @@ resource "aws_iam_policy" "lambda_access" {
           "logs:GetLogEvents"
         ]
         Resource = "arn:aws:logs:us-east-2:895197120905:log-group:/aws/lambda/terraform-dispatch-lambda:*"
-  },
-  # Added permissions for API Gateway stage access logging / delivery setup
-  {
+      },
+      # Added permissions for API Gateway stage access logging / delivery setup
+      {
         Effect = "Allow"
         Action = [
           "logs:CreateLogGroup",
