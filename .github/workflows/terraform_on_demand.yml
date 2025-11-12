@@ -2,7 +2,8 @@ name: Terraform On Demand
 
 on:
   repository_dispatch:
-    types: [terraform_on_demand]
+    types:
+      - terraform_on_demand
 
 permissions:
   contents: read
@@ -11,15 +12,22 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-latest
-    env:
-      RUN_TABLE: multicloud_iac_runs
-      AWS_REGION: us-east-2
-      RUN_ID: ${{ github.event.client_payload.runId }}
-      ACTION: ${{ github.event.client_payload.action }}
-      CLOUDS: ${{ github.event.client_payload.clouds }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Load Terraform .env
+        run: |
+          echo "Loading .env.terraform variables"
+          export $(grep -v '^#' .env.terraform | xargs -d '\n')
+          echo "RUN_TABLE=$RUN_TABLE" >> $GITHUB_ENV
+          echo "AWS_REGION=$AWS_REGION" >> $GITHUB_ENV
+          echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+          echo "ACTION=$ACTION" >> $GITHUB_ENV
+          echo "CLOUDS=$CLOUDS" >> $GITHUB_ENV
+          echo "Loaded environment:"
+          cat .env.terraform
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -35,6 +43,7 @@ jobs:
 
       - name: Mark run in_progress
         run: |
+          echo "Marking run ${RUN_ID} as in_progress..."
           aws dynamodb update-item \
             --table-name "$RUN_TABLE" \
             --key '{"runId":{"S":"'$RUN_ID'"}}' \
@@ -63,35 +72,29 @@ jobs:
 
       - name: Determine final status
         run: |
+          echo "Determining final status..."
           if [ "$ACTION" = "apply" ]; then
-            if grep -q APPLY_FAILED apply.txt; then echo "FINAL_STATUS=failed" >> $GITHUB_ENV; else echo "FINAL_STATUS=applied" >> $GITHUB_ENV; fi
+            if grep -q APPLY_FAILED apply.txt; then 
+              echo "FINAL_STATUS=failed" >> $GITHUB_ENV
+            else 
+              echo "FINAL_STATUS=applied" >> $GITHUB_ENV
+            fi
           else
-            if grep -q DESTROY_FAILED destroy.txt; then echo "FINAL_STATUS=failed" >> $GITHUB_ENV; else echo "FINAL_STATUS=destroyed" >> $GITHUB_ENV; fi
+            if grep -q DESTROY_FAILED destroy.txt; then 
+              echo "FINAL_STATUS=failed" >> $GITHUB_ENV
+            else 
+              echo "FINAL_STATUS=destroyed" >> $GITHUB_ENV
+            fi
 
-      - name: Upload logs and final status
+      - name: Update final status in DynamoDB
         run: |
-          pip install boto3
-          python - <<'PY'
-import os, boto3
-run_id=os.environ['RUN_ID']
-status=os.environ.get('FINAL_STATUS','unknown')
-region=os.environ.get('AWS_REGION','us-east-2')
-table=os.environ['RUN_TABLE']
-parts=[]
-for fname in ['plan.txt','apply.txt','destroy.txt']:
-  if os.path.exists(fname):
-    with open(fname,'r') as f: parts.append(f"===== {fname} =====\n"+f.read())
-logs='\n'.join(parts)
-if len(logs)>380000: logs=logs[:380000]
-client=boto3.client('dynamodb', region_name=region)
-client.update_item(
-  TableName=table,
-  Key={'runId':{'S':run_id}},
-  UpdateExpression='SET #s=:s, logs=:l',
-  ExpressionAttributeNames={'#s':'status'},
-  ExpressionAttributeValues={':s':{'S':status}, ':l':{'S':logs or 'No logs'}}
-)
-PY
+          echo "Updating run ${RUN_ID} to final status: ${FINAL_STATUS}"
+          aws dynamodb update-item \
+            --table-name "$RUN_TABLE" \
+            --key '{"runId":{"S":"'$RUN_ID'"}}' \
+            --update-expression 'SET #s=:s' \
+            --expression-attribute-names '{"#s":"status"}' \
+            --expression-attribute-values '{":s":{"S":"'$FINAL_STATUS'"}}'
 
       - name: Mark failure on non-zero
         if: failure()
