@@ -7,6 +7,7 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
   const [terraformData, setTerraformData] = useState({});
   const [loading, setLoading] = useState(false); // Changed to false initially
   const [error, setError] = useState(null);
+  const [verifyState, setVerifyState] = useState({ status: 'idle', message: '' });
 
   // Component logging for development
   console.log("CloudOutputs rendered with:", { deploymentStatus, terraformData });
@@ -172,6 +173,28 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
   }
 
   const clouds = formatTerraformData(terraformData);
+
+  // Simple reachability probe for public instance IP (best-effort; CORS may block)
+  const probeInstance = async (ip) => {
+    if (!ip) return;
+    setVerifyState({ status: 'verifying', message: 'Probing instance reachability on port 80...' });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    try {
+      // Using fetch with no-cors; response will be opaque if reachable
+  await fetch(`http://${ip}`, { mode: 'no-cors', signal: controller.signal });
+      clearTimeout(timeout);
+      // Opaque response => treat as success since connection established
+      setVerifyState({ status: 'success', message: 'Instance appears reachable (received network response). For full validation, SSH or curl from a terminal).' });
+    } catch (err) {
+      clearTimeout(timeout);
+      if (err.name === 'AbortError') {
+        setVerifyState({ status: 'timeout', message: 'Timeout: Instance did not respond within 5s. It may be booting, security group blocked, or unreachable.' });
+      } else {
+        setVerifyState({ status: 'error', message: `Probe failed: ${err.message}` });
+      }
+    }
+  };
 
   if (clouds.length === 0) {
     return (
@@ -355,6 +378,42 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
                   </svg>
                   View Raw Terraform Output (JSON)
                 </a>
+                {/* Instance reachability validator */}
+                {cloud.items.some(i => i.label === 'Public IP') && (
+                  <div style={{ marginTop: '0.75rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const ipItem = cloud.items.find(i => i.label === 'Public IP');
+                        probeInstance(ipItem?.value);
+                      }}
+                      style={{
+                        background: '#10b981',
+                        color: '#0f172a',
+                        fontSize: '0.7rem',
+                        fontWeight: 600,
+                        padding: '0.45rem 0.75rem',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        letterSpacing: '0.5px'
+                      }}
+                      disabled={verifyState.status === 'verifying'}
+                    >
+                      {verifyState.status === 'verifying' ? 'Probing...' : 'Verify Instance Reachability'}
+                    </button>
+                    {verifyState.status !== 'idle' && (
+                      <div style={{
+                        marginTop: '0.5rem',
+                        fontSize: '0.65rem',
+                        lineHeight: 1.3,
+                        color: verifyState.status === 'success' ? '#10b981' : verifyState.status === 'error' ? '#f87171' : verifyState.status === 'timeout' ? '#fbbf24' : '#94a3b8'
+                      }}>
+                        {verifyState.message}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </article>

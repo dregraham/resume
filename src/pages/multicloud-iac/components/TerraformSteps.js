@@ -3,7 +3,7 @@ import React from "react";
 const steps = [
   {
     title: "1. Provision",
-    description: "Terraform plans and applies infrastructure for AWS S3 + CloudFront and Azure Storage + CDN in parallel workspaces."
+    description: "Terraform plans and applies infrastructure for AWS and Azure in parallel workspaces."
   },
   {
     title: "2. Deploy",

@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import SimpleNav from "../../Components/SimpleNav";
 import CloudOutputs from "./components/CloudOutputs";
 
@@ -11,6 +10,13 @@ import rehypeHighlight from "rehype-highlight";
 import "github-markdown-css";
 import "highlight.js/styles/github.css";
 import "./MultiCloudIAC.css"; // Optional CSS file, same as CloudDashboard.css
+
+const TERRAFORM_ENDPOINT = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod/terraform";
+const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_API_KEY;
+const REQUESTED_CLOUDS = ["aws", "azure"];
+const POLL_INTERVAL_MS = 5000;
+const AUTODESTROY_SECONDS = 120;
+const FINAL_STATES = new Set(["succeeded", "failed", "errored", "cancelled", "destroyed"]);
 
 const getNodeText = (node) => {
   if (!node) return "";
@@ -34,6 +40,11 @@ export default function MultiCloudIAC() {
   });
   const [hasDeploymentAttempt, setHasDeploymentAttempt] = useState(false);
   const [expandedSteps, setExpandedSteps] = useState({});
+  const [currentAction, setCurrentAction] = useState(null);
+  const [apiError, setApiError] = useState(null);
+
+  const pollerRef = useRef(null);
+  const autoDestroyTriggeredRef = useRef(false);
 
 
 
@@ -64,94 +75,170 @@ export default function MultiCloudIAC() {
     };
   }, []);
 
-  // === Terraform simulation logic ===
-  const terraformRun = useCallback(async (action) => {
-    setLogs([]);
-    setShowOutputs(false);
-    setStatus("running");
-    setHasDeploymentAttempt(true);
-
-    if (action === "create") {
-      // AWS deployment simulation - high success rate for demo
-      const awsSuccess = Math.random() > 0.05; // 95% success rate
-      
-      const steps = [
-        "Initializing Terraform...",
-        "Validating configuration files...",
-        "Planning infrastructure changes...",
-        "Starting AWS deployment...",
-      ];
-
-      // AWS deployment simulation
-      for (let i = 0; i < steps.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLogs((prev) => [...prev, steps[i]]);
-      }
-
-      if (awsSuccess) {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLogs((prev) => [...prev, "✓ AWS: VPC and EC2 instance created successfully"]);
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLogs((prev) => [...prev, "✓ AWS: S3 metadata uploaded to bucket"]);
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLogs((prev) => [...prev, "🎉 AWS infrastructure deployment completed!"]);
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setLogs((prev) => [...prev, "✗ AWS: Deployment failed - insufficient permissions"]);
-      }
-
-      // Update deployment status (only AWS for now)
-      setDeploymentStatus({ aws: awsSuccess, azure: false });
-
-      if (awsSuccess) {
-        setShowOutputs(true);
-        startCountdown(120); // 2 minutes
-      } else {
-        // Show outputs section even on failure to display the failure message
-        setShowOutputs(true);
-      }
-    } else {
-      // Destroy sequence
-      const steps = [
-        "Loading current Terraform state...",
-        "Destroying AWS resources...",
-        "Destroying Azure resources...",
-        "Cleaning up Terraform state files...",
-        "All environments removed successfully.",
-      ];
-
-      for (let i = 0; i < steps.length; i++) {
-        await new Promise((resolve) => setTimeout(resolve, 600));
-        setLogs((prev) => [...prev, steps[i]]);
-      }
-
-      setTimer(null);
-      setShowOutputs(false);
-      setDeploymentStatus({ aws: false, azure: false });
-      setHasDeploymentAttempt(false);
+  const stopPolling = useCallback(() => {
+    if (pollerRef.current) {
+      clearInterval(pollerRef.current);
+      pollerRef.current = null;
     }
-
-    setStatus("idle");
   }, []);
+
+  const startPolling = useCallback(
+    (runId, action) => {
+      stopPolling();
+
+      const poll = async () => {
+        try {
+          const headers = TERRAFORM_API_KEY ? { "x-api-key": TERRAFORM_API_KEY } : {};
+          const res = await fetch(`${TERRAFORM_ENDPOINT}?runId=${encodeURIComponent(runId)}`, { headers });
+          if (res.status === 404) return; // run not yet recorded
+          if (!res.ok) throw new Error(`Polling failed (${res.status})`);
+
+          const data = await res.json();
+          if (typeof data.logs === "string") {
+            const lines = data.logs.split(/\r?\n/).filter((line) => line.trim().length > 0);
+            setLogs(lines);
+          }
+
+          if (typeof data.status === "string") {
+            const normalized = data.status.toLowerCase();
+            setStatus(normalized);
+
+            if (normalized === "running" || normalized === "queued") {
+              return;
+            }
+
+            if (FINAL_STATES.has(normalized)) {
+              stopPolling();
+              setCurrentAction(null);
+
+              if (action === "apply" && normalized === "succeeded") {
+                setDeploymentStatus({
+                  aws: REQUESTED_CLOUDS.includes("aws"),
+                  azure: REQUESTED_CLOUDS.includes("azure"),
+                });
+                setShowOutputs(true);
+                setHasDeploymentAttempt(true);
+                autoDestroyTriggeredRef.current = false;
+                setTimer(AUTODESTROY_SECONDS);
+              }
+
+              if (action === "destroy" && (normalized === "succeeded" || normalized === "destroyed")) {
+                setDeploymentStatus({ aws: false, azure: false });
+                setShowOutputs(false);
+                setHasDeploymentAttempt(false);
+                setTimer(null);
+              }
+            }
+          }
+        } catch (err) {
+          console.error("Terraform polling error:", err);
+          setApiError(err.message);
+        }
+      };
+
+      poll();
+      pollerRef.current = setInterval(poll, POLL_INTERVAL_MS);
+    },
+    [stopPolling]
+  );
+
+  const triggerTerraform = useCallback(
+    async (action) => {
+      if (!TERRAFORM_API_KEY) {
+        setApiError("Terraform API key missing. Set REACT_APP_TERRAFORM_API_KEY in your environment.");
+        return;
+      }
+
+      try {
+        setApiError(null);
+        setLogs([]);
+        setCurrentAction(action);
+        setStatus("queued");
+        if (action === "apply") {
+          setShowOutputs(false);
+          setHasDeploymentAttempt(true);
+          setDeploymentStatus({ aws: false, azure: false });
+          autoDestroyTriggeredRef.current = false;
+          setTimer(null);
+        }
+
+        const response = await fetch(TERRAFORM_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-api-key": TERRAFORM_API_KEY,
+          },
+          body: JSON.stringify({
+            action: action === "destroy" ? "destroy" : "apply",
+            clouds: REQUESTED_CLOUDS,
+          }),
+        });
+
+        if (!response.ok) {
+          const message = await response.text();
+          throw new Error(message || `Terraform request failed (${response.status})`);
+        }
+
+        const payload = await response.json();
+        if (!payload.runId) {
+          throw new Error("Dispatcher did not return a runId; cannot monitor Terraform run.");
+        }
+
+        startPolling(payload.runId, action);
+      } catch (err) {
+        console.error("Terraform request error:", err);
+        setStatus("idle");
+        setCurrentAction(null);
+        setApiError(err.message);
+      }
+    },
+    [startPolling]
+  );
 
   // === Timer countdown ===
   useEffect(() => {
     if (timer === null) return;
-    if (timer === 0) {
-      terraformRun("destroy");
+    if (timer <= 0) {
+      setTimer(null);
+      if (!autoDestroyTriggeredRef.current) {
+        autoDestroyTriggeredRef.current = true;
+        triggerTerraform("destroy");
+      }
       return;
     }
+
     const countdown = setInterval(() => {
       setTimer((prev) => (prev > 0 ? prev - 1 : 0));
     }, 1000);
-    return () => clearInterval(countdown);
-  }, [timer, terraformRun]);
 
-  const startCountdown = (seconds) => setTimer(seconds);
-  const handleDestroyClick = () => {
-    setTimer(null);
-    terraformRun("destroy");
+    return () => clearInterval(countdown);
+  }, [timer, triggerTerraform]);
+
+  useEffect(() => {
+    return () => {
+      stopPolling();
+    };
+  }, [stopPolling]);
+
+  const handleCreateClick = () => {
+    if (currentAction && (status === "running" || status === "queued")) return;
+    triggerTerraform("apply");
   };
+
+  const handleDestroyClick = () => {
+    if (currentAction && (status === "running" || status === "queued")) return;
+    autoDestroyTriggeredRef.current = true;
+    setTimer(null);
+    triggerTerraform("destroy");
+  };
+
+  const isBusy = currentAction && (status === "running" || status === "queued");
+  const createButtonLabel = isBusy && currentAction === "apply" ? "Provisioning..." : "Create Environment";
+  const destroyButtonLabel = (() => {
+    if (isBusy && currentAction === "destroy") return "Destroying...";
+    if (timer !== null) return `Destroying in ${timer}s...`;
+    return "Destroy Environment";
+  })();
 
   // === Highlight Card (for infrastructure steps) ===
   const HighlightCard = ({ step, title, text, color, hasCode, codeDetails, expandedDetails }) => {
@@ -355,25 +442,31 @@ export default function MultiCloudIAC() {
 
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <button
-                onClick={() => terraformRun("create")}
-                disabled={status === "running" || timer !== null}
+                onClick={handleCreateClick}
+                disabled={isBusy}
                 className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
               >
-                {status === "running" ? "Running..." : "Create Environment"}
+                {createButtonLabel}
               </button>
               <button
                 onClick={handleDestroyClick}
-                disabled={status === "running" || (!showOutputs && !timer)}
+                disabled={isBusy || (!showOutputs && timer === null)}
                 className="bg-rose-500 hover:bg-rose-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
               >
-                {timer !== null
-                  ? `Destroying in ${timer}s...`
-                  : "Destroy Environment"}
+                {destroyButtonLabel}
               </button>
             </div>
 
             <div className="bg-black text-green-400 font-inter text-sm p-5 rounded-lg max-w-3xl mx-auto min-h-[180px] overflow-y-auto border border-gray-700 will-change-contents" style={{ fontFamily: 'Inter, monospace' }}>
-              {logs.length === 0 ? (
+              {apiError && (
+                <p className="text-red-400 m-0 mb-2">{apiError}</p>
+              )}
+              {status && status !== "idle" && (
+                <p className="text-gray-400 text-xs uppercase tracking-[0.25em] mb-3" style={{ letterSpacing: "0.2em" }}>
+                  Status: {status.toUpperCase()}
+                </p>
+              )}
+              {logs.length === 0 && !apiError ? (
                 <p className="text-gray-500 m-0">
                   Terraform console output will appear here...
                 </p>
