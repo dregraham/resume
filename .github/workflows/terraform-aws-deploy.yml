@@ -93,6 +93,7 @@ jobs:
           path: |
             src/pages/multicloud-iac/infra/aws/tfplan
             src/pages/multicloud-iac/infra/aws/tfplan.txt
+            src/pages/multicloud-iac/infra/aws/lambda_dispatch.zip
 
   apply:
     name: Terraform Apply or Destroy
