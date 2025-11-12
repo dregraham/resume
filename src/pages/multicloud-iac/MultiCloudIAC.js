@@ -11,9 +11,14 @@ import "github-markdown-css";
 import "highlight.js/styles/github.css";
 import "./MultiCloudIAC.css"; // Optional CSS file, same as CloudDashboard.css
 
-const TERRAFORM_ENDPOINT = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod/terraform";
+// Terraform API configuration is driven by environment variables.
+// Ensure your .env contains:
+// REACT_APP_TERRAFORM_API_URL=https://.../prod/terraform
+// REACT_APP_TERRAFORM_API_KEY=YOUR_KEY_VALUE
+// After editing .env you MUST restart the dev server (`npm start`).
+const TERRAFORM_ENDPOINT = process.env.REACT_APP_TERRAFORM_API_URL;
 const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_API_KEY;
-const REQUESTED_CLOUDS = ["aws", "azure"];
+const REQUESTED_CLOUDS = ["aws"];
 const POLL_INTERVAL_MS = 5000;
 const AUTODESTROY_SECONDS = 120;
 const FINAL_STATES = new Set(["succeeded", "failed", "errored", "cancelled", "destroyed"]);
@@ -42,6 +47,7 @@ export default function MultiCloudIAC() {
   const [expandedSteps, setExpandedSteps] = useState({});
   const [currentAction, setCurrentAction] = useState(null);
   const [apiError, setApiError] = useState(null);
+  const [runId, setRunId] = useState(null);
 
   const pollerRef = useRef(null);
   const autoDestroyTriggeredRef = useRef(false);
@@ -144,8 +150,12 @@ export default function MultiCloudIAC() {
 
   const triggerTerraform = useCallback(
     async (action) => {
+      if (!TERRAFORM_ENDPOINT) {
+        setApiError("Terraform API URL missing. Set REACT_APP_TERRAFORM_API_URL in your .env and restart the dev server.");
+        return;
+      }
       if (!TERRAFORM_API_KEY) {
-        setApiError("Terraform API key missing. Set REACT_APP_TERRAFORM_API_KEY in your environment.");
+        setApiError("Terraform API key missing. Set REACT_APP_TERRAFORM_API_KEY in your .env and restart the dev server.");
         return;
       }
 
@@ -168,28 +178,42 @@ export default function MultiCloudIAC() {
             "Content-Type": "application/json",
             "x-api-key": TERRAFORM_API_KEY,
           },
+          // For demo simplicity, always send requested clouds; initial instructions showed single-cloud example:
+          // body: JSON.stringify({ action: "apply", clouds: ["aws"] })
           body: JSON.stringify({
             action: action === "destroy" ? "destroy" : "apply",
             clouds: REQUESTED_CLOUDS,
           }),
         });
-
         if (!response.ok) {
-          const message = await response.text();
-          throw new Error(message || `Terraform request failed (${response.status})`);
+          const raw = await response.text();
+          let hint = "";
+          if (response.status === 403) hint = " (Forbidden: verify API key / Lambda API_KEY env var)";
+          if (response.status === 404) hint = " (Not found: ensure endpoint path /prod/terraform matches)";
+          if (response.status >= 500) hint = " (Server error: check Lambda logs & RUN_TABLE env var)";
+          throw new Error(`${raw || 'Terraform request failed'} [HTTP ${response.status}]${hint}`);
         }
-
-        const payload = await response.json();
+        let payload = {};
+        try {
+          payload = await response.json();
+        } catch (e) {
+          throw new Error("Invalid JSON in dispatcher response");
+        }
         if (!payload.runId) {
           throw new Error("Dispatcher did not return a runId; cannot monitor Terraform run.");
         }
+        setRunId(payload.runId);
 
         startPolling(payload.runId, action);
       } catch (err) {
         console.error("Terraform request error:", err);
         setStatus("idle");
         setCurrentAction(null);
-        setApiError(err.message);
+        if (err instanceof TypeError) {
+          setApiError("Network/CORS error: " + err.message + " (check API gateway CORS + connectivity)");
+        } else {
+          setApiError(err.message);
+        }
       }
     },
     [startPolling]
@@ -457,7 +481,7 @@ export default function MultiCloudIAC() {
               </button>
             </div>
 
-            <div className="bg-black text-green-400 font-inter text-sm p-5 rounded-lg max-w-3xl mx-auto min-h-[180px] overflow-y-auto border border-gray-700 will-change-contents" style={{ fontFamily: 'Inter, monospace' }}>
+            <div className="bg-black text-green-400 font-inter text-sm p-5 rounded-lg max-w-3xl mx-auto min-h-[220px] overflow-y-auto border border-gray-700 will-change-contents" style={{ fontFamily: 'Inter, monospace' }}>
               {apiError && (
                 <p className="text-red-400 m-0 mb-2">{apiError}</p>
               )}
@@ -465,6 +489,9 @@ export default function MultiCloudIAC() {
                 <p className="text-gray-400 text-xs uppercase tracking-[0.25em] mb-3" style={{ letterSpacing: "0.2em" }}>
                   Status: {status.toUpperCase()}
                 </p>
+              )}
+              {runId && (
+                <p className="text-gray-500 text-xs mb-3">Run ID: {runId}</p>
               )}
               {logs.length === 0 && !apiError ? (
                 <p className="text-gray-500 m-0">
