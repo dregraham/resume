@@ -1,0 +1,84 @@
+name: Terraform On Demand
+
+on:
+  repository_dispatch:
+    types: 
+    - terraform_on_demand
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      RUN_TABLE: multicloud_iac_runs
+      AWS_REGION: us-east-2
+      RUN_ID: ${{ github.event.client_payload.runId }}
+      ACTION: ${{ github.event.client_payload.action }}
+      CLOUDS: ${{ github.event.client_payload.clouds }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.5
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Mark run in_progress
+        run: |
+          aws dynamodb update-item \
+            --table-name "$RUN_TABLE" \
+            --key '{"runId":{"S":"'$RUN_ID'"}}' \
+            --update-expression 'SET #s=:s' \
+            --expression-attribute-names '{"#s":"status"}' \
+            --expression-attribute-values '{":s":{"S":"in_progress"}}'
+
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init -input=false
+
+      - name: Terraform Plan (apply only)
+        if: env.ACTION == 'apply'
+        working-directory: terraform
+        run: terraform plan -input=false -no-color -out=tfplan |& tee ../plan.txt || echo "PLAN_FAILED" >> ../plan.txt
+
+      - name: Terraform Apply (apply only)
+        if: env.ACTION == 'apply'
+        working-directory: terraform
+        run: terraform apply -input=false -no-color -auto-approve |& tee ../apply.txt || echo "APPLY_FAILED" >> ../apply.txt
+
+      - name: Terraform Destroy (destroy only)
+        if: env.ACTION == 'destroy'
+        working-directory: terraform
+        run: terraform destroy -input=false -no-color -auto-approve |& tee ../destroy.txt || echo "DESTROY_FAILED" >> ../destroy.txt
+
+      - name: Determine final status
+        run: |
+          if [ "$ACTION" = "apply" ]; then
+            if grep -q APPLY_FAILED apply.txt; then echo "FINAL_STATUS=failed" >> $GITHUB_ENV; else echo "FINAL_STATUS=applied" >> $GITHUB_ENV; fi
+          else
+            if grep -q DESTROY_FAILED destroy.txt; then echo "FINAL_STATUS=failed" >> $GITHUB_ENV; else echo "FINAL_STATUS=destroyed" >> $GITHUB_ENV; fi
+
+      - name: Update final status in DynamoDB
+        run: |
+          aws dynamodb update-item \
+            --table-name "$RUN_TABLE" \
+            --key '{"runId":{"S":"'$RUN_ID'"}}' \
+            --update-expression 'SET #s=:s' \
+            --expression-attribute-names '{"#s":"status"}' \
+            --expression-attribute-values '{":s":{"S":"'$FINAL_STATUS'"}}'
+
+      - name: Mark failure on non-zero
+        if: failure()
+        run: echo "Workflow encountered errors; status recorded."
