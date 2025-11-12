@@ -2,7 +2,8 @@ name: Terraform On Demand
 
 on:
   repository_dispatch:
-    types: [terraform_on_demand]
+    types: 
+    - terraform_on_demand
 
 permissions:
   contents: read
