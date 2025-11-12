@@ -68,30 +68,14 @@ jobs:
           else
             if grep -q DESTROY_FAILED destroy.txt; then echo "FINAL_STATUS=failed" >> $GITHUB_ENV; else echo "FINAL_STATUS=destroyed" >> $GITHUB_ENV; fi
 
-      - name: Upload logs and final status
+      - name: Update final status in DynamoDB
         run: |
-          pip install boto3
-          python - <<'PY'
-import os, boto3
-run_id=os.environ['RUN_ID']
-status=os.environ.get('FINAL_STATUS','unknown')
-region=os.environ.get('AWS_REGION','us-east-2')
-table=os.environ['RUN_TABLE']
-parts=[]
-for fname in ['plan.txt','apply.txt','destroy.txt']:
-  if os.path.exists(fname):
-    with open(fname,'r') as f: parts.append(f"===== {fname} =====\n"+f.read())
-logs='\n'.join(parts)
-if len(logs)>380000: logs=logs[:380000]
-client=boto3.client('dynamodb', region_name=region)
-client.update_item(
-  TableName=table,
-  Key={'runId':{'S':run_id}},
-  UpdateExpression='SET #s=:s, logs=:l',
-  ExpressionAttributeNames={'#s':'status'},
-  ExpressionAttributeValues={':s':{'S':status}, ':l':{'S':logs or 'No logs'}}
-)
-PY
+          aws dynamodb update-item \
+            --table-name "$RUN_TABLE" \
+            --key '{"runId":{"S":"'$RUN_ID'"}}' \
+            --update-expression 'SET #s=:s' \
+            --expression-attribute-names '{"#s":"status"}' \
+            --expression-attribute-values '{":s":{"S":"'$FINAL_STATUS'"}}'
 
       - name: Mark failure on non-zero
         if: failure()
