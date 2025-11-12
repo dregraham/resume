@@ -53,7 +53,91 @@ resource "aws_iam_policy" "lambda_access" {
           "iam:GetUser"
         ]
         Resource = "*"
-  },
+      },
+      # Terraform-specific permissions for GitHub Actions workflow
+      {
+        Sid    = "IAMForTerraform"
+        Effect = "Allow"
+        Action = [
+          # S3 permissions for Terraform backend state storage
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:DeleteObject",
+          "s3:ListBucket",
+          "s3:GetBucketVersioning",
+          # DynamoDB permissions for state locking and run tracking
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem",
+          "dynamodb:DescribeTable",
+          "dynamodb:UpdateItem",
+          # IAM permissions for role management
+          "iam:PassRole",
+          "iam:GetRole",
+          "iam:CreateRole",
+          "iam:DeleteRole",
+          "iam:AttachRolePolicy",
+          "iam:DetachRolePolicy",
+          "iam:PutRolePolicy",
+          "iam:DeleteRolePolicy",
+          "iam:GetRolePolicy",
+          "iam:ListAttachedRolePolicies",
+          "iam:ListRolePolicies",
+          "iam:TagRole",
+          "iam:UntagRole",
+          # Lambda permissions for Terraform resource management
+          "lambda:CreateFunction",
+          "lambda:DeleteFunction",
+          "lambda:UpdateFunctionCode",
+          "lambda:UpdateFunctionConfiguration",
+          "lambda:PublishVersion",
+          "lambda:AddPermission",
+          "lambda:RemovePermission",
+          "lambda:GetPolicy",
+          "lambda:TagResource",
+          "lambda:UntagResource",
+          # API Gateway permissions for Terraform resource management
+          "apigateway:CreateApi",
+          "apigateway:DeleteApi",
+          "apigateway:UpdateApi",
+          "apigateway:TagResource",
+          "apigateway:UntagResource",
+          "apigateway:CreateIntegration",
+          "apigateway:DeleteIntegration",
+          "apigateway:UpdateIntegration",
+          "apigateway:CreateRoute",
+          "apigateway:DeleteRoute",
+          "apigateway:UpdateRoute",
+          "apigateway:CreateStage",
+          "apigateway:DeleteStage",
+          "apigateway:UpdateStage",
+          # DynamoDB table management permissions
+          "dynamodb:CreateTable",
+          "dynamodb:DeleteTable",
+          "dynamodb:UpdateTable",
+          "dynamodb:TagResource",
+          "dynamodb:UntagResource",
+          "dynamodb:ListTables"
+        ]
+        Resource = [
+          # S3 backend bucket and objects
+          "arn:aws:s3:::dre-multicloud-demo-site",
+          "arn:aws:s3:::dre-multicloud-demo-site/*",
+          # DynamoDB state lock table
+          "arn:aws:dynamodb:us-east-2:895197120905:table/terraform-state-locks",
+          # DynamoDB run tracking table
+          "arn:aws:dynamodb:us-east-2:895197120905:table/multicloud_iac_runs",
+          # IAM roles created/managed by Terraform
+          "arn:aws:iam::895197120905:role/terraform-*",
+          # Lambda functions created/managed by Terraform
+          "arn:aws:lambda:us-east-2:895197120905:function:terraform-*",
+          # API Gateway resources
+          "arn:aws:apigateway:us-east-2::/apis/*",
+          "arn:aws:apigateway:us-east-2::/apis/*/integrations/*",
+          "arn:aws:apigateway:us-east-2::/apis/*/routes/*",
+          "arn:aws:apigateway:us-east-2::/apis/*/stages/*"
+        ]
+      }
     ]
   })
 }

@@ -13,11 +13,15 @@ This repository supports triggering real Terraform `apply` or `destroy` runs fro
 - S3 backend bucket (defined in existing `backend.tf`).
 - DynamoDB table for Terraform state locks: `terraform-state-locks`.
 - DynamoDB run tracking table: `multicloud_iac_runs`.
-- IAM principal used by GitHub Actions (`github-terraform-user`) with permissions:
-  - `dynamodb:UpdateItem`, `dynamodb:DescribeTable`, `dynamodb:GetItem`
-  - `s3:*` (restricted to backend bucket ideally: get/put/list)
-  - `iam:PassRole` if Terraform provisions roles
-  - All AWS services your Terraform configuration manages (apigateway, lambda, dynamodb, etc.)
+- IAM principal used by GitHub Actions (`github-terraform-user`) with permissions defined in `terraform/iam_lambda_access.tf`:
+  - The policy includes a statement with Sid `IAMForTerraform` that grants necessary permissions for:
+    - S3 backend state management (bucket: `dre-multicloud-demo-site`)
+    - DynamoDB state locking and run tracking (`terraform-state-locks`, `multicloud_iac_runs`)
+    - IAM role management for Terraform-created roles (pattern: `terraform-*`)
+    - Lambda function management for Terraform-created functions (pattern: `terraform-*`)
+    - API Gateway resource management
+    - DynamoDB table creation and management
+  - See `terraform/iam_lambda_access.tf` for the complete IAM policy specification with explicit Resource ARNs
 
 ## Lambda Environment Variables
 Set these on the dispatch Lambda:
