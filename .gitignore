@@ -42,3 +42,7 @@ awscliv2.zip
 # Node / build (existing patterns keep if already present)
 node_modules/
 dist/
+
+# local terraform variables files
+terraform.tfvars
+*.auto.tfvars
