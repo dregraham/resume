@@ -49,3 +49,11 @@ resource "aws_lambda_function" "dispatch" {
 
   depends_on = [aws_iam_role_policy_attachment.lambda_basic]
 }
+
+data "aws_iam_role" "lambda_exec" {
+  name = "terraform-dispatch-lambda-exec"
+}
+
+data "aws_lambda_function" "dispatch" {
+  function_name = "terraform-dispatch-lambda"
+}

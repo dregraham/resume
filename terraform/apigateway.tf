@@ -29,16 +29,6 @@ resource "aws_apigatewayv2_route" "dispatch_post" {
 }
 
 ###############################################################################
-# Stage only if we create the API
-###############################################################################
-resource "aws_apigatewayv2_stage" "dispatch" {
-  count       = var.existing_api_id == "" ? 1 : 0
-  api_id      = aws_apigatewayv2_api.dispatch[0].id
-  name        = "prod"
-  auto_deploy = true
-}
-
-###############################################################################
 # Lambda permission (always ensure invocation allowed)
 ###############################################################################
 resource "aws_lambda_permission" "dispatch_invoke" {
@@ -51,5 +41,5 @@ resource "aws_lambda_permission" "dispatch_invoke" {
 
 output "dispatch_api_url" {
   description = "Invoke URL for the Terraform dispatch API"
-  value       = "${local.base_invoke_url}/terraform"
+  value       = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod/terraform"
 }
