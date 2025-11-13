@@ -112,12 +112,14 @@ export default function MultiCloudIAC() {
     const effectiveRequestId = requestId || generatedId;
     const effectiveStateKey = stateKey || `multicloud-iac/aws/${effectiveRequestId}.tfstate`;
 
+    // Send the correct event type for terraform-provision
     let response;
     try {
       response = await fetch(endpoint, {
         method: "POST",
         headers,
         body: JSON.stringify({
+          event_type: "terraform-provision",
           mode,
           requestId: effectiveRequestId,
           stateKey: effectiveStateKey,
