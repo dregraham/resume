@@ -11,12 +11,19 @@ import "highlight.js/styles/github.css";
 import "./MultiCloudIAC.css"; // Optional CSS file, same as CloudDashboard.css
 
 // Terraform API configuration is driven by environment variables.
-// Ensure your .env contains:
-// REACT_APP_TERRAFORM_API_URL=https://.../prod/terraform
-// REACT_APP_TERRAFORM_API_KEY=YOUR_KEY_VALUE
-// After editing .env you MUST restart the dev server (`npm start`).
-const TERRAFORM_ENDPOINT = process.env.REACT_APP_TERRAFORM_TRIGGER_URL;
-const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY;
+// Preferred names (update .env accordingly):
+//   REACT_APP_TERRAFORM_TRIGGER_URL=https://.../prod/terraform
+//   REACT_APP_TERRAFORM_TRIGGER_API_KEY=YOUR_KEY_VALUE
+// Backward compatible fallbacks:
+//   REACT_APP_TERRAFORM_API_URL
+//   REACT_APP_TERRAFORM_API_KEY
+// After editing .env you MUST rebuild (`npm run build`) for production.
+const TERRAFORM_ENDPOINT =
+  process.env.REACT_APP_TERRAFORM_TRIGGER_URL ||
+  process.env.REACT_APP_TERRAFORM_API_URL;
+const TERRAFORM_API_KEY =
+  process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY ||
+  process.env.REACT_APP_TERRAFORM_API_KEY;
 const AUTODESTROY_SECONDS = 120;
 
 const getNodeText = (node) => {

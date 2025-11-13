@@ -33,3 +33,9 @@ variable "cors_allow_origin" {
   type        = string
   default     = "*"
 }
+
+variable "existing_api_id" {
+  description = "If set, reuse this existing API Gateway HTTP API instead of creating a new one"
+  type        = string
+  default     = "1c5u47evyg"
+}
