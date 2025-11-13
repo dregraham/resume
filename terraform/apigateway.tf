@@ -2,31 +2,13 @@
 # API Gateway (existing via var.existing_api_id)
 ###############################################################################
 
-data "aws_apigatewayv2_api" "existing" {
-    api_id = var.existing_api_id
-}
-
-resource "aws_apigatewayv2_api" "dispatch" {
-  count         = var.existing_api_id == "" ? 1 : 0
-  name          = "terraform-dispatch-http"
-  protocol_type = "HTTP"
-
-  cors_configuration {
-    allow_methods = ["POST", "OPTIONS"]
-    allow_headers = ["Content-Type", "x-api-key"]
-    allow_origins = [var.cors_allow_origin]
-  }
-}
-
 ###############################################################################
-# Locals unify IDs / invoke URL regardless of path taken
+# Locals for shared API Gateway
 ###############################################################################
 locals {
-  # Use try() to avoid invalid index errors when count = 0 on optional resources
-  dispatch_api_id        = var.existing_api_id != "" ? var.existing_api_id : try(aws_apigatewayv2_api.dispatch[0].id, "")
-  dispatch_execution_arn = var.existing_api_id != "" ? try(data.aws_apigatewayv2_api.existing[0].execution_arn, "") : try(aws_apigatewayv2_api.dispatch[0].execution_arn, "")
-  # For existing API assume stage "prod" already present; we do not manage it if existing_api_id supplied
-  base_invoke_url        = var.existing_api_id != "" ? "${try(data.aws_apigatewayv2_api.existing[0].api_endpoint, "")}/prod" : try(aws_apigatewayv2_stage.dispatch[0].invoke_url, "")
+  dispatch_api_id        = "1c5u47evyg"
+  dispatch_execution_arn = "arn:aws:execute-api:us-east-2:895197120905:1c5u47evyg"
+  base_invoke_url        = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod"
 }
 
 ###############################################################################
