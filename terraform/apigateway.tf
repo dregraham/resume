@@ -23,11 +23,6 @@ resource "aws_apigatewayv2_route" "dispatch_post" {
   target    = "integrations/${aws_apigatewayv2_integration.dispatch.id}"
 }
 
-resource "aws_apigatewayv2_route" "dispatch_options" {
-  api_id    = aws_apigatewayv2_api.dispatch.id
-  route_key = "OPTIONS /terraform"
-  target    = "integrations/${aws_apigatewayv2_integration.dispatch.id}"
-}
 
 resource "aws_apigatewayv2_stage" "dispatch" {
   api_id      = aws_apigatewayv2_api.dispatch.id
