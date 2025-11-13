@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SimpleNav from "../../Components/SimpleNav";
 import CloudOutputs from "./components/CloudOutputs";
 import ReactMarkdown from "react-markdown";
@@ -16,20 +16,8 @@ import "./MultiCloudIAC.css"; // Optional CSS file, same as CloudDashboard.css
 // REACT_APP_TERRAFORM_API_KEY=YOUR_KEY_VALUE
 // After editing .env you MUST restart the dev server (`npm start`).
 const TERRAFORM_ENDPOINT = process.env.REACT_APP_TERRAFORM_TRIGGER_URL;
-const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_API_KEY;
-const REQUESTED_CLOUDS = ["aws"];
-const POLL_INTERVAL_MS = 5000;
+const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY;
 const AUTODESTROY_SECONDS = 120;
-const FINAL_STATES = new Set([
-  "applied",
-  "destroyed",
-  "failed",
-  "errored",
-  "cancelled",
-  "dispatch_failed",
-]);
-const APPLY_SUCCESS_STATES = new Set(["applied"]);
-const DESTROY_SUCCESS_STATES = new Set(["destroyed"]);
 
 const getNodeText = (node) => {
   if (!node) return "";
@@ -93,14 +81,14 @@ export default function MultiCloudIAC() {
     stateKey,
     region = terraformRegion
   } = {}) => {
-    const endpoint = process.env.REACT_APP_TERRAFORM_TRIGGER_URL;
+    const endpoint = TERRAFORM_ENDPOINT;
     if (!endpoint) {
       throw new Error(
         "Terraform trigger URL is not configured. Set REACT_APP_TERRAFORM_TRIGGER_URL in your environment."
       );
     }
 
-    const apiKey = process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY;
+    const apiKey = TERRAFORM_API_KEY;
     const headers = {
       "Content-Type": "application/json"
     };
@@ -264,7 +252,7 @@ export default function MultiCloudIAC() {
 
     setDeploymentStatus({ aws: true, azure: false });
     setShowOutputs(true);
-    startCountdown(120);
+    startCountdown(AUTODESTROY_SECONDS);
     setStatus("idle");
   }, [dispatchTerraformWorkflow, startCountdown, terraformRegion]);
 
