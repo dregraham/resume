@@ -15,7 +15,7 @@ import "./MultiCloudIAC.css"; // Optional CSS file, same as CloudDashboard.css
 // REACT_APP_TERRAFORM_API_URL=https://.../prod/terraform
 // REACT_APP_TERRAFORM_API_KEY=YOUR_KEY_VALUE
 // After editing .env you MUST restart the dev server (`npm start`).
-const TERRAFORM_ENDPOINT = process.env.REACT_APP_TERRAFORM_API_URL;
+const TERRAFORM_ENDPOINT = process.env.REACT_APP_TERRAFORM_TRIGGER_URL;
 const TERRAFORM_API_KEY = process.env.REACT_APP_TERRAFORM_API_KEY;
 const REQUESTED_CLOUDS = ["aws"];
 const POLL_INTERVAL_MS = 5000;
