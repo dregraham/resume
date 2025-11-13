@@ -16,24 +16,10 @@ terraform {
     }
   }
 
-  backend "s3" {}
 }
 
 provider "aws" {
-  region = var.aws_region
+  region = var.default_region
 }
 
-variable "aws_region" {
-  type        = string
-  default     = "us-east-2"
-  description = "AWS region to deploy the ephemeral environment"
-}
 
-data "aws_s3_bucket" "logs" {
-  bucket = "dre-multicloud-demo-site"
-}
-
-output "logs_bucket_name" {
-  value = data.aws_s3_bucket.logs.bucket
-}
-}

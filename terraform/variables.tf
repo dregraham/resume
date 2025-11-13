@@ -1,8 +1,3 @@
-variable "aws_region" {
-  description = "AWS region for shared Terraform infrastructure"
-  type        = string
-  default     = "us-east-2"
-}
 
 variable "github_token" {
   description = "GitHub token with repo + workflow scopes"
