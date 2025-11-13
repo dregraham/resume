@@ -38,6 +38,12 @@ jobs:
         with:
           terraform_version: 1.9.5
 
+      - name: Export Terraform environment
+        run: |
+          echo "TF_STATE_BUCKET=${{ secrets.TF_STATE_BUCKET }}" >> "$GITHUB_ENV"
+          echo "TF_LOCK_TABLE=${{ secrets.TF_LOCK_TABLE }}" >> "$GITHUB_ENV"
+          echo "TF_VAR_github_token=${{ secrets.TF_VAR_GITHUB_TOKEN }}" >> "$GITHUB_ENV"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -64,9 +70,6 @@ jobs:
             -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
             -backend-config="encrypt=true"
         working-directory: ${{ env.TF_WORKDIR }}
-        env:
-          TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
-          TF_LOCK_TABLE: ${{ secrets.TF_LOCK_TABLE }}
 
       - name: Terraform Apply
         if: env.MODE == 'provision'
