@@ -1,10 +1,9 @@
 ###############################################################################
-# API Gateway (create new OR reuse existing via var.existing_api_id)
+# API Gateway (existing via var.existing_api_id)
 ###############################################################################
 
 data "aws_apigatewayv2_api" "existing" {
-  count  = var.existing_api_id != "" ? 1 : 0
-  api_id = var.existing_api_id
+    api_id = var.existing_api_id
 }
 
 resource "aws_apigatewayv2_api" "dispatch" {
