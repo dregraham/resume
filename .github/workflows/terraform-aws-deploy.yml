@@ -119,7 +119,7 @@ jobs:
         run: |
           echo "TF_STATE_BUCKET=${{ secrets.TF_STATE_BUCKET }}" >> "$GITHUB_ENV"
           echo "TF_LOCK_TABLE=${{ secrets.TF_LOCK_TABLE }}" >> "$GITHUB_ENV"
-          echo "TF_VAR_github_token=${{ secrets[inputs.github_token_secret] }}" >> "$GITHUB_ENV"
+          echo "TF_VAR_github_token=${{ secrets.TF_VAR_GITHUB_TOKEN }}" >> "$GITHUB_ENV"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4

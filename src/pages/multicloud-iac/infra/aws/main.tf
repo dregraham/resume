@@ -73,7 +73,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name    = "${local.env_id}-public-subnet" 
+    Name    = "${local.env_id}-public-subnet"
     Project = "MultiCloud-IaC"
     Owner   = "DreGraham"
     EnvId   = local.env_id
