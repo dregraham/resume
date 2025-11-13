@@ -38,7 +38,7 @@ jobs:
     name: Terraform Plan
     runs-on: ubuntu-latest
     env:
-      TF_WORKDIR: src/pages/multicloud-iac/infra/aws
+      TF_WORKDIR: terraform
       TF_VAR_aws_region: ${{ inputs.aws_region }}
       TF_IN_AUTOMATION: 1
     steps:
@@ -71,7 +71,7 @@ jobs:
             -backend-config="region=${{ inputs.aws_region }}" \
             -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
             -backend-config="encrypt=true"
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Terraform Plan
         run: |

@@ -30,45 +30,74 @@ jobs:
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      # Terraform Init
-      - name: Terraform Init
-        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} init
+
+      # Terraform Init (AWS)
+      - name: Terraform Init (AWS)
+        if: matrix.cloud == 'aws'
+        run: terraform -chdir=terraform init
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Terraform Init (Azure)
+      - name: Terraform Init (Azure)
+        if: matrix.cloud == 'azure'
+        run: terraform -chdir=src/pages/multicloud-iac/infra/azure init
+        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      # Terraform Validate
-      - name: Terraform Validate
-        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} validate
+      # Terraform Validate (AWS)
+      - name: Terraform Validate (AWS)
+        if: matrix.cloud == 'aws'
+        run: terraform -chdir=terraform validate
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Terraform Validate (Azure)
+      - name: Terraform Validate (Azure)
+        if: matrix.cloud == 'azure'
+        run: terraform -chdir=src/pages/multicloud-iac/infra/azure validate
+        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      # Terraform Plan
-      - name: Terraform Plan
-        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} plan -out=tfplan
+      # Terraform Plan (AWS)
+      - name: Terraform Plan (AWS)
+        if: matrix.cloud == 'aws'
+        run: terraform -chdir=terraform plan -out=tfplan
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Terraform Plan (Azure)
+      - name: Terraform Plan (Azure)
+        if: matrix.cloud == 'azure'
+        run: terraform -chdir=src/pages/multicloud-iac/infra/azure plan -out=tfplan
+        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
-      # Terraform Outputs
-      - name: Show Terraform Outputs
-        run: terraform -chdir=src/pages/multicloud-iac/infra/${{ matrix.cloud }} output
+      # Terraform Outputs (AWS)
+      - name: Show Terraform Outputs (AWS)
+        if: matrix.cloud == 'aws'
+        run: terraform -chdir=terraform output
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Terraform Outputs (Azure)
+      - name: Show Terraform Outputs (Azure)
+        if: matrix.cloud == 'azure'
+        run: terraform -chdir=src/pages/multicloud-iac/infra/azure output
+        env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}

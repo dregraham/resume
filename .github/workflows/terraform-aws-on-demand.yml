@@ -17,7 +17,7 @@ jobs:
     name: Provision and Teardown
     runs-on: ubuntu-latest
     env:
-      TF_WORKDIR: src/pages/multicloud-iac/infra/aws
+      TF_WORKDIR: terraform
       TF_IN_AUTOMATION: 1
       TF_VAR_aws_region: ${{ github.event.client_payload.aws_region || 'us-east-2' }}
       REQUEST_ID: ${{ github.event.client_payload.request_id || github.run_id }}
@@ -69,24 +69,24 @@ jobs:
             -backend-config="region=${{ github.event.client_payload.aws_region || 'us-east-2' }}" \
             -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
             -backend-config="encrypt=true"
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Terraform Apply
         if: env.MODE == 'provision'
         run: terraform apply -input=false -auto-approve
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Capture outputs
         if: env.MODE == 'provision'
         run: terraform output -json > terraform-outputs.json
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Upload outputs
         if: env.MODE == 'provision'
         uses: actions/upload-artifact@v4
         with:
           name: terraform-outputs-${{ env.REQUEST_ID }}
-          path: src/pages/multicloud-iac/infra/aws/terraform-outputs.json
+          path: terraform/terraform-outputs.json
 
       - name: Wait before destroy
         if: env.MODE == 'provision'
@@ -95,13 +95,13 @@ jobs:
       - name: Terraform Destroy
         if: env.MODE == 'provision'
         run: terraform destroy -input=false -auto-approve
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Terraform Destroy (manual)
         if: env.MODE == 'destroy'
         run: terraform destroy -input=false -auto-approve
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Cleanup plan artifacts
         run: rm -f terraform-outputs.json
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
