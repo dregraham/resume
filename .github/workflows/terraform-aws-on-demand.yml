@@ -48,8 +48,9 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::895197120905:role/TerraformExecutionRole
-          role-session-name: ${{ github.job }}
-          aws-region: ${{ github.event.client_payload.aws_region || 'us-east-2' }}
+          role-session-name: GitHubActions
+          aws-region: us-east-2
+          audience: sts.amazonaws.com
 
       - name: Derive backend key
         run: |
