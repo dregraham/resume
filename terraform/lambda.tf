@@ -19,21 +19,16 @@ data "aws_iam_policy_document" "lambda_assume" {
   }
 }
 
-resource "aws_iam_role" "lambda_exec" {
-  name               = "terraform-dispatch-lambda-exec"
-  assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
-}
 
-resource "aws_iam_role_policy_attachment" "lambda_basic" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+data "aws_iam_role" "github_terraform_user" {
+  name = "github-terraform-user"
 }
 
 resource "aws_lambda_function" "dispatch" {
   function_name    = "terraform-dispatch-lambda"
   handler          = "index.handler"
   runtime          = "nodejs18.x"
-  role             = aws_iam_role.lambda_exec.arn
+  role             = data.aws_iam_role.github_terraform_user.arn
   filename         = data.archive_file.dispatch.output_path
   source_code_hash = data.archive_file.dispatch.output_base64sha256
 
@@ -46,8 +41,6 @@ resource "aws_lambda_function" "dispatch" {
       CORS_ALLOW_ORIGIN     = var.cors_allow_origin
     }
   }
-
-  depends_on = [aws_iam_role_policy_attachment.lambda_basic]
 }
 
 data "aws_iam_role" "lambda_exec" {
