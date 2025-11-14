@@ -1,0 +1,10 @@
+{
+  "name": "terraform-dispatch-lambda",
+  "version": "1.0.0",
+  "description": "Lambda function to dispatch GitHub repository events for Terraform workflows",
+  "main": "index.js",
+  "dependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
