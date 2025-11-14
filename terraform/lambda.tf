@@ -20,15 +20,16 @@ data "aws_iam_policy_document" "lambda_assume" {
 }
 
 
-data "aws_iam_role" "github_terraform_user" {
-  name = "github-terraform-user"
+
+data "aws_iam_role" "terraform_execution_role" {
+  name = "TerraformExecutionRole"
 }
 
 resource "aws_lambda_function" "dispatch" {
   function_name    = "terraform-dispatch-lambda"
   handler          = "index.handler"
   runtime          = "nodejs18.x"
-  role             = data.aws_iam_role.github_terraform_user.arn
+  role             = data.aws_iam_role.terraform_execution_role.arn
   filename         = data.archive_file.dispatch.output_path
   source_code_hash = data.archive_file.dispatch.output_base64sha256
 

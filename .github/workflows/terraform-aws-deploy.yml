@@ -12,7 +12,7 @@ on:
           - plan
           - apply
           - destroy
-      aws_region:
+      default_region:
         description: "AWS region for this run"
         required: true
         default: us-east-2
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TF_WORKDIR: terraform
-      TF_VAR_aws_region: ${{ inputs.aws_region }}
+      TF_VAR_aws_region: ${{ inputs.default_region }}
       TF_IN_AUTOMATION: 1
     steps:
       - name: Checkout repository
@@ -59,16 +59,16 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.aws_region }}
+          role-to-assume: arn:aws:iam::895197120905:role/TerraformExecutionRole
+          role-session-name: ${{ github.job }}
+          aws-region: ${{ inputs.default_region }}
 
       - name: Terraform Init
         run: |
           terraform init -input=false \
             -backend-config="bucket=${TF_STATE_BUCKET}" \
             -backend-config="key=multicloud-iac/aws/terraform.tfstate" \
-            -backend-config="region=${{ inputs.aws_region }}" \
+            -backend-config="region=${{ inputs.default_region }}" \
             -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
             -backend-config="encrypt=true"
         working-directory: terraform
@@ -104,7 +104,7 @@ jobs:
       name: ${{ inputs.environment_name }}
     env:
       TF_WORKDIR: src/pages/multicloud-iac/infra/aws
-      TF_VAR_aws_region: ${{ inputs.aws_region }}
+      TF_VAR_aws_region: ${{ inputs.default_region }}
       TF_IN_AUTOMATION: 1
     steps:
       - name: Checkout repository
@@ -124,16 +124,16 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ inputs.aws_region }}
+          role-to-assume: arn:aws:iam::895197120905:role/TerraformExecutionRole
+          role-session-name: ${{ github.job }}
+          aws-region: ${{ inputs.default_region }}
 
       - name: Terraform Init
         run: |
           terraform init -input=false \
             -backend-config="bucket=${TF_STATE_BUCKET}" \
             -backend-config="key=multicloud-iac/aws/terraform.tfstate" \
-            -backend-config="region=${{ inputs.aws_region }}" \
+            -backend-config="region=${{ inputs.default_region }}" \
             -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
             -backend-config="encrypt=true"
         working-directory: ${{ env.TF_WORKDIR }}
