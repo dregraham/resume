@@ -1,9 +1,9 @@
 {
   "main": {
     "name": "Dre Graham",
-    "description": "Cloud Computing | DevOps | Infrastructure as Code",
+    "description": "Cloud | DevOps | Full-Stack Engineer",
     "image": "profilepic.jpg",
-    "bio": "I’m a Cloud Computing graduate who’s spent the last few years deep in the world of AWS, Azure, and Windows systems. My background in technical support taught me how to dig into complex issues, automate the boring stuff, and keep critical environments running smoothly. I enjoy building and improving cloud setups, writing scripts in Python and PowerShell to save time, and using tools like CloudWatch, Sumo Logic, and Kibana to keep systems transparent and reliable. These days, I’m focused on leveling up in DevOps—bringing automation, observability, and efficiency together to make cloud operations seamless.\n\nWhen I'm not working on cloud projects, you can find me on my bike, hiking with my dogs or traveling with my wife. I'm always eager to connect with fellow tech enthusiasts and explore new opportunities in the cloud computing space.",
+    "bio": "I'm a Cloud, DevOps, and Full-Stack engineer with hands-on experience supporting .NET/SQL applications, troubleshooting API-driven systems, and building automation across AWS and Azure. I love working with C#, React, and cloud services—whether it's designing dashboards, deploying infrastructure as code, or streamlining CI/CD pipelines with GitHub Actions, PowerShell, Python, and Terraform. My background in technical support taught me to dig deep into distributed systems, solve tough problems, and keep environments running smoothly. I thrive on learning new tech, collaborating with others, and modernizing applications into scalable, cloud-native solutions.\n\nOutside of work, you'll find me on my bike, hiking with my dogs, or traveling with my wife. I'm always up for connecting with fellow tech enthusiasts and exploring new opportunities in the cloud space.",
     "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
     "email": "andre.graham709@gmail.com",
     "github": "https://github.com/dregraham",
