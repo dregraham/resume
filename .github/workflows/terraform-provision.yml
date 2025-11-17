@@ -7,7 +7,9 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,7 +38,15 @@ jobs:
       - name: Terraform Plan
         if: github.event.client_payload.terraform_action == 'plan'
         run: terraform plan
-      
+
       - name: Terraform Apply
         if: github.event.client_payload.terraform_action == 'apply'
         run: terraform apply -auto-approve
+
+      - name: Wait 2 minutes before destroy
+        if: github.event.client_payload.terraform_action == 'apply'
+        run: sleep 120
+
+      - name: Destroy VPC, Subnet, EC2 (with delay)
+        if: github.event.client_payload.terraform_action == 'apply'
+        run: terraform destroy -target=aws_instance.main -target=aws_subnet.main -target=aws_vpc.main -target=null_resource.delay_destroy -auto-approve
