@@ -17,7 +17,7 @@ jobs:
     name: Provision and Teardown
     runs-on: ubuntu-latest
     env:
-      TF_WORKDIR: src/pages/multicloud-iac/infra/aws
+      TF_WORKDIR: terraform
       TF_IN_AUTOMATION: 1
       TF_VAR_aws_region: ${{ github.event.client_payload.aws_region || 'us-east-2' }}
       REQUEST_ID: ${{ github.event.client_payload.request_id || github.run_id }}
@@ -38,12 +38,19 @@ jobs:
         with:
           terraform_version: 1.9.5
 
+      - name: Export Terraform environment
+        run: |
+          echo "TF_STATE_BUCKET=${{ secrets.TF_STATE_BUCKET }}" >> "$GITHUB_ENV"
+          echo "TF_LOCK_TABLE=${{ secrets.TF_LOCK_TABLE }}" >> "$GITHUB_ENV"
+          echo "TF_VAR_github_token=${{ secrets.TF_VAR_GITHUB_TOKEN }}" >> "$GITHUB_ENV"
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ github.event.client_payload.aws_region || 'us-east-2' }}
+          role-to-assume: arn:aws:iam::895197120905:role/TerraformExecutionRole
+          role-session-name: GitHubActions
+          aws-region: us-east-2
+          audience: sts.amazonaws.com
 
       - name: Derive backend key
         run: |
@@ -63,27 +70,24 @@ jobs:
             -backend-config="region=${{ github.event.client_payload.aws_region || 'us-east-2' }}" \
             -backend-config="dynamodb_table=${TF_LOCK_TABLE}" \
             -backend-config="encrypt=true"
-        working-directory: ${{ env.TF_WORKDIR }}
-        env:
-          TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
-          TF_LOCK_TABLE: ${{ secrets.TF_LOCK_TABLE }}
+        working-directory: terraform
 
       - name: Terraform Apply
         if: env.MODE == 'provision'
         run: terraform apply -input=false -auto-approve
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Capture outputs
         if: env.MODE == 'provision'
         run: terraform output -json > terraform-outputs.json
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Upload outputs
         if: env.MODE == 'provision'
         uses: actions/upload-artifact@v4
         with:
           name: terraform-outputs-${{ env.REQUEST_ID }}
-          path: src/pages/multicloud-iac/infra/aws/terraform-outputs.json
+          path: terraform/terraform-outputs.json
 
       - name: Wait before destroy
         if: env.MODE == 'provision'
@@ -92,13 +96,13 @@ jobs:
       - name: Terraform Destroy
         if: env.MODE == 'provision'
         run: terraform destroy -input=false -auto-approve
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Terraform Destroy (manual)
         if: env.MODE == 'destroy'
         run: terraform destroy -input=false -auto-approve
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform
 
       - name: Cleanup plan artifacts
         run: rm -f terraform-outputs.json
-        working-directory: ${{ env.TF_WORKDIR }}
+        working-directory: terraform

@@ -1,58 +1,82 @@
+
 # Terraform Dispatch Lambda
 
-This AWS Lambda function exposes a lightweight HTTPS endpoint that triggers the on-demand Terraform workflow in this repository. It emits a `repository_dispatch` event to GitHub, passing the request metadata that the workflow uses to run `terraform apply`, wait, and then run `terraform destroy`.
+This AWS Lambda function acts as a secure HTTPS API endpoint to trigger infrastructure automation workflows in GitHub. When called, it emits a `repository_dispatch` event to GitHub, passing metadata that launches a Terraform workflow (provision or destroy) in the target repository.
 
-## Deployment Overview
+## What Does This Lambda Do?
 
-1. **Create the Lambda function** (Node.js 18 runtime is recommended).
-2. **Upload `index.js`** from this folder as the Lambda handler (`index.handler`).
-3. **Set environment variables**:
-   - `GITHUB_WORKFLOW_TOKEN` – GitHub token (classic PAT or GitHub App installation token) with the `repo` and `workflow` scopes.
-   - `GITHUB_OWNER` – defaults to `dregraham` if omitted.
-   - `GITHUB_REPO` – defaults to `resume` if omitted.
-   - `GITHUB_EVENT_TYPE` – defaults to `terraform-provision`; keep aligned with the workflow trigger.
-   - `DEFAULT_REGION` – default AWS region (matches the Terraform backend).
-   - `CORS_ALLOW_ORIGIN` – optional; set to your web origin (e.g., `https://www.dregraham.com`).
-4. **Secure the function**: attach it to an HTTPS endpoint (API Gateway HTTP API is a simple option). Protect the endpoint with an API key, IAM authorizer, or Cognito depending on your needs.
-5. (Optional) **Add logging/monitoring** via CloudWatch log retention, X-Ray, or custom metrics.
+- Accepts POST requests from your front-end or automation tools.
+- Validates and parses the request body for deployment parameters (region, mode, requestId, stateKey).
+- Emits a `repository_dispatch` event to GitHub, triggering a workflow that provisions or destroys AWS infrastructure using Terraform.
+- Returns a response with the request details for tracking.
 
-## Request/Response Contract
+## How It Works
 
-- **POST body**
-  ```json
-  {
-    "region": "us-east-2",            // optional – overrides DEFAULT_REGION
-    "mode": "provision" | "destroy", // optional (defaults to provision)
-    "requestId": "<uuid>",            // optional – supply to link destroy calls
-    "stateKey": "multicloud-iac/aws/<uuid>.tfstate" // optional – backend key
+1. **API Gateway Integration**: Attach the Lambda to an HTTPS endpoint (API Gateway HTTP API recommended). Secure the endpoint with an API key, IAM, or Cognito.
+2. **Request Handling**: Accepts only POST requests with a JSON body. OPTIONS requests are handled for CORS preflight.
+3. **Dispatch to GitHub**: Uses a GitHub token to send a `repository_dispatch` event to the configured repo and owner.
+4. **Response**: Returns `202 Accepted` with `{ requestId, stateKey, mode, region }`.
+
+## Environment Variables
+
+- `GITHUB_WORKFLOW_TOKEN` – GitHub token (PAT or App token) with `repo` and `workflow` scopes.
+- `GITHUB_OWNER` – GitHub username/org (default: `dregraham`).
+- `GITHUB_REPO` – Repository name (default: `resume`).
+- `GITHUB_EVENT_TYPE` – Event type for dispatch (default: `terraform-provision`).
+- `DEFAULT_REGION` – Default AWS region (default: `us-east-2`).
+- `CORS_ALLOW_ORIGIN` – Allowed origin for CORS (default: `*`).
+
+## Request Format
+
+POST body:
+```json
+{
+  "region": "us-east-2",            // optional, overrides DEFAULT_REGION
+  "mode": "provision" | "destroy", // optional, defaults to provision
+  "requestId": "<uuid>",            // optional, for tracking
+  "stateKey": "multicloud-iac/aws/<uuid>.tfstate" // optional, backend key
+}
+```
+
+## Response Format
+
+Returns HTTP 202 with:
+```json
+{
+  "requestId": "...",
+  "stateKey": "...",
+  "mode": "provision" | "destroy",
+  "region": "us-east-2"
+}
+```
+
+## What Gets Sent to GitHub
+
+Dispatches:
+```json
+{
+  "event_type": "terraform-provision",
+  "client_payload": {
+    "request_id": "...",
+    "aws_region": "...",
+    "mode": "provision" | "destroy",
+    "state_key": "multicloud-iac/aws/..."
   }
-  ```
-- **Response**: `202 Accepted` with `{ requestId, stateKey, mode, region }`.
-- The handler sends `repository_dispatch` with:
-  ```json
-  {
-    "event_type": "terraform-provision",
-    "client_payload": {
-      "request_id": "...",
-      "aws_region": "...",
-      "mode": "provision" | "destroy",
-      "state_key": "multicloud-iac/aws/..."
-    }
-  }
-  ```
+}
+```
 
-## Security Notes
+## Security Best Practices
 
-- Keep the GitHub token secret; prefer storing it in AWS Secrets Manager and referencing it from Lambda.
-- Lock down the API Gateway endpoint (API keys, WAF, throttling) to prevent abuse.
-- Consider adding request validation (e.g., allow-list origins, HMAC signatures) if exposing the endpoint publicly.
+- Store your GitHub token securely (AWS Secrets Manager recommended).
+- Protect the API Gateway endpoint (API keys, WAF, throttling).
+- Validate requests if exposing publicly (origin allow-list, HMAC signatures).
 
 ## Front-End Integration
 
-The React page reads these environment variables:
+Your React front-end should use:
 
 - `REACT_APP_TERRAFORM_TRIGGER_URL` – HTTPS endpoint for this Lambda/API Gateway.
-- `REACT_APP_TERRAFORM_TRIGGER_API_KEY` – optional header (`x-api-key`) if your gateway requires one.
-- `REACT_APP_TERRAFORM_REGION` – overrides the default region included in dispatch payloads.
+- `REACT_APP_TERRAFORM_TRIGGER_API_KEY` – Optional API key header (`x-api-key`).
+- `REACT_APP_TERRAFORM_REGION` – Region override for dispatch payloads.
 
-When a user clicks **Create Environment**, the page hits the trigger URL, receives a request ID, and displays it while the GitHub Actions workflow provisions and tears down the demo environment.
+When a user clicks **Create Environment**, the front-end sends a POST to the Lambda endpoint, receives a request ID, and displays it while the GitHub Actions workflow provisions and destroys the AWS environment.

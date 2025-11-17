@@ -1,37 +1,33 @@
-resource "aws_apigatewayv2_api" "terraform_api" {
-  name          = "TerraformDispatcherAPI"
-  protocol_type = "HTTP"
-
-  # CORS configuration to satisfy browser preflight checks from prod site and GitHub preview domains.
-  # NOTE: GitHub preview domains change; for a looser dev policy temporarily add "*" then tighten before prod.
-  cors_configuration {
-    allow_origins  = ["https://dregraham.com", "https://potential-space-computing-machine-9gjvg5445p4f7pwg-3000.app.github.dev"]
-    allow_methods  = ["OPTIONS", "GET", "POST"]
-    allow_headers  = ["Content-Type", "x-api-key"]
-    max_age        = 86400
-  }
+###############################################################################
+# API Gateway Configuration with CORS Support
+###############################################################################
+locals {
+  dispatch_api_id        = "1c5u47evyg"
+  dispatch_execution_arn = "arn:aws:execute-api:us-east-2:895197120905:1c5u47evyg"
+  base_invoke_url        = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod"
 }
 
-resource "aws_apigatewayv2_integration" "lambda_integration" {
-  api_id                 = aws_apigatewayv2_api.terraform_api.id
-  integration_type       = "AWS_PROXY"
-  # Hard-coded Lambda invoke ARN to avoid needing extra read permissions for data source.
-  integration_uri        = "arn:aws:lambda:us-east-2:895197120905:function:terraform-dispatch-lambda"
-  payload_format_version = "2.0"
+data "aws_apigatewayv2_api" "dispatch" {
+  api_id = local.dispatch_api_id
 }
 
-resource "aws_apigatewayv2_route" "terraform_route" {
-  api_id    = aws_apigatewayv2_api.terraform_api.id
-  route_key = "ANY /terraform"
-  target    = "integrations/${aws_apigatewayv2_integration.lambda_integration.id}"
+# Reference existing routes and integration
+data "aws_apigatewayv2_route" "dispatch_options" {
+  api_id   = local.dispatch_api_id
+  route_id = "v9k66ev"
 }
 
-resource "aws_apigatewayv2_stage" "prod" {
-  api_id      = aws_apigatewayv2_api.terraform_api.id
-  name        = "prod"
-  auto_deploy = true
+data "aws_apigatewayv2_route" "dispatch_post" {
+  api_id   = local.dispatch_api_id
+  route_id = "zht2bvl"
 }
 
-output "terraform_endpoint" {
-  value = "${aws_apigatewayv2_api.terraform_api.api_endpoint}/prod/terraform"
+data "aws_apigatewayv2_integration" "dispatch_lambda" {
+  api_id        = local.dispatch_api_id
+  integration_id = "hqdgn90"
+}
+
+output "dispatch_api_url" {
+  description = "Invoke URL for the Terraform dispatch API"
+  value       = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod/terraform"
 }

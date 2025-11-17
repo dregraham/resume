@@ -1,0 +1,42 @@
+name: Terraform Provision
+
+on:
+  repository_dispatch:
+    types: [terraform-provision]
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-2
+      
+      - name: Extract payload data
+        run: |
+          echo "Environment: ${{ github.event.client_payload.environment }}"
+          echo "Action: ${{ github.event.client_payload.terraform_action }}"
+          echo "Workspace: ${{ github.event.client_payload.workspace }}"
+          echo "Triggered by: ${{ github.event.client_payload.triggered_by }}"
+      
+      - name: Terraform Init
+        run: terraform init
+      
+      - name: Terraform Plan
+        if: github.event.client_payload.terraform_action == 'plan'
+        run: terraform plan
+      
+      - name: Terraform Apply
+        if: github.event.client_payload.terraform_action == 'apply'
+        run: terraform apply -auto-approve

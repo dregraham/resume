@@ -41,23 +41,131 @@ const getNodeText = (node) => {
 };
 
 export default function MultiCloudIAC() {
+    // Story-driven infrastructure steps (narrative format)
+    const infraSteps = [
+      {
+        step: "01",
+        title: "The Vision: Multi-Cloud Automation",
+        text: (
+          <>
+            I set out to build a hands-on demo that could automate infrastructure across AWS and Azure using Terraform, triggered securely from a web UI or code. The goal: a repeatable, secure, and observable workflow.<br />
+            All workflow logic is managed in <a href="https://github.com/dregraham/resume/tree/main/.github/workflows" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>GitHub Actions</a>.
+          </>
+        ),
+        color: "from-orange-400 to-yellow-400",
+        expandedDetails: (
+          <>
+            The first step was designing the folder structure and workflows. All Terraform code lives in dedicated directories for AWS and Azure, and GitHub Actions orchestrate the <a href="https://github.com/dregraham/resume/blob/main/.github/workflows/terraform-aws-deploy.yml" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>build</a>, <a href="https://github.com/dregraham/resume/blob/main/.github/workflows/terraform-aws-deploy.yml" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>plan</a>, and <a href="https://github.com/dregraham/resume/blob/main/.github/workflows/terraform-aws-deploy.yml" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>apply</a> phases. Secrets and OIDC authentication keep everything secure.
+          </>
+        )
+      },
+      {
+        step: "02",
+        title: "Triggering Infrastructure from the Front-End",
+        text: (
+          <>
+            With the front-end wired to the API Gateway, clicking 'Create Environment' sends a secure dispatch to GitHub Actions, which provisions everything you see.<br />
+            The Lambda function logic is in <a href="https://github.com/dregraham/resume/tree/main/aws/terraform-dispatch-lambda" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>terraform-dispatch-lambda</a>.
+          </>
+        ),
+        color: "from-pink-500 to-fuchsia-400",
+        expandedDetails: (
+          <>
+            The API Gateway and Lambda receive the request, validate it, and dispatch a repository event. This event starts the Terraform workflow, passing all needed parameters for region, state, and mode.
+          </>
+        )
+      },
+      {
+        step: "03",
+        title: "Infrastructure as Code",
+        text: (
+          <>
+            Terraform code defines VPCs, EC2 instances, storage, and networking for AWS. All configuration is managed in a single <a href="https://github.com/dregraham/resume/blob/main/terraform/main.tf" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>main.tf</a> file.
+          </>
+        ),
+        color: "from-sky-400 to-cyan-500",
+        expandedDetails: (
+          <>
+            The main.tf file includes resource definitions, variables, and outputs. It sets up everything needed for the demo environment in AWS, including security groups and IAM roles.
+          </>
+        )
+      },
+      {
+        step: "04",
+        title: "Planning & Safety Checks",
+        text: (
+          <>
+            Terraform <a href="https://github.com/dregraham/resume/blob/main/.github/workflows/terraform-aws-deploy.yml" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>plan</a> previews all changes before anything is created or destroyed, ensuring no surprises.
+          </>
+        ),
+        color: "from-indigo-500 to-blue-400",
+        expandedDetails: (
+          <>
+            Remote state is stored in S3, and DynamoDB locks prevent race conditions. The plan phase is a safety net, showing exactly what will be created or destroyed.<br />
+            <a href="https://github.com/dregraham/resume/blob/main/terraform/backend.tf" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>backend.tf</a>
+          </>
+        )
+      },
+      {
+        step: "05",
+        title: "Provisioning Resources Across Clouds",
+        text: (
+          <>
+            Terraform <a href="https://github.com/dregraham/resume/blob/main/.github/workflows/terraform-aws-deploy.yml" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>apply</a> brings the plan to life, creating VPCs, subnets, EC2 instances, and storage in AWS, and parallel resources in Azure.
+          </>
+        ),
+        color: "from-green-400 to-emerald-500",
+        expandedDetails: (
+          <>
+            The workflow updates the state file and exports outputs for monitoring. All resources are tagged and tracked for easy teardown later.
+          </>
+        )
+      },
+      {
+        step: "06",
+        title: "Exporting Metadata for Observability",
+        text: (
+          <>
+            After deployment, Terraform <a href="https://github.com/dregraham/resume/blob/main/terraform/main.tf" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>outputs</a> environment metadata to S3. This data powers the dashboard and enables monitoring.
+          </>
+        ),
+        color: "from-amber-400 to-yellow-300",
+        expandedDetails: (
+          <>
+            Output values include resource IDs, network details, and endpoint URLs. These are stored in cloud storage and surfaced in the web UI for transparency.
+          </>
+        )
+      },
+      {
+        step: "07",
+        title: "Automatic Teardown & Cost Control",
+        text: (
+          <>
+            To keep costs low, the workflow waits two minutes, then triggers <a href="https://github.com/dregraham/resume/blob/main/.github/workflows/terraform-aws-deploy.yml" target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'underline' }}>destroy</a> to tear down all resources. Everything is cleaned up automatically.
+          </>
+        ),
+        color: "from-rose-400 to-red-400",
+        expandedDetails: (
+          <>
+            Lifecycle management ensures no demo resources linger. The destroy phase removes all provisioned resources and updates the state file, leaving a clean slate for the next run.
+          </>
+        )
+      },
+    ];
   const [status, setStatus] = useState("idle");
   const [logs, setLogs] = useState([]);
-  const [showOutputs, setShowOutputs] = useState(false);
+  const [showOutputs] = useState(false); // removed unused setter
   const [timer, setTimer] = useState(null);
   const [readmeMarkdown, setReadmeMarkdown] = useState(null);
   const [readmeLoading, setReadmeLoading] = useState(true);
   const [readmeError, setReadmeError] = useState(null);
   const [isReadmeExpanded, setIsReadmeExpanded] = useState(false);
-  const [deploymentStatus, setDeploymentStatus] = useState({
-    aws: false,
-    azure: false
-  });
-  const [hasDeploymentAttempt, setHasDeploymentAttempt] = useState(false);
+  const [deploymentStatus] = useState({ aws: false, azure: false }); // removed unused setter
+  const [hasDeploymentAttempt] = useState(false); // removed unused setter
   const [expandedSteps, setExpandedSteps] = useState({});
   const [apiError, setApiError] = useState(null);
-  const [lastRequestId, setLastRequestId] = useState(null);
-  const [lastStateKey, setLastStateKey] = useState(null);
+  const [lastRequestId] = useState(null); // removed unused setter
+  const [lastStateKey] = useState(null); // removed unused setter
   const terraformRegion = process.env.REACT_APP_TERRAFORM_REGION || "us-east-2";
 
 
@@ -95,14 +203,14 @@ export default function MultiCloudIAC() {
     stateKey,
     region = terraformRegion
   } = {}) => {
-    const endpoint = process.env.REACT_APP_TERRAFORM_TRIGGER_URL;
+    const endpoint = TERRAFORM_ENDPOINT;
     if (!endpoint) {
       throw new Error(
         "Terraform trigger URL is not configured. Set REACT_APP_TERRAFORM_TRIGGER_URL in your environment."
       );
     }
 
-    const apiKey = process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY;
+    const apiKey = TERRAFORM_API_KEY;
     const headers = {
       "Content-Type": "application/json"
     };
@@ -119,12 +227,14 @@ export default function MultiCloudIAC() {
     const effectiveRequestId = requestId || generatedId;
     const effectiveStateKey = stateKey || `multicloud-iac/aws/${effectiveRequestId}.tfstate`;
 
+    // Send the correct event type for terraform-provision
     let response;
     try {
       response = await fetch(endpoint, {
         method: "POST",
         headers,
         body: JSON.stringify({
+          event_type: "terraform-provision",
           mode,
           requestId: effectiveRequestId,
           stateKey: effectiveStateKey,
@@ -165,7 +275,22 @@ export default function MultiCloudIAC() {
     };
   }, [terraformRegion]);
 
-  const startCountdown = useCallback((seconds) => setTimer(seconds), []);
+  // const startCountdown = useCallback((seconds) => setTimer(seconds), []); // removed unused function
+  // === Terraform simulation logic ===
+  const terraformRun = useCallback(async (action) => {
+    if (action !== "create") return;
+    setStatus("running");
+    setApiError(null);
+    setLogs(["Dispatching Terraform workflow via secure backend..."]);
+    try {
+      await dispatchTerraformWorkflow({ mode: "provision", region: terraformRegion });
+      setLogs((prev) => [...prev, "Terraform workflow dispatched."]);
+    } catch (error) {
+      setApiError(error.message);
+      setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
+    }
+    setStatus("idle");
+  }, [dispatchTerraformWorkflow, terraformRegion]);
 
   const triggerDestroyWorkflow = useCallback(async (reason = "auto") => {
     if (!lastRequestId || !lastStateKey) {
@@ -196,95 +321,22 @@ export default function MultiCloudIAC() {
         ...prev,
         "Terraform destroy workflow dispatched to GitHub Actions."
       ]);
-    } catch (error) {
-      console.error("Destroy dispatch failed", error);
-      setApiError(error.message);
-      setLogs((prev) => [...prev, "✗ Failed to trigger destroy workflow."]);
-    } finally {
-      setStatus("idle");
-      setTimer(null);
-      setShowOutputs(false);
-      setDeploymentStatus({ aws: false, azure: false });
-      setHasDeploymentAttempt(false);
-      setLastRequestId(null);
-      setLastStateKey(null);
-    }
-  }, [dispatchTerraformWorkflow, lastRequestId, lastStateKey, terraformRegion]);
-
-  // === Terraform simulation logic ===
-  const terraformRun = useCallback(async (action) => {
-    if (action !== "create") {
-      return;
-    }
-
-    setLogs(["Dispatching Terraform workflow via secure backend..."]);
-    setShowOutputs(false);
-    setStatus("running");
-    setApiError(null);
-    setHasDeploymentAttempt(true);
-
-    let dispatchResult;
-    try {
-      dispatchResult = await dispatchTerraformWorkflow({
-        mode: "provision",
-        region: terraformRegion
-      });
-      setLastRequestId(dispatchResult.requestId);
-      setLastStateKey(dispatchResult.stateKey);
-      setLogs((prev) => [
-        ...prev,
-        `GitHub Actions workflow queued (request ${dispatchResult.requestId}).`,
-        "Terraform will provision resources and automatically destroy them after approximately two minutes."
-      ]);
-    } catch (error) {
-      console.error("Terraform dispatch failed", error);
-      setApiError(error.message);
-      setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
-      setStatus("idle");
-      setDeploymentStatus({ aws: false, azure: false });
-      return;
-    }
-
-    const steps = [
-      "Initializing Terraform...",
-      "Validating configuration files...",
-      "Planning infrastructure changes...",
-      "Starting AWS deployment..."
-    ];
-
-    for (let i = 0; i < steps.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-      setLogs((prev) => [...prev, steps[i]]);
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    setLogs((prev) => [...prev, "✓ AWS: VPC and EC2 instance created successfully"]);
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setLogs((prev) => [...prev, "✓ AWS: S3 metadata uploaded to bucket"]);
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setLogs((prev) => [...prev, "🎉 AWS infrastructure deployment completed!"]);
-
-    setDeploymentStatus({ aws: true, azure: false });
-    setShowOutputs(true);
-    startCountdown(120);
+  } catch (error) {
+    console.error("Destroy dispatch failed", error);
+    setApiError(error.message || "Failed to dispatch destroy workflow.");
+    setLogs((prev) => [
+      ...prev,
+      "Terraform destroy workflow failed to dispatch."
+    ]);
     setStatus("idle");
-  }, [dispatchTerraformWorkflow, startCountdown, terraformRegion]);
+    return;
+  }
+  setStatus("idle");
+}, [lastRequestId, lastStateKey, terraformRegion, dispatchTerraformWorkflow]);
 
-  // === Timer countdown ===
-  useEffect(() => {
-    if (timer === null) return;
-    if (timer === 0) {
-      triggerDestroyWorkflow("auto");
-      return;
-    }
-    const countdown = setInterval(() => {
-      setTimer((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(countdown);
-  }, [timer, triggerDestroyWorkflow]);
-  const handleDestroyClick = () => {
-    triggerDestroyWorkflow("manual");
-  };
+const handleDestroyClick = () => {
+  triggerDestroyWorkflow("manual");
+};
 
   // === Highlight Card (for infrastructure steps) ===
   const HighlightCard = ({ step, title, text, color, hasCode, codeDetails, expandedDetails }) => {
@@ -382,94 +434,7 @@ export default function MultiCloudIAC() {
         <section className="bg-white py-24">
           <div className="max-w-5xl mx-auto px-6">
             <div className="space-y-6">
-              {[
-                {
-                  step: "01",
-                  title: "Code Commit Triggers Automation",
-                  text: "A developer push to GitHub triggers an automated GitHub Actions workflow orchestrating the entire build sequence.",
-                  color: "from-orange-400 to-yellow-400",
-                  expandedDetails: "GitHub Actions workflows are defined in .github/workflows/ and use OIDC authentication to securely connect to AWS and Azure without storing long-lived credentials. The workflow triggers on pushes to main branch and runs terraform commands in a containerized environment.",
-                  hasCode: false
-                },
-                {
-                  step: "02",
-                  title: "Terraform Initializes the Environment",
-                  text: "Terraform runs 'init' to authenticate securely via IAM roles in GitHub Secrets — no exposed credentials.",
-                  color: "from-pink-500 to-fuchsia-400",
-                  expandedDetails: "The initialization phase downloads required providers (AWS, Azure), configures remote state storage in S3, and establishes secure authentication using GitHub's OIDC provider with short-lived tokens.",
-                  hasCode: false
-                },
-                {
-                  step: "03",
-                  title: "Modules Define Multi-Cloud Resources",
-                  text: "Reusable modules define networks, subnets, and storage across AWS and Azure with parameters for region and scale.",
-                  color: "from-sky-400 to-cyan-500",
-                  expandedDetails: "Infrastructure is defined using HashiCorp Configuration Language (HCL) in modular, reusable components. Each cloud provider has dedicated configuration files that define VPCs, subnets, security groups, compute instances, and storage resources.",
-                  hasCode: true,
-                  codeDetails: [
-                    {
-                      provider: "AWS",
-                      filename: "main.tf",
-                      url: "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/multicloud-iac/infra/aws/main.tf",
-                      description: "Defines VPC, EC2 instance, security groups, and S3 bucket for AWS infrastructure"
-                    },
-                    {
-                      provider: "Azure",
-                      filename: "main.tf", 
-                      url: "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/multicloud-iac/infra/azure/main.tf",
-                      description: "Defines resource group, virtual network, and storage account for Azure infrastructure"
-                    }
-                  ]
-                },
-                {
-                  step: "04",
-                  title: "Plan Phase Validates Configuration",
-                  text: "Terraform performs 'plan' to preview resource creation, modification, or destruction before execution.",
-                  color: "from-indigo-500 to-blue-400",
-                  expandedDetails: "The planning phase analyzes the current state, compares it with desired configuration, and generates an execution plan showing exactly what resources will be created, modified, or destroyed. This provides a safety check before making any actual infrastructure changes.",
-                  hasCode: false
-                },
-                {
-                  step: "05",
-                  title: "Apply Phase Provisions the Infrastructure",
-                  text: "Terraform executes the plan, creating resources across both AWS and Azure in parallel.",
-                  color: "from-green-400 to-emerald-500",
-                  expandedDetails: "During the apply phase, Terraform creates resources in the correct order based on dependencies. It handles parallel creation where possible and manages the resource lifecycle, updating the state file with the actual infrastructure details after successful provisioning.",
-                  hasCode: true,
-                  codeDetails: [
-                    {
-                      provider: "AWS",
-                      filename: "main.tf",
-                      url: "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/multicloud-iac/infra/aws/main.tf",
-                      description: "See resource blocks and dependencies that get provisioned during apply"
-                    }
-                  ]
-                },
-                {
-                  step: "06",
-                  title: "Outputs Export Metadata for Monitoring",
-                  text: "Once deployed, Terraform exports environment metadata to S3 and Azure Blob for observability and metrics.",
-                  color: "from-amber-400 to-yellow-300",
-                  expandedDetails: "Output values are defined in the Terraform configuration and automatically exported after successful deployment. These outputs include resource IDs, network details, and endpoint URLs that are stored in cloud storage for consumption by monitoring systems and this web interface.",
-                  hasCode: true,
-                  codeDetails: [
-                    {
-                      provider: "AWS",
-                      filename: "main.tf (outputs)",
-                      url: "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/multicloud-iac/infra/aws/main.tf",
-                      description: "View the output blocks that generate the JSON metadata displayed in the demo"
-                    }
-                  ]
-                },
-                {
-                  step: "07",
-                  title: "Lifecycle Policies Handle Auto-Destruction",
-                  text: "After a short lifespan (2 minutes in this demo), Terraform 'destroy' tears down resources to prevent costs.",
-                  color: "from-rose-400 to-red-400",
-                  expandedDetails: "Automated lifecycle management ensures demo resources don't accumulate costs. The destroy process removes all provisioned resources in the correct order, handling dependencies and updating the state file to reflect the clean environment.",
-                  hasCode: false
-                },
-              ].map((item, i) => (
+              {infraSteps.map((item, i) => (
                 <HighlightCard key={i} {...item} />
               ))}
             </div>
