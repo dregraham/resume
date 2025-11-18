@@ -304,15 +304,15 @@ export default function MultiCloudIAC() {
         "- EC2 Instance (new)",
         "- API Gateway (existing): 1c5u47evyg"
       ]);
-        // ...existing code...
-        // Render CloudOutputs
-        // Place this where you want CloudOutputs to appear in your JSX
-        {showOutputs && cloudOutputs && (
-          <CloudOutputs data={cloudOutputs} />
-        )}
-        {showOutputs && cloudOutputsError && (
-          <div className="text-red-500">Error loading CloudOutputs: {cloudOutputsError}</div>
-        )}
+      // ...existing code...
+      // Render CloudOutputs
+      // Place this where you want CloudOutputs to appear in your JSX
+      {showOutputs && cloudOutputs && (
+        <CloudOutputs data={cloudOutputs} />
+      )}
+      {showOutputs && cloudOutputsError && (
+        <div className="text-red-500">Error loading CloudOutputs: {cloudOutputsError}</div>
+      )}
       // Start countdown timer (no logs)
       const interval = setInterval(() => {
         setCountdown((prev) => {
@@ -334,7 +334,7 @@ export default function MultiCloudIAC() {
       setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
       setStatus("idle");
     }
-  }, [dispatchTerraformWorkflow, terraformRegion]);
+  }, [dispatchTerraformWorkflow, terraformRegion, cloudOutputs, cloudOutputsError, handleDestroyClick, showOutputs]);
 
   const triggerDestroyWorkflow = useCallback(async (reason = "auto") => {
     if (!lastRequestId || !lastStateKey) {
