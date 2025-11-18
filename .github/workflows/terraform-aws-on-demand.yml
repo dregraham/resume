@@ -2,7 +2,7 @@ name: Terraform AWS On-Demand
 
 on:
   repository_dispatch:
-    types: [terraform-provision]
+    types: [aws-on-demand]
 
 permissions:
   id-token: write
