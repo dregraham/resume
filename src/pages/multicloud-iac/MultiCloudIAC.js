@@ -314,7 +314,6 @@ export default function MultiCloudIAC() {
           return prev - 1;
         });
       }, 1000);
-      setTimer(interval);
     } catch (error) {
       setApiError(error.message);
       setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
