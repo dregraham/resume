@@ -24,6 +24,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-2
+          audience: sts.amazonaws.com
       
       - name: Extract payload data
         run: |
