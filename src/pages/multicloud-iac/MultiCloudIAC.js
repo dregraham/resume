@@ -161,6 +161,20 @@ export default function MultiCloudIAC() {
   const [lastRequestId] = useState(null); // removed unused setter
   const [lastStateKey] = useState(null); // removed unused setter
   const terraformRegion = process.env.REACT_APP_TERRAFORM_REGION || "us-east-2";
+  const [cloudOutputs, setCloudOutputs] = useState(null);
+  const [cloudOutputsError, setCloudOutputsError] = useState(null);
+  // Fetch details.json from API after provisioning
+  useEffect(() => {
+    if (showOutputs) {
+      fetch("/api/cloud-outputs") // Replace with your API endpoint that returns details.json
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to fetch CloudOutputs");
+          return res.json();
+        })
+        .then((data) => setCloudOutputs(data))
+        .catch((err) => setCloudOutputsError(err.message));
+    }
+  }, [showOutputs]);
 
 
 
@@ -290,6 +304,15 @@ export default function MultiCloudIAC() {
         "- EC2 Instance (new)",
         "- API Gateway (existing): 1c5u47evyg"
       ]);
+        // ...existing code...
+        // Render CloudOutputs
+        // Place this where you want CloudOutputs to appear in your JSX
+        {showOutputs && cloudOutputs && (
+          <CloudOutputs data={cloudOutputs} />
+        )}
+        {showOutputs && cloudOutputsError && (
+          <div className="text-red-500">Error loading CloudOutputs: {cloudOutputsError}</div>
+        )}
       // Start countdown timer (no logs)
       const interval = setInterval(() => {
         setCountdown((prev) => {
@@ -496,7 +519,7 @@ const handleDestroyClick = () => {
                 </button>
                 {countdown !== null && (
                   <div style={{ color: '#f87171', marginTop: '0.5rem', fontWeight: 500 }}>
-                    Auto-destroy in {countdown} seconds
+                    {countdown} seconds until auto-destroy
                   </div>
                 )}
               </div>
