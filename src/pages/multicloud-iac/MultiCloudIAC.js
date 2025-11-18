@@ -147,8 +147,9 @@ export default function MultiCloudIAC() {
     ];
   const [status, setStatus] = useState("idle");
   const [logs, setLogs] = useState([]);
-  const [showOutputs] = useState(false); // removed unused setter
+  const [showOutputs, setShowOutputs] = useState(false);
   const [timer, setTimer] = useState(null);
+  const [countdown, setCountdown] = useState(null);
   const [readmeMarkdown, setReadmeMarkdown] = useState(null);
   const [readmeLoading, setReadmeLoading] = useState(true);
   const [readmeError, setReadmeError] = useState(null);
@@ -274,22 +275,49 @@ export default function MultiCloudIAC() {
     if (action !== "create") return;
     setStatus("running");
     setApiError(null);
-    setLogs(["Dispatching Terraform workflow via secure backend..."]);
+    setLogs(["[Provisioning] Dispatching Terraform workflow via secure backend..."]);
     try {
       await dispatchTerraformWorkflow({ mode: "provision", region: terraformRegion });
-      setLogs((prev) => [...prev, "Terraform workflow dispatched."]);
+      setLogs((prev) => [...prev, "[Provisioning] Terraform workflow dispatched."]);
+      setStatus("built");
+      setCountdown(500);
+      setShowOutputs(true);
+      setLogs((prev) => [
+        ...prev,
+        "[Provisioning] Environment created. Resources being provisioned:",
+        "- VPC (new)",
+        "- Subnet (new)",
+        "- EC2 Instance (new)",
+        "- API Gateway (existing): 1c5u47evyg"
+      ]);
+      // Start countdown timer (no logs)
+      const interval = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev === 1) {
+            clearInterval(interval);
+            setLogs((prevLogs) => [...prevLogs, "[Destroy] Auto-destroying environment..."]);
+            handleDestroyClick();
+            setCountdown(null);
+            setStatus("idle");
+            setShowOutputs(false);
+            return null;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      setTimer(interval);
     } catch (error) {
       setApiError(error.message);
       setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
+      setStatus("idle");
     }
-    setStatus("idle");
   }, [dispatchTerraformWorkflow, terraformRegion]);
 
   const triggerDestroyWorkflow = useCallback(async (reason = "auto") => {
     if (!lastRequestId || !lastStateKey) {
       setLogs((prev) => [
         ...prev,
-        "No active Terraform environment found. Nothing to destroy."
+        "[Destroy] No active Terraform environment found. Nothing to destroy."
       ]);
       return;
     }
@@ -299,8 +327,8 @@ export default function MultiCloudIAC() {
     setLogs((prev) => [
       ...prev,
       reason === "auto"
-        ? "Auto-destroy timer reached zero. Triggering Terraform destroy..."
-        : "Destroy requested. Dispatching Terraform destroy workflow..."
+        ? "[Destroy] Auto-destroy timer reached zero. Triggering Terraform destroy..."
+        : "[Destroy] Destroy requested. Dispatching Terraform destroy workflow..."
     ]);
 
     try {
@@ -312,20 +340,24 @@ export default function MultiCloudIAC() {
       });
       setLogs((prev) => [
         ...prev,
-        "Terraform destroy workflow dispatched to GitHub Actions."
+        "[Destroy] Terraform destroy workflow dispatched to GitHub Actions."
       ]);
-  } catch (error) {
-    console.error("Destroy dispatch failed", error);
-    setApiError(error.message || "Failed to dispatch destroy workflow.");
-    setLogs((prev) => [
-      ...prev,
-      "Terraform destroy workflow failed to dispatch."
-    ]);
-    setStatus("idle");
-    return;
-  }
-  setStatus("idle");
-}, [lastRequestId, lastStateKey, terraformRegion, dispatchTerraformWorkflow]);
+      if (timer) {
+        clearInterval(timer);
+        setTimer(null);
+      }
+      setCountdown(null);
+      setStatus("idle");
+    } catch (error) {
+      console.error("Destroy dispatch failed", error);
+      setApiError(error.message || "Failed to dispatch destroy workflow.");
+      setLogs((prev) => [
+        ...prev,
+        "[Destroy] Terraform destroy workflow failed to dispatch."
+      ]);
+      setStatus("idle");
+    }
+  }, [lastRequestId, lastStateKey, terraformRegion, dispatchTerraformWorkflow, timer]);
 
 const handleDestroyClick = () => {
   triggerDestroyWorkflow("manual");
@@ -448,26 +480,26 @@ const handleDestroyClick = () => {
               <button
                 onClick={async () => {
                   await terraformRun("create");
-                  setLogs((prev) => [...prev, "Waiting 120 seconds before auto-destroy..."]);
-                  setTimeout(() => {
-                    setLogs((prev) => [...prev, "Auto-destroying environment..."]);
-                    handleDestroyClick();
-                  }, 120000);
                 }}
-                disabled={status === "running" || timer !== null}
+                disabled={status === "running" || status === "built"}
                 className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
               >
-                {status === "running" ? "Running..." : "Create Environment"}
+                {status === "running" ? "Running..." : status === "built" ? "Environment Created" : "Create Environment"}
               </button>
-              <button
-                onClick={handleDestroyClick}
-                disabled={status === "running" || (!lastRequestId && !timer)}
-                className="bg-rose-500 hover:bg-rose-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
-              >
-                {timer !== null
-                  ? `Destroying in ${timer}s...`
-                  : "Destroy Environment"}
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <button
+                  onClick={handleDestroyClick}
+                  disabled={status === "running" || (!lastRequestId && countdown == null)}
+                  className="bg-rose-500 hover:bg-rose-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
+                >
+                  Delete Environment
+                </button>
+                {countdown !== null && (
+                  <div style={{ color: '#f87171', marginTop: '0.5rem', fontWeight: 500 }}>
+                    Auto-destroy in {countdown} seconds
+                  </div>
+                )}
+              </div>
             </div>
 
             {lastRequestId && (
