@@ -34,6 +34,10 @@ const getNodeText = (node) => {
 };
 
 export default function MultiCloudIAC() {
+      // Move handleDestroyClick above terraformRun to avoid no-use-before-define
+      const handleDestroyClick = () => {
+        triggerDestroyWorkflow("manual");
+      };
     // Story-driven infrastructure steps (narrative format)
     const infraSteps = [
       {
@@ -304,15 +308,6 @@ export default function MultiCloudIAC() {
         "- EC2 Instance (new)",
         "- API Gateway (existing): 1c5u47evyg"
       ]);
-      // ...existing code...
-      // Render CloudOutputs
-      // Place this where you want CloudOutputs to appear in your JSX
-      {showOutputs && cloudOutputs && (
-        <CloudOutputs data={cloudOutputs} />
-      )}
-      {showOutputs && cloudOutputsError && (
-        <div className="text-red-500">Error loading CloudOutputs: {cloudOutputsError}</div>
-      )}
       // Start countdown timer (no logs)
       const interval = setInterval(() => {
         setCountdown((prev) => {
@@ -334,7 +329,8 @@ export default function MultiCloudIAC() {
       setLogs((prev) => [...prev, "✗ Failed to trigger Terraform workflow."]);
       setStatus("idle");
     }
-  }, [dispatchTerraformWorkflow, terraformRegion, cloudOutputs, cloudOutputsError, handleDestroyClick, showOutputs]);
+  }, [dispatchTerraformWorkflow, terraformRegion, handleDestroyClick]);
+
 
   const triggerDestroyWorkflow = useCallback(async (reason = "auto") => {
     if (!lastRequestId || !lastStateKey) {
@@ -382,9 +378,6 @@ export default function MultiCloudIAC() {
     }
   }, [lastRequestId, lastStateKey, terraformRegion, dispatchTerraformWorkflow, timer]);
 
-const handleDestroyClick = () => {
-  triggerDestroyWorkflow("manual");
-};
 
   // === Highlight Card (for infrastructure steps) ===
   const HighlightCard = ({ step, title, text, color, hasCode, codeDetails, expandedDetails }) => {
