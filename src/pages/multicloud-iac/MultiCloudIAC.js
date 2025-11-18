@@ -446,7 +446,14 @@ const handleDestroyClick = () => {
 
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <button
-                onClick={() => terraformRun("create")}
+                onClick={async () => {
+                  await terraformRun("create");
+                  setLogs((prev) => [...prev, "Waiting 120 seconds before auto-destroy..."]);
+                  setTimeout(() => {
+                    setLogs((prev) => [...prev, "Auto-destroying environment..."]);
+                    handleDestroyClick();
+                  }, 120000);
+                }}
                 disabled={status === "running" || timer !== null}
                 className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-md font-medium transition-all duration-200 min-w-[160px]"
               >

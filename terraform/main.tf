@@ -28,6 +28,9 @@ resource "aws_vpc" "main" {
   tags = {
     Name = "main-vpc"
   }
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 resource "aws_subnet" "main" {
@@ -37,6 +40,9 @@ resource "aws_subnet" "main" {
   tags = {
     Name = "main-subnet"
   }
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 resource "aws_instance" "main" {
@@ -45,6 +51,9 @@ resource "aws_instance" "main" {
   subnet_id     = aws_subnet.main.id
   tags = {
     Name = "main-ec2-instance"
+  }
+  lifecycle {
+    prevent_destroy = false
   }
 }
 

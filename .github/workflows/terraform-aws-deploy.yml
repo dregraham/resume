@@ -76,7 +76,10 @@ jobs:
       - name: Terraform Plan
         run: |
           if [ "${{ inputs.action }}" = "destroy" ]; then
-            terraform plan -destroy -input=false -out=tfplan
+            terraform plan -destroy -input=false -out=tfplan \
+              -target=aws_instance.main \
+              -target=aws_subnet.main \
+              -target=aws_vpc.main
           else
             terraform plan -input=false -out=tfplan
           fi

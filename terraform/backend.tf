@@ -3,7 +3,6 @@ terraform {
     bucket         = "dre-multicloud-demo-site"
     key            = "multicloud-iac/terraform.tfstate"
     region         = "us-east-2"
-    dynamodb_table = "terraform-state-locks"
     encrypt        = true
   }
 }
