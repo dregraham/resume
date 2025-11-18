@@ -128,8 +128,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          role-session-name: ${{ github.job }}
-          aws-region: ${{ inputs.default_region }}
+          aws-region: us-east-2
+          audience: sts.amazonaws.com
 
       - name: Terraform Init
         run: |
