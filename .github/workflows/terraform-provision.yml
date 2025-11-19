@@ -13,7 +13,7 @@ jobs:
 
     env:
       TF_WORKING_DIR: terraform
-      AWS_REGION: ${{ github.event.client_payload.region }}
+      AWS_REGION: us-east-2
       TF_VAR_request_id: ${{ github.event.client_payload.requestId }}
       TF_VAR_state_key: ${{ github.event.client_payload.stateKey }}
 
@@ -30,7 +30,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: ${{ github.event.client_payload.region }}
+          aws-region: us-east-2
 
       - name: Debug working directory
         run: |
