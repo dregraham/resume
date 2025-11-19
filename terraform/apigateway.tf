@@ -5,9 +5,9 @@ locals {
   dispatch_api_id        = "1c5u47evyg"
   dispatch_execution_arn = "arn:aws:execute-api:us-east-2:895197120905:1c5u47evyg"
   base_invoke_url        = "https://1c5u47evyg.execute-api.us-east-2.amazonaws.com/prod"
-  dispatch_options_route_id = "v9k66ev"   # Replace with your actual route ID
-  dispatch_post_route_id    = "zht2bvl"   # Replace with your actual route ID
-  dispatch_lambda_integration_id = "hqdgn90" # Replace with your actual integration ID
+  dispatch_options_route_id = "kt2255s"  
+  dispatch_post_route_id    = "kt2255s"   
+  dispatch_lambda_integration_id = "hqdgn90" 
 }
 
 data "aws_apigatewayv2_api" "dispatch" {

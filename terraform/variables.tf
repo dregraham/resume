@@ -1,4 +1,3 @@
-
 variable "github_token" {
   description = "GitHub token with repo + workflow scopes"
   type        = string
@@ -33,4 +32,30 @@ variable "existing_api_id" {
   description = "Reusing existing API Gateway HTTP API instead of creating a new one"
   type        = string
   default     = "1c5u47evyg"
+}
+
+# ---------- NEW ENVIRONMENT TRACKING VARIABLES ----------
+
+variable "request_id" {
+  description = "Unique environment request ID (passed via GitHub Actions / payload)"
+  type        = string
+  default     = "" # Will be passed during GitHub Terraform Apply
+}
+
+variable "created_by" {
+  description = "Identifier of the automation or user that created the environment"
+  type        = string
+  default     = "GitHubActions" # Best default
+}
+
+variable "expires_at" {
+  description = "UTC expiration timestamp for ephemeral environments (used for tagging)"
+  type        = string
+  default     = "" # Supplied at runtime: now + 5 minutes
+}
+
+variable "region" {
+  description = "AWS region used for Terraform provisioning"
+  type        = string
+  default     = "us-east-2"
 }
