@@ -487,17 +487,7 @@ export default function MultiCloudIAC() {
           </div>
         </section>
 
-        {/* === INFRASTRUCTURE OUTPUTS === */}
-        {showOutputs && (
-          <section className="bg-white py-8" style={{ backgroundColor: "#ffffff" }}>
-            <div className="max-w-5xl mx-auto px-6">
-              <CloudOutputs 
-                deploymentStatus={deploymentStatus} 
-                hasDeploymentAttempt={hasDeploymentAttempt}
-              />
-            </div>
-          </section>
-        )}
+        {/* === INFRASTRUCTURE OUTPUTS REMOVED === */}
 
 
 
