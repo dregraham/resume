@@ -17,62 +17,50 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
       // Skip fetching if AWS deployment is not active
       if (!deploymentStatus.aws) {
         setLoading(false);
-        setTerraformData({});
-        return;
-      }
 
-      try {
-        setLoading(true);
-        const results = {};
-
-        // Only fetch AWS outputs when deployment succeeded
-        if (deploymentStatus.aws) {
-          try {
-            const awsResponse = await fetch(AWS_TERRAFORM_OUTPUT_URL);
-            if (awsResponse.ok) {
-              const awsData = await awsResponse.json();
-              results.aws = awsData;
-              console.log("AWS Terraform data fetched successfully:", awsData);
-            } else {
-              console.log("AWS output file not found (HTTP", awsResponse.status, ")");
-            }
-          } catch (err) {
-            console.log("Failed to fetch AWS outputs (likely CORS issue):", err.message);
-            // Fallback to demo data when CORS blocks the real S3 fetch
-            console.log("Using fallback demo data for AWS deployment");
-            results.aws = {
-              environment_id: `mc-env-demo-${Date.now().toString(36)}`,
-              region: "us-east-2",
-              vpc_id: `vpc-${Math.random().toString(36).substring(2, 10)}`,
-              subnet_id: `subnet-${Math.random().toString(36).substring(2, 10)}`,
-              instance_id: `i-${Math.random().toString(16).substring(2, 12)}`,
-              instance_public_ip: `3.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
-              logs_bucket: "dre-multicloud-demo-site",
-              created_at_utc: new Date().toISOString()
-            };
-          }
+        if (loading) {
+          return (
+            <section style={{ width: "100%", textAlign: "center", padding: "2rem" }}>
+              <div style={{ fontSize: "1rem", color: "#6b7280" }}>
+                Loading Terraform deployment outputs...
+              </div>
+            </section>
+          );
         }
 
-        setTerraformData(results);
-        setError(null);
-      } catch (err) {
-        setError("Failed to fetch Terraform outputs");
-        console.error("Error fetching Terraform outputs:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+        if (error) {
+          return (
+            <section style={{ width: "100%", textAlign: "center", padding: "2rem" }}>
+              <div style={{ fontSize: "1rem", color: "#dc2626" }}>
+                {error}
+              </div>
+              <div style={{ fontSize: "0.9rem", color: "#6b7280", marginTop: "0.5rem" }}>
+                Failed to fetch deployment data. Check network connectivity.
+              </div>
+            </section>
+          );
+        }
 
-    fetchTerraformOutputs();
-    
-    // Refresh every 30 seconds to catch new deployments
-    const interval = setInterval(fetchTerraformOutputs, 30000);
-    return () => clearInterval(interval);
-  }, [deploymentStatus]);
+        const clouds = formatTerraformData(terraformData);
 
-  const formatTerraformData = (data) => {
-    const clouds = [];
+        // Only render if we have valid AWS data
+        if (!clouds.length || !terraformData.aws || !terraformData.aws.vpc_id) {
+          return null;
+        }
 
+        // Show VPC, Subnet, and EC2 IDs clearly
+        return (
+          <section style={{ width: "100%", textAlign: "center", padding: "2rem" }}>
+            <h2 style={{ fontSize: "1.5rem", color: "#10b981", marginBottom: "1rem" }}>Provisioned AWS Environment</h2>
+            <div style={{ fontSize: "1.1rem", color: "#374151", marginBottom: "1.5rem" }}>
+              <strong>VPC ID:</strong> {terraformData.aws.vpc_id}<br />
+              <strong>Subnet ID:</strong> {terraformData.aws.subnet_id}<br />
+              <strong>EC2 Instance ID:</strong> {terraformData.aws.instance_id}<br />
+              <strong>Public IP:</strong> {terraformData.aws.instance_public_ip}
+            </div>
+            {/* ...existing code for reachability, links, etc... */}
+          </section>
+        );
     // AWS Environment
     if (data.aws) {
       clouds.push({

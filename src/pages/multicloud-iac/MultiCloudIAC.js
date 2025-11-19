@@ -291,13 +291,10 @@ export default function MultiCloudIAC() {
       setStatus("built");
       setCountdown(500);
       setShowOutputs(true);
+      // Wait for CloudOutputs to fetch S3 data, then update logs with real IDs
       setLogs((prev) => [
         ...prev,
-        "[Provisioning] Environment created. Resources being provisioned:",
-        "- VPC (new)",
-        "- Subnet (new)",
-        "- EC2 Instance (new)",
-        "- API Gateway (existing): 1c5u47evyg"
+        "[Provisioning] Environment created. Fetching resource IDs from S3..."
       ]);
       // Start countdown timer (no logs)
       const interval = setInterval(() => {
