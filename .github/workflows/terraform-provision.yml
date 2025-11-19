@@ -2,61 +2,86 @@ name: Terraform Provision
 
 on:
   repository_dispatch:
-    types: [terraform-provision]
+    types: [terraform-provision, terraform-destroy]
 
 jobs:
   terraform:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
 
     env:
-      TF_WORKING_DIR: terraform
-      AWS_REGION: us-east-2
-      TF_VAR_request_id: ${{ github.event.client_payload.requestId }}
-      TF_VAR_state_key: ${{ github.event.client_payload.stateKey }}
+      TF_WORKING_DIR: ./terraform
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/AWSOIDCRole
+          role-session-name: GitHubTerraformSession
+          aws-region: ${{ github.event.client_payload.region }}
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.5.0
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-2
-
-      - name: Debug working directory
-        run: |
-          echo "Root Directory:"
-          pwd
-          ls -R .
-          echo "Terraform Directory:"
-          ls -R $TF_WORKING_DIR
 
       - name: Terraform Init
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform init -backend-config="key=${{ github.event.client_payload.stateKey }}"
+        run: terraform init
 
-      - name: Terraform Plan
-        working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform plan -out=tfplan.binary
-
+      # === APPLY INFRA ===
       - name: Terraform Apply
+        if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform apply -auto-approve tfplan.binary
+        run: |
+          terraform apply -auto-approve \
+            -var="request_id=${{ github.event.client_payload.requestId }}" \
+            -var="created_by=GitHubActions" \
+            -var="expires_at=$(date -u -d '+5 minutes' '+%Y-%m-%dT%H:%M:%SZ')" \
+            -var="region=${{ github.event.client_payload.region }}"
 
-      - name: Wait 5 minutes before auto-destroy
+      # === CAPTURE ENVIRONMENT OUTPUTS ===
+      - name: Save Terraform outputs to JSON
+        if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: sleep 300  # 5 minutes
+        run: terraform output -json > env-details.json
 
+      - name: Upload env details to S3
+        if: github.event.client_payload.terraform_action == 'provision'
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: >
+          aws s3 cp env-details.json
+          s3://dre-multicloud-demo-site/created_envs/${{ github.event.client_payload.requestId }}-outputs.json
+
+      # === AUTO DESTROY PHASE 1 ===
       - name: Auto Destroy VPC, Subnet, EC2
+        id: auto_destroy
+        if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform destroy -auto-approve -target=aws_instance.main -target=aws_subnet.main -target=aws_vpc.main
+        continue-on-error: true
+        run: |
+          sleep 300
+          terraform destroy -auto-approve \
+            -target=aws_instance.main \
+            -target=aws_subnet.main \
+            -target=aws_vpc.main
+
+      # === RETRY ON FAILURE (DESTROY EVERYTHING) ===
+      - name: Wait extra 10 minutes before retry if destroy failed
+        if: >
+          github.event.client_payload.terraform_action == 'provision' &&
+          steps.auto_destroy.outcome == 'failure'
+        run: sleep 600
+
+      - name: Force Final Destroy (No Targets – Full Cleanup)
+        if: >
+          github.event.client_payload.terraform_action == 'provision' &&
+          steps.auto_destroy.outcome == 'failure'
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform destroy -auto-approve -lock=false
+
+      # === DIRECT DESTROY PATH ===
+      - name: Terraform Destroy (direct request)
+        if: github.event.client_payload.terraform_action == 'destroy'
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform destroy -auto-approve

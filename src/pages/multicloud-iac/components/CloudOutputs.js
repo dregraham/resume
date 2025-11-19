@@ -152,7 +152,7 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
     const timeout = setTimeout(() => controller.abort(), 5000);
     try {
       // Using fetch with no-cors; response will be opaque if reachable
-  await fetch(`http://${ip}`, { mode: 'no-cors', signal: controller.signal });
+      await fetch(`http://${ip}`, { mode: 'no-cors', signal: controller.signal });
       clearTimeout(timeout);
       // Opaque response => treat as success since connection established
       setVerifyState({ status: 'success', message: 'Instance appears reachable (received network response). For full validation, SSH or curl from a terminal).' });
