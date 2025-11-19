@@ -431,7 +431,7 @@ export default function MultiCloudIAC() {
               Trigger A Deployment
             </h2>
             <p className="max-w-2xl mx-auto text-gray-400 text-lg mb-10">
-              Trigger a Terraform deployment. Observe console as resources are provisioned and destroyed automatically.
+              Click "Create Environment" button below to deploy resources.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mb-8">
@@ -487,7 +487,7 @@ export default function MultiCloudIAC() {
           </div>
         </section>
 
-        {/* === INFRASTRUCTURE OUTPUTS REMOVED === */}
+
 
 
 

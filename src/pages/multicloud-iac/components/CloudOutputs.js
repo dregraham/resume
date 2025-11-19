@@ -17,50 +17,32 @@ export default function CloudOutputs({ deploymentStatus = { aws: false, azure: f
       // Skip fetching if AWS deployment is not active
       if (!deploymentStatus.aws) {
         setLoading(false);
+        return;
+      }
 
-        if (loading) {
-          return (
-            <section style={{ width: "100%", textAlign: "center", padding: "2rem" }}>
-              <div style={{ fontSize: "1rem", color: "#6b7280" }}>
-                Loading Terraform deployment outputs...
-              </div>
-            </section>
-          );
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(AWS_TERRAFORM_OUTPUT_URL);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
+        const data = await response.json();
+        setTerraformData(data);
+      } catch (err) {
+        console.error("Failed to fetch Terraform outputs:", err);
+        setError(`Failed to load deployment data: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        if (error) {
-          return (
-            <section style={{ width: "100%", textAlign: "center", padding: "2rem" }}>
-              <div style={{ fontSize: "1rem", color: "#dc2626" }}>
-                {error}
-              </div>
-              <div style={{ fontSize: "0.9rem", color: "#6b7280", marginTop: "0.5rem" }}>
-                Failed to fetch deployment data. Check network connectivity.
-              </div>
-            </section>
-          );
-        }
+    fetchTerraformOutputs();
+  }, [deploymentStatus.aws]);
 
-        const clouds = formatTerraformData(terraformData);
-
-        // Only render if we have valid AWS data
-        if (!clouds.length || !terraformData.aws || !terraformData.aws.vpc_id) {
-          return null;
-        }
-
-        // Show VPC, Subnet, and EC2 IDs clearly
-        return (
-          <section style={{ width: "100%", textAlign: "center", padding: "2rem" }}>
-            <h2 style={{ fontSize: "1.5rem", color: "#10b981", marginBottom: "1rem" }}>Provisioned AWS Environment</h2>
-            <div style={{ fontSize: "1.1rem", color: "#374151", marginBottom: "1.5rem" }}>
-              <strong>VPC ID:</strong> {terraformData.aws.vpc_id}<br />
-              <strong>Subnet ID:</strong> {terraformData.aws.subnet_id}<br />
-              <strong>EC2 Instance ID:</strong> {terraformData.aws.instance_id}<br />
-              <strong>Public IP:</strong> {terraformData.aws.instance_public_ip}
-            </div>
-            {/* ...existing code for reachability, links, etc... */}
-          </section>
-        );
+  const formatTerraformData = (data) => {
+    const clouds = [];
     // AWS Environment
     if (data.aws) {
       clouds.push({
