@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   provision:
+    if: github.ref == 'refs/heads/main'
     name: Provision and Teardown
     runs-on: ubuntu-latest
     env:
