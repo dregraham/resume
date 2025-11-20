@@ -1,13 +1,6 @@
 terraform {
   required_version = ">= 1.4.0"
 
-  backend "s3" {
-    bucket         = "dre-multicloud-demo-site"
-    key            = var.state_key               # Comes from Lambda → GitHub → workflow
-    region         = var.region                  # Used for backend region
-    dynamodb_table = "terraform-state-locks"     # Existing lock table
-  }
-
   required_providers {
     aws = {
       source  = "hashicorp/aws"

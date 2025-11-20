@@ -2,7 +2,9 @@ name: Terraform Provision
 
 on:
   repository_dispatch:
-    types: [terraform-provision, terraform-destroy]
+    types:
+      - terraform-provision
+      - terraform-destroy
 
 jobs:
   terraform:
@@ -10,6 +12,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+
     env:
       TF_WORKING_DIR: ./terraform
 
@@ -29,9 +32,15 @@ jobs:
 
       - name: Terraform Init
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="bucket=dre-multicloud-demo-site" \
+            -backend-config="key=${{ github.event.client_payload.stateKey }}" \
+            -backend-config="region=${{ github.event.client_payload.region }}" \
+            -backend-config="dynamodb_table=terraform-state-locks" \
+            -backend-config="encrypt=true"
 
-      # === APPLY INFRA ===
+      # === APPLY INFRASTRUCTURE ===
       - name: Terraform Apply
         if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -63,7 +72,7 @@ jobs:
           aws s3 cp env-details.json \
             s3://dre-multicloud-demo-site/created_envs/${{ github.event.client_payload.requestId }}-outputs.json
 
-      # === AUTO DESTROY PHASE 1 (10 MIN DELAY) ===
+      # === AUTO DESTROY AFTER 10 MIN ===
       - name: Auto Destroy VPC, Subnet, EC2
         id: auto_destroy
         if: github.event.client_payload.terraform_action == 'provision'
@@ -76,21 +85,21 @@ jobs:
             -target=aws_subnet.main \
             -target=aws_vpc.main
 
-      # === RETRY ON FAILURE (DESTROY EVERYTHING) ===
-      - name: Wait extra 10 minutes before retry if destroy failed
+      # === RETRY IF PARTIAL CLEANUP FAILED ===
+      - name: Wait extra 10 minutes before retry
         if: >
           github.event.client_payload.terraform_action == 'provision' &&
           steps.auto_destroy.outcome == 'failure'
         run: sleep 600
 
-      - name: Force Final Destroy (No Targets – Full Cleanup)
+      - name: Force Final Destroy (full cleanup)
         if: >
           github.event.client_payload.terraform_action == 'provision' &&
           steps.auto_destroy.outcome == 'failure'
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform destroy -auto-approve -lock=false
 
-      # === DIRECT DESTROY PATH ===
+      # === DIRECT DESTROY (user-triggered) ===
       - name: Terraform Destroy (direct request)
         if: github.event.client_payload.terraform_action == 'destroy'
         working-directory: ${{ env.TF_WORKING_DIR }}
