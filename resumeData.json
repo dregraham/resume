@@ -83,8 +83,8 @@
       {
         "title": "Flexible Rent Scheduler App",
         "category": "A Java application built on Spring Boot to help users manage flexible rent payments.",
-        "image": "frs_logos.jpg",
-        "url": "/projects/flexible-rent-scheduler/static-rent-schedule.html"
+        "image": "frs_logos.png",
+        "url": "/FlexibleRentSchedule/static-rent-schedule.html"
       }
     ]
   }
