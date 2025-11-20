@@ -38,9 +38,17 @@ jobs:
         run: |
           terraform apply -auto-approve \
             -var="request_id=${{ github.event.client_payload.requestId }}" \
-            -var="created_by=GitHubActions" \
-            -var="expires_at=$(date -u -d '+5 minutes' '+%Y-%m-%dT%H:%M:%SZ')" \
-            -var="region=${{ github.event.client_payload.region }}"
+            -var="region=${{ github.event.client_payload.region }}" \
+            -var="state_key=${{ github.event.client_payload.stateKey }}"
+
+      - name: Update DynamoDB when provision complete
+        if: github.event.client_payload.terraform_action == 'provision'
+        run: |
+          aws dynamodb update-item \
+            --table-name multicloud_iac_runs \
+            --key "{\"id\": {\"S\": \"${{ github.event.client_payload.requestId }}\"}}" \
+            --update-expression "SET status = :s" \
+            --expression-attribute-values "{\":s\": {\"S\": \"complete\"}}"
 
       # === CAPTURE ENVIRONMENT OUTPUTS ===
       - name: Save Terraform outputs to JSON
@@ -51,18 +59,18 @@ jobs:
       - name: Upload env details to S3
         if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
-        run: >
-          aws s3 cp env-details.json
-          s3://dre-multicloud-demo-site/created_envs/${{ github.event.client_payload.requestId }}-outputs.json
+        run: |
+          aws s3 cp env-details.json \
+            s3://dre-multicloud-demo-site/created_envs/${{ github.event.client_payload.requestId }}-outputs.json
 
-      # === AUTO DESTROY PHASE 1 ===
+      # === AUTO DESTROY PHASE 1 (10 MIN DELAY) ===
       - name: Auto Destroy VPC, Subnet, EC2
         id: auto_destroy
         if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
         continue-on-error: true
         run: |
-          sleep 300
+          sleep 600
           terraform destroy -auto-approve \
             -target=aws_instance.main \
             -target=aws_subnet.main \

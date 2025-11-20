@@ -1,3 +1,7 @@
+#####################
+# GitHub Parameters #
+#####################
+
 variable "github_token" {
   description = "GitHub token with repo + workflow scopes"
   type        = string
@@ -5,57 +9,47 @@ variable "github_token" {
 }
 
 variable "github_owner" {
-  description = "GitHub organization or user owning the repository"
+  description = "GitHub organization or user owning the repo"
   type        = string
   default     = "dregraham"
 }
 
 variable "github_repo" {
-  description = "GitHub repository name to target for workflow dispatch"
+  description = "GitHub repo name"
   type        = string
   default     = "resume"
 }
 
-variable "default_region" {
-  description = "Default AWS region passed to the dispatch Lambda"
-  type        = string
-  default     = "us-east-2"
-}
-
-variable "cors_allow_origin" {
-  description = "Allowed origin for dispatch API CORS responses"
-  type        = string
-  default     = "*"
-}
-
-variable "existing_api_id" {
-  description = "Reusing existing API Gateway HTTP API instead of creating a new one"
-  type        = string
-  default     = "1c5u47evyg"
-}
-
-# ---------- NEW ENVIRONMENT TRACKING VARIABLES ----------
+#########################
+# Environment Variables #
+#########################
 
 variable "request_id" {
-  description = "Unique environment request ID (passed via GitHub Actions / payload)"
+  description = "Unique environment request ID (passed from workflow)"
   type        = string
-  default     = "" # Will be passed during GitHub Terraform Apply
 }
 
-variable "created_by" {
-  description = "Identifier of the automation or user that created the environment"
+variable "state_key" {
+  description = "Terraform state path in S3"
   type        = string
-  default     = "GitHubActions" # Best default
-}
-
-variable "expires_at" {
-  description = "UTC expiration timestamp for ephemeral environments (used for tagging)"
-  type        = string
-  default     = "" # Supplied at runtime: now + 5 minutes
 }
 
 variable "region" {
-  description = "AWS region used for Terraform provisioning"
+  description = "AWS region for provisioning"
   type        = string
-  default     = "us-east-2"
+}
+
+############################
+# Optional Meta Tags       #
+############################
+
+variable "created_by" {
+  description = "Who created the environment"
+  type        = string
+  default     = "GitHubActions"
+}
+
+variable "expires_at" {
+  description = "UTC timestamp when environment expires"
+  type        = string
 }
