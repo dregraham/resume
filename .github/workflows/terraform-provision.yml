@@ -40,7 +40,7 @@ jobs:
             -backend-config="dynamodb_table=terraform-state-locks" \
             -backend-config="encrypt=true"
 
-      # === APPLY INFRASTRUCTURE ===
+      # === APPLY (ENV CREATION) ===
       - name: Terraform Apply
         if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -48,7 +48,11 @@ jobs:
           terraform apply -auto-approve \
             -var="request_id=${{ github.event.client_payload.requestId }}" \
             -var="region=${{ github.event.client_payload.region }}" \
-            -var="state_key=${{ github.event.client_payload.stateKey }}"
+            -var="state_key=${{ github.event.client_payload.stateKey }}" \
+            -var="expires_at=$(date -u -d '+10 minutes' +%Y-%m-%dT%H:%M:%SZ)" \
+            -var="github_token=${{ secrets.GH_WORKFLOW_TOKEN }}" \
+            -var="github_owner=dregraham" \
+            -var="github_repo=resume"
 
       - name: Update DynamoDB when provision complete
         if: github.event.client_payload.terraform_action == 'provision'
@@ -72,8 +76,8 @@ jobs:
           aws s3 cp env-details.json \
             s3://dre-multicloud-demo-site/created_envs/${{ github.event.client_payload.requestId }}-outputs.json
 
-      # === AUTO DESTROY AFTER 10 MIN ===
-      - name: Auto Destroy VPC, Subnet, EC2
+      # === AUTO-DESTROY AFTER 10 MIN ===
+      - name: Auto Destroy (targeted cleanup)
         id: auto_destroy
         if: github.event.client_payload.terraform_action == 'provision'
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -85,8 +89,7 @@ jobs:
             -target=aws_subnet.main \
             -target=aws_vpc.main
 
-      # === RETRY IF PARTIAL CLEANUP FAILED ===
-      - name: Wait extra 10 minutes before retry
+      - name: Wait extra 10 minutes before retry if failed
         if: >
           github.event.client_payload.terraform_action == 'provision' &&
           steps.auto_destroy.outcome == 'failure'
@@ -99,8 +102,14 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform destroy -auto-approve -lock=false
 
-      # === DIRECT DESTROY (user-triggered) ===
+      # === DIRECT ENV DESTRUCTION ===
       - name: Terraform Destroy (direct request)
         if: github.event.client_payload.terraform_action == 'destroy'
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform destroy -auto-approve
+            -var="request_id=${{ github.event.client_payload.requestId }}" \
+            -var="region=${{ github.event.client_payload.region }}" \
+            -var="state_key=${{ github.event.client_payload.stateKey }}" \
+            -var="github_token=${{ secrets.GH_WORKFLOW_TOKEN }}" \
+            -var="github_owner=dregraham" \
+            -var="github_repo=resume"
