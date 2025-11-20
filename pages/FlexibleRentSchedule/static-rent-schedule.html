@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexible Rent Schedule Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f9f9f9; }
+        .container { max-width: 500px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+        h1 { text-align: center; }
+        label { display: block; margin-top: 1em; }
+        input, select, button { width: 100%; padding: 0.5em; margin-top: 0.5em; }
+        .result { margin-top: 2em; font-size: 1.2em; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Flexible Rent Schedule Calculator</h1>
+        <p>Enter a rent amount and choose a schedule option to see the monthly payment.</p>
+        <form id="rentForm" onsubmit="calculate(event)">
+            <label for="rent">Rent Amount ($):</label>
+            <input type="number" id="rent" name="rent" min="0" required>
+
+            <label for="schedule">Schedule Option:</label>
+            <select id="schedule" name="schedule" required>
+                <option value="12">Monthly (12 payments)</option>
+                <option value="6">Bi-Monthly (6 payments)</option>
+                <option value="4">Quarterly (4 payments)</option>
+                <option value="1">Yearly (1 payment)</option>
+            </select>
+
+            <button type="submit">Calculate</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        function calculate(event) {
+            event.preventDefault();
+            const rent = parseFloat(document.getElementById('rent').value);
+            const schedule = parseInt(document.getElementById('schedule').value);
+            let payment = 0;
+            if (schedule > 0) {
+                payment = rent / schedule;
+            }
+            document.getElementById('result').textContent =
+                `Monthly Payment: $${payment.toFixed(2)} (${schedule} payments per year)`;
+        }
+    </script>
+</body>
+</html>

@@ -80,11 +80,11 @@
         "image": "aws_azure_iac.png",
         "url": "/projects/multicloud-iac"
       },
-      {
-        "title": "Flexible Rent Scheduler App",
-        "category": "A Java application built on Spring Boot to help users manage flexible rent payments.",
-        "image": "frs_logos.png",
-        "url": "/FlexibleRentSchedule/static-rent-schedule.html"
+        {
+          "title": "Flexible Rent Scheduler App",
+          "category": "A Java application built on Spring Boot to help users manage flexible rent payments.",
+          "image": "frs_logos.png",
+          "url": "https://dregraham.com/FlexibleRentSchedule/static-rent-schedule.html"
       }
     ]
   }
