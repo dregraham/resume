@@ -81,10 +81,10 @@
         "url": "/projects/multicloud-iac"
       },
       {
-        "title": "Log Analyzer Toolkit",
-        "category": "A toolkit for analyzing and visualizing log data.",
-        "image": "analyze.jpg",
-        "url": "/projects/log-analyzer-toolkit"
+        "title": "Flexible Rent Scheduler App",
+        "category": "A Java application built on Spring Boot to help users manage flexible rent payments.",
+        "image": "frs_logos.jpg",
+        "url": "/projects/flexible-rent-scheduler/static-rent-schedule.html"
       }
     ]
   }
