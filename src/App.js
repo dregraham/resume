@@ -16,6 +16,7 @@ import CloudHealthDashboard from './pages/CloudHealthDashboard/CloudHealthDashbo
 import LogAnalyzerToolkit from './pages/LogAnalyzerToolkit/LogAnalyzerToolkit';
 import DynamoDBInventoryManager from './pages/DynamoDBInventoryManager/DynamoDBInventoryManager';
 import MultiCloudIAC from './pages/multicloud-iac/MultiCloudIAC';
+import FlexiblePaymentSchedule from './pages/FlexiblePaymentSchedule/FlexiblePaymentSchedule';
 
 
 class App extends Component {
@@ -142,6 +143,7 @@ class App extends Component {
             <Route path="/projects/log-analyzer-toolkit" element={<LogAnalyzerToolkit />} />
             <Route path="/projects/dynamodb-inventory-manager" element={<DynamoDBInventoryManager />} />
             <Route path="/projects/multicloud-iac" element={<MultiCloudIAC />} />
+            <Route path="/projects/flexible-payment-schedule" element={<FlexiblePaymentSchedule />} />
           </Routes>
           <Footer data={this.state.resumeData.main} />
           </ErrorBoundary>

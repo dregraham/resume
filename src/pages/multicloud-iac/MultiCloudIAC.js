@@ -1,13 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import SimpleNav from "../../Components/SimpleNav";
-import CloudOutputs from "./components/CloudOutputs";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeHighlight from "rehype-highlight";
-import "github-markdown-css";
-import "highlight.js/styles/github.css";
+
+
+
+
+
+
+
+
 import "./MultiCloudIAC.css";
 
 // Backend API config from environment variables
@@ -18,18 +18,13 @@ const TERRAFORM_API_KEY =
   process.env.REACT_APP_TERRAFORM_TRIGGER_API_KEY ||
   process.env.REACT_APP_TERRAFORM_API_KEY;
 
-const getNodeText = (node) => {
-  if (!node) return "";
-  if (node.type === "text" && typeof node.value === "string") return node.value;
-  if (!Array.isArray(node.children)) return "";
-  return node.children.map(getNodeText).join("");
-};
+
 
 export default function MultiCloudIAC() {
   // Core state
   const [status, setStatus] = useState("idle");
   const [logs, setLogs] = useState([]);
-  const [showOutputs, setShowOutputs] = useState(false);
+
   const [countdown, setCountdown] = useState(null);
   const [apiError, setApiError] = useState(null);
   const [lastRequestId, setLastRequestId] = useState(null); // Track provisioned env
@@ -50,7 +45,7 @@ export default function MultiCloudIAC() {
       ]);
 
       setStatus("running");
-      setShowOutputs(false);
+
 
       try {
         const headers = { "Content-Type": "application/json" };
@@ -155,7 +150,6 @@ export default function MultiCloudIAC() {
         setLastRequestId(result.requestId);
         setLogs((prev) => [...prev, "[Provisioning] Workflow dispatched."]);
         setStatus("built");
-        setShowOutputs(true);
         setCountdown(500);
 
         // Auto-destroy after countdown
@@ -167,7 +161,6 @@ export default function MultiCloudIAC() {
               triggerDestroyWorkflow("auto");
               setCountdown(null);
               setStatus("idle");
-              setShowOutputs(false);
               return null;
             }
             return prev - 1;
@@ -185,97 +178,88 @@ export default function MultiCloudIAC() {
     [dispatchTerraformWorkflow, terraformRegion, triggerDestroyWorkflow]
   );
 
-  // === GitHub README Fetch ===
-  const [readmeMarkdown, setReadmeMarkdown] = useState(null);
-  const [readmeLoading, setReadmeLoading] = useState(true);
-  const [readmeError, setReadmeError] = useState(null);
-  const [isReadmeExpanded, setIsReadmeExpanded] = useState(false);
-  const [expandedSteps, setExpandedSteps] = useState({});
+  const [isBlurbExpanded, setIsBlurbExpanded] = useState(false);
 
-  useEffect(() => {
-    let canceled = false;
-    fetch(
-      "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/multicloud-iac/README.md"
-    )
-      .then((r) => {
-        if (!r.ok) throw new Error("Failed to fetch README");
-        return r.text();
-      })
-      .then((text) => {
-        if (!canceled) {
-          setReadmeMarkdown(text);
-          setReadmeLoading(false);
-        }
-      })
-      .catch((err) => {
-        if (!canceled) {
-          setReadmeError(err.message);
-          setReadmeLoading(false);
-        }
-      });
-    return () => {
-      canceled = true;
-    };
-  }, []);
 
-  // === Infra Steps (existing content preserved) ===
+
+  // === Infra Steps ===
   const infraSteps = [
     {
       step: "01",
-      title: "The Vision: Multi-Cloud Automation",
-      text: (
-        <>
-          I set out to build a hands-on demo that could automate infrastructure across AWS and Azure using Terraform...
-        </>
-      ),
+      title: "Multi-Cloud Infrastructure as Code",
+      text: "Terraform configurations for AWS and Azure with automated provisioning, state management, and resource cleanup through GitHub Actions workflows.",
       color: "from-orange-400 to-yellow-400",
     },
-    // other steps remain unchanged...
+    {
+      step: "02",
+      title: "Automated Deployment Pipeline",
+      text: "GitHub Actions workflows trigger Terraform operations with remote state storage in S3, DynamoDB locking, and environment-based approvals for production safety.",
+      color: "from-blue-400 to-purple-400",
+    },
+    {
+      step: "03",
+      title: "Secure API Integration",
+      text: "AWS Lambda functions handle deployment requests with API Gateway, proper authentication, and request ID tracking for parallel environment management.",
+      color: "from-green-400 to-teal-400",
+    },
+    {
+      step: "04",
+      title: "Auto-Destroy & Cost Control",
+      text: "Built-in countdown timer automatically destroys demo environments after 8 minutes to prevent unnecessary cloud costs while maintaining full functionality demonstration.",
+      color: "from-red-400 to-pink-400",
+    }
   ];
 
-  const HighlightCard = ({ step, title, text, color }) => {
-    const isExpanded = expandedSteps[step];
 
-    return (
-      <div
-        className="relative flex flex-col bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all p-6 cursor-pointer"
-        onClick={() =>
-          setExpandedSteps((prev) => ({ ...prev, [step]: !prev[step] }))
-        }
-      >
-        <div className="flex items-start gap-6">
-          <div
-            className={`w-14 h-14 rounded-full bg-gradient-to-br ${color} text-white font-bold flex items-center justify-center text-xl shadow-md`}
-          >
-            {step}
-          </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">
-              {title}
-            </h3>
-            <p className="text-gray-600 text-[1.25rem]">{text}</p>
-          </div>
-        </div>
-      </div>
-    );
-  };
 
   return (
     <>
       <SimpleNav />
       <main className="font-inter text-gray-800">
-        <section className="text-center py-28">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
-            Multi-Cloud IaC Automation (AWS & Azure)
+        <section className="text-center py-20">
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6" style={{ fontFamily: 'desyrelregular, serif' }}>
+            Multi-Cloud IaC Automation
           </h1>
-          <p className="max-w-2xl mx-auto text-lg">
-            Trigger a full Terraform deployment, then watch it auto-destroy.
+          <p className="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
+            Automated infrastructure provisioning across AWS and Azure using Terraform, GitHub Actions, and serverless integration with auto-destroy functionality.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="https://github.com/dregraham/resume/tree/main/src/pages/multicloud-iac" target="_blank" rel="noopener noreferrer" 
+               className="bg-gray-900 text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors font-medium">
+              View Source Code
+            </a>
+            <button onClick={() => document.querySelector('.bg-gray-900').scrollIntoView({behavior: 'smooth'})} 
+                    className="border border-gray-300 text-gray-700 px-8 py-3 rounded-md hover:bg-gray-50 transition-colors font-medium">
+              Try Live Demo
+            </button>
+          </div>
+        </section>
+
+        {/* === STEPS SECTION === */}
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="text-5xl font-bold text-center mb-12" style={{ fontFamily: 'desyrelregular, serif' }}>How It Works</h2>
+            <div className="grid gap-6">
+              {infraSteps.map((item) => (
+                <div key={item.step} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-start gap-6">
+                    <div className={`w-14 h-14 rounded-full bg-gradient-to-br ${item.color} text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0`}>
+                      {item.step}
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-gray-900 mb-3">{item.title}</h3>
+                      <p className="text-gray-600 leading-relaxed">{item.text}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
 
         <section className="bg-gray-900 text-white py-16">
           <div className="max-w-5xl mx-auto px-6 text-center">
-            <h2 className="text-3xl font-semibold mb-4">Trigger a Deployment</h2>
+            <h2 className="text-5xl font-semibold mb-4 text-white" style={{ fontFamily: 'desyrelregular, serif' }}>Live Demo</h2>
 
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <button
@@ -319,6 +303,42 @@ export default function MultiCloudIAC() {
                 logs.map((log, i) => <p key={i}>{log}</p>)
               )}
             </div>
+          </div>
+        </section>
+
+        {/* === HOW I BUILT THIS BLURB === */}
+        <div className={`how-built-blurb ${isBlurbExpanded ? 'expanded' : ''}`} onClick={() => setIsBlurbExpanded(!isBlurbExpanded)}>
+          <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
+          {isBlurbExpanded && (
+            <div className="blurb-story">
+              <p><strong>Overall Challenge:</strong> Show how Terraform can be applied to create environments in AWS and Azure with automated provisioning, state management, and cost controls for live demonstrations.</p>
+              
+              <p><strong>GitHub Actions Workflow Issues:</strong> The terraform-provision.yml had YAML syntax errors with missing closing tags and indentation issues. Spent hours debugging workflow failures before discovering the malformed structure.</p>
+              
+              <p><strong>AWS Infrastructure Setup:</strong> Had to manually create the supporting AWS infrastructure - an S3 bucket for Terraform state storage, a DynamoDB table for state locking, and API Gateway endpoints. The Lambda dispatch function required careful IAM permissions to trigger GitHub workflows securely.</p>
+              
+              <p><strong>State Collision Problems:</strong> Multiple demo requests were conflicting with shared Terraform state. Had to implement unique state keys per request ID in the Terraform configuration to allow parallel deployments without conflicts.</p>
+              
+              <p><strong>Security Architecture:</strong> Initially tried putting GitHub PATs directly in the React frontend - a major security flaw. Had to build an AWS Lambda proxy with API Gateway authentication to safely trigger repository dispatch events without exposing credentials.</p>
+              
+              <p><strong>Cost Control Implementation:</strong> The biggest challenge was preventing forgotten demo environments from racking up AWS costs. Implemented an auto-destroy countdown timer with edge case handling for manual cleanup scenarios.</p>
+              
+              <p><strong>Final Architecture:</strong> Terraform modules with remote S3 state → GitHub Actions workflows → Lambda API proxy → React frontend with real-time status tracking. Result: Production-ready infrastructure automation with zero runaway costs.</p>
+            </div>
+          )}
+        </div>
+
+        {/* === README LINK === */}
+        <section className="py-16 bg-white">
+          <div className="text-center">
+            <a
+              href="https://github.com/dregraham/resume/blob/main/src/pages/multicloud-iac/README.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+            >
+              README.md →
+            </a>
           </div>
         </section>
       </main>

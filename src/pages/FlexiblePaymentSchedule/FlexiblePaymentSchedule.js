@@ -1,5 +1,6 @@
 import React from 'react';
 import SimpleNav from '../../Components/SimpleNav';
+import './FlexiblePaymentSchedule.css';
 
 // Add JetBrains Mono font
 const fontLink = document.createElement('link');
@@ -29,6 +30,7 @@ const FlexiblePaymentSchedule = () => {
   const [schedule, setSchedule] = React.useState('12');
   const [results, setResults] = React.useState(null);
   const [errors, setErrors] = React.useState({});
+  const [isBlurbExpanded, setIsBlurbExpanded] = React.useState(false);
 
   const formatNumber = (value) => {
     const num = value.replace(/[^\d.]/g, '');
@@ -137,9 +139,9 @@ const FlexiblePaymentSchedule = () => {
           <div className="text-center mb-12">
             <div className="flex justify-center items-center mb-6">
               <svg className="w-16 h-16 mr-4" viewBox="0 0 24 24"><path fill="#6db33f" d="M20.205 16.392c-2.469 3.289-7.741 2.179-11.122 2.338 0 0-.599.034-1.201.133 0 0 .228-.097.519-.198 2.374-.821 3.496-.986 4.939-1.727 2.71-1.388 5.408-4.413 5.957-7.555-1.032 3.022-4.17 5.623-7.027 6.679-1.955.722-5.492 1.424-5.493 1.424a5.28 5.28 0 0 1-.143-.076c-2.405-1.17-2.475-6.38 1.894-8.059 1.916-.736 3.747-.332 5.818-.825 2.208-.525 4.766-2.18 5.805-4.344 1.165 3.458 2.565 8.866.054 12.21zm.042-13.28a9.212 9.212 0 0 1-1.065 1.89 9.982 9.982 0 0 0-7.167-3.031C6.492 1.971 2 6.463 2 11.985a9.983 9.983 0 0 0 3.205 7.334l.22.194a10.001 10.001 0 0 0 6.560 2.462c5.522 0 9.985-4.463 9.985-9.985 0-2.68-1.054-5.11-2.723-6.878z"/></svg>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">Payment Calculator</h1>
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-900" style={{ fontFamily: 'desyrelregular, serif' }}>Payment Calculator</h1>
             </div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">Enterprise Spring Boot application with REST API integration</p>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">Full-stack loan calculator with Spring Boot REST API and React frontend</p>
             <div className="inline-flex items-center px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-medium">
               <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>Server Running
             </div>
@@ -329,75 +331,142 @@ const FlexiblePaymentSchedule = () => {
         </div>
       </div>
 
-      {/* Step 3: Technology Stack */}
-      <div className="bg-gradient-to-r from-gray-50 to-blue-50 py-12 jetbrains-mono">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-start">
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Technology Stack</h3>
-              <p className="text-lg text-gray-600 mb-6">
-                Enterprise Spring Boot application with automated dependency management and build process.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-orange-500 rounded-full mr-3"></span>
-                  <a href="https://adoptium.net/" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:text-orange-700 underline font-medium">Java 17</a>
-                  <span className="ml-2 text-gray-600">- Runtime environment</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
-                  <a href="https://maven.apache.org/" target="_blank" rel="noopener noreferrer" className="text-red-600 hover:text-red-700 underline font-medium">Maven</a>
-                  <span className="ml-2 text-gray-600">- Build automation</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
-                  <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" className="text-green-600 hover:text-green-700 underline font-medium">Spring Boot 3.2</a>
-                  <span className="ml-2 text-gray-600">- Web framework</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
-                  <a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline font-medium">React</a>
-                  <span className="ml-2 text-gray-600">- Frontend UI</span>
-                </div>
+      {/* Step 3: Technical Implementation */}
+      <div className="bg-white py-16 jetbrains-mono">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Enterprise Architecture & Technology Stack</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Demonstrates Spring Boot REST API development, financial calculations, input validation, 
+              and React frontend integration with fallback handling.
+            </p>
+          </div>
+          
+          {/* Technology Stack */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <a href="https://adoptium.net/" target="_blank" rel="noopener noreferrer" className="bg-white p-6 border-l-4 border-orange-500 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="font-bold text-gray-900 mb-2">Java 17 LTS</h3>
+              <p className="text-sm text-gray-600 mb-3">Runtime Environment</p>
+              <p className="text-sm text-gray-700">Modern language features, enhanced performance, and long-term support</p>
+            </a>
+            
+            <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener noreferrer" className="bg-white p-6 border-l-4 border-green-600 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="font-bold text-gray-900 mb-2">Spring Boot 3.2</h3>
+              <p className="text-sm text-gray-600 mb-3">Application Framework</p>
+              <p className="text-sm text-gray-700">REST API with dependency injection, validation, and CORS configuration</p>
+            </a>
+            
+            <a href="https://reactjs.org/" target="_blank" rel="noopener noreferrer" className="bg-white p-6 border-l-4 border-blue-500 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="font-bold text-gray-900 mb-2">React 18</h3>
+              <p className="text-sm text-gray-600 mb-3">Frontend Framework</p>
+              <p className="text-sm text-gray-700">Component-based UI architecture with state management</p>
+            </a>
+            
+            <a href="https://maven.apache.org/" target="_blank" rel="noopener noreferrer" className="bg-white p-6 border-l-4 border-red-600 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="font-bold text-gray-900 mb-2">Apache Maven</h3>
+              <p className="text-sm text-gray-600 mb-3">Build Automation</p>
+              <p className="text-sm text-gray-700">Dependency management and standardized project structure</p>
+            </a>
+          </div>
+          
+          {/* Architecture Overview */}
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-8 mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">System Architecture</h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="border-l-4 border-purple-500 pl-6">
+                <h4 className="font-bold text-gray-900 mb-2">@RestController</h4>
+                <p className="text-sm text-gray-600 mb-3">POST /api/payment-calculator/calculate with JSON request/response</p>
+                <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/src/main/java/com/dregraham/rentcalculator/controller/RentCalculatorController.java" 
+                   target="_blank" rel="noopener noreferrer" 
+                   className="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                  PaymentController.java →
+                </a>
               </div>
-              <div className="pt-6">
-                <a 
-                  href="https://github.com/dregraham/resume/tree/main/src/pages/FlexiblePaymentSchedule" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-purple-600 hover:text-purple-700 font-medium"
-                >
-                  View Complete Source Code →
+              
+              <div className="border-l-4 border-purple-500 pl-6">
+                <h4 className="font-bold text-gray-900 mb-2">@Service</h4>
+                <p className="text-sm text-gray-600 mb-3">Loan payment calculations using standard amortization formulas</p>
+                <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/src/main/java/com/dregraham/rentcalculator/service/RentCalculatorService.java" 
+                   target="_blank" rel="noopener noreferrer" 
+                   className="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                  PaymentService.java →
+                </a>
+              </div>
+              
+              <div className="border-l-4 border-purple-500 pl-6">
+                <h4 className="font-bold text-gray-900 mb-2">@Valid DTOs</h4>
+                <p className="text-sm text-gray-600 mb-3">Validated data transfer objects with comprehensive error handling</p>
+                <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/src/main/java/com/dregraham/rentcalculator/model/RentCalculationRequest.java" 
+                   target="_blank" rel="noopener noreferrer" 
+                   className="text-purple-600 hover:text-purple-700 text-sm font-medium">
+                  PaymentRequest.java →
                 </a>
               </div>
             </div>
-            <div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Architecture Components</h3>
-              <div className="space-y-4">
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
-                  <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/src/main/java/com/dregraham/rentcalculator/controller/RentCalculatorController.java" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 underline font-medium">RentCalculatorController.java</a>
-                  <span className="ml-2 text-gray-600">- REST endpoints</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
-                  <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/src/main/java/com/dregraham/rentcalculator/service/RentCalculatorService.java" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 underline font-medium">RentCalculatorService.java</a>
-                  <span className="ml-2 text-gray-600">- Business logic</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
-                  <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/src/main/java/com/dregraham/rentcalculator/model/RentCalculationRequest.java" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 underline font-medium">RentCalculationRequest.java</a>
-                  <span className="ml-2 text-gray-600">- Data validation</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <span className="w-3 h-3 bg-purple-500 rounded-full mr-3"></span>
-                  <a href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/pom.xml" target="_blank" rel="noopener noreferrer" className="text-purple-600 hover:text-purple-700 underline font-medium">Maven configuration</a>
-                  <span className="ml-2 text-gray-600">- Dependencies</span>
-                </div>
-              </div>
+          </div>
+          
+          {/* Key Features */}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+              <h4 className="font-bold text-gray-900 mb-4 border-b-2 border-green-500 pb-2">
+                Backend Implementation
+              </h4>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center"><span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>@Valid annotations with @NotNull, @DecimalMin constraints</li>
+                <li className="flex items-center"><span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>ResponseEntity with proper HTTP status codes</li>
+                <li className="flex items-center"><span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>@CrossOrigin configuration for React integration</li>
+                <li className="flex items-center"><span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>@Autowired service layer dependency injection</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
+              <h4 className="font-bold text-gray-900 mb-4 border-b-2 border-blue-500 pb-2">
+                Development Practices
+              </h4>
+              <ul className="space-y-2 text-sm text-gray-600">
+                <li className="flex items-center"><span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Controller → Service → Model layered architecture</li>
+                <li className="flex items-center"><span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>DTO pattern for request/response objects</li>
+                <li className="flex items-center"><span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>Error handling with try/catch and fallback logic</li>
+                <li className="flex items-center"><span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>React hooks (useState) with form validation</li>
+              </ul>
             </div>
           </div>
+          
         </div>
+      </div>
+
+      {/* === HOW I BUILT THIS BLURB === */}
+      <div className={`how-built-blurb ${isBlurbExpanded ? 'expanded' : ''}`} onClick={() => setIsBlurbExpanded(!isBlurbExpanded)}>
+        <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
+        {isBlurbExpanded && (
+          <div className="blurb-story">
+            <p><strong>Initial Challenge:</strong> Build a full-stack loan calculator demonstrating Spring Boot backend skills with React frontend integration and automated deployment.</p>
+            
+            <p><strong>Project Scope Creep:</strong> Started as a simple rent calculator but evolved into a comprehensive loan payment system with interest calculations, multiple payment frequencies, and enterprise validation patterns.</p>
+            
+            <p><strong>PowerShell Script Nightmares:</strong> Creating automated setup scripts that work across different Windows environments was brutal. Had to handle missing Java/Maven installations, PATH issues, and PowerShell execution policies. The script kept failing to create files properly.</p>
+            
+            <p><strong>Spring Boot Integration Issues:</strong> Getting CORS configuration right for React frontend took multiple attempts. The @CrossOrigin annotation wasn't working initially, and API calls were being blocked by browser security policies.</p>
+            
+            <p><strong>Financial Formula Complexity:</strong> Implementing proper loan amortization calculations with compound interest and different payment frequencies required careful mathematical precision. Edge cases like zero interest rates needed special handling.</p>
+            
+            <p><strong>ESLint Error Cleanup:</strong> Had to remove numerous unused imports and variables that were causing compilation errors. The codebase had accumulated unused React hooks and components during development iterations.</p>
+            
+            <p><strong>Final Solution:</strong> Spring Boot REST API with @Valid annotations → Loan amortization algorithms → React frontend with fallback JavaScript calculations → PowerShell/shell deployment scripts. Result: Enterprise-grade calculator with proper validation, error handling, and cross-platform deployment.</p>
+          </div>
+        )}
+      </div>
+      
+      {/* === README LINK === */}
+      <div className="text-center py-8">
+        <a 
+          href="https://github.com/dregraham/resume/blob/main/src/pages/FlexiblePaymentSchedule/README.md" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="inline-flex items-center bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+        >
+          README.md →
+        </a>
       </div>
     </>
   );

@@ -1,11 +1,4 @@
-import React, { useState, useEffect } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeSlug from 'rehype-slug';
-import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypeHighlight from 'rehype-highlight';
-import 'github-markdown-css';
-import 'highlight.js/styles/github.css';
+import React, { useState } from "react";
 import "./CloudDashboard.css";
 import SimpleNav from "../../Components/SimpleNav";
 import coreData from "./mockData1_core.json";
@@ -13,17 +6,6 @@ import computeNetworkData from "./mockData2_compute_network.json";
 import securityData from "./mockData3_security_identity.json";
 import databaseData from "./mockData4_database_analytics.json";
 import devopsData from "./mockData5_devops_global.json";
-
-const getNodeText = (node) => {
-  if (!node) return "";
-  if (node.type === "text" && typeof node.value === "string") {
-    return node.value;
-  }
-  if (!Array.isArray(node.children)) {
-    return "";
-  }
-  return node.children.map(getNodeText).join("");
-};
 
 
 export default function CloudHealthDashboard() {
@@ -33,34 +15,7 @@ export default function CloudHealthDashboard() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [activeTab, setActiveTab] = useState("overview");
-  // README markdown preview state (full file, GitHub-like styling)
-  const [readmeMarkdown, setReadmeMarkdown] = useState(null);
-  const [readmeLoading, setReadmeLoading] = useState(true);
-  const [readmeError, setReadmeError] = useState(null);
-  const [isReadmeExpanded, setIsReadmeExpanded] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    const url = "https://raw.githubusercontent.com/dregraham/resume/main/src/pages/CloudHealthDashboard/README.md";
-    fetch(url)
-      .then(r => {
-        if (!r.ok) throw new Error("Failed to fetch README");
-        return r.text();
-      })
-      .then(text => {
-        if (!cancelled) {
-          setReadmeMarkdown(text);
-          setReadmeLoading(false);
-        }
-      })
-      .catch(err => {
-        if (!cancelled) {
-          setReadmeError(err.message || 'Error loading README');
-          setReadmeLoading(false);
-        }
-      });
-    return () => { cancelled = true; };
-  }, []);
+  const [isBlurbExpanded, setIsBlurbExpanded] = useState(false);
 
   const handleDatasetChange = (e) => {
     const value = e.target.value;
@@ -107,55 +62,113 @@ export default function CloudHealthDashboard() {
       <SimpleNav />
       <div style={{ height: 36 }} />
 
-      <section id="top" className="dashboard-container">
-        {/* === HOW IT WORKS === */}
-        <div className="section-box info-section">
-          <h2>How This Works</h2>
-          <p>
-            The <strong>Cloud Health Dashboard</strong> simulates an AWS Service
-            Health Console. Each card represents a service, showing region,
-            metrics, and health state. 
-			<br/>
-			Click a card to open an interactive
-            pop-out view with tabs for Overview, Metrics, and Backend Logs.
+      {/* === HERO SECTION === */}
+      <section className="text-center py-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6" style={{ fontFamily: 'desyrelregular, serif' }}>
+            Cloud Health Dashboard
+          </h1>
+          <p className="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
+            AWS Service Health Console simulation with interactive service monitoring, real-time status updates, and detailed metrics visualization.
           </p>
-
-          {/* Dataset Selector */}
- <div className="dataset-section">
-  <hr className="dataset-divider" />
-  <div className="dataset-selector">
-    <label htmlFor="dataset-select">Select Dataset:</label>
-    <select
-      id="dataset-select"
-      value={selectedDataset}
-      onChange={handleDatasetChange}
-    >
-      <option value="core">Core Services</option>
-      <option value="compute_network">Compute & Network</option>
-      <option value="security_identity">Security & Identity</option>
-      <option value="database_analytics">Database & Analytics</option>
-      <option value="devops_global">DevOps & Global</option>
-    </select>
-  </div>
-</div>
-
-
-          <div style={{ textAlign: "center", marginTop: "2rem" }}>
-            <button
-              onClick={refreshStatus}
-              disabled={loading}
-              className="refresh-button"
-            >
-              {loading ? "Checking..." : "Run Health Check"}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="https://github.com/dregraham/resume/tree/main/src/pages/CloudHealthDashboard" target="_blank" rel="noopener noreferrer" 
+               className="bg-gray-900 text-white px-8 py-3 rounded-md hover:bg-gray-800 transition-colors font-medium">
+              View Source Code
+            </a>
+            <button onClick={() => document.querySelector('.dashboard-container').scrollIntoView({behavior: 'smooth'})} 
+                    className="border border-gray-300 text-gray-700 px-8 py-3 rounded-md hover:bg-gray-50 transition-colors font-medium">
+              Try Dashboard
             </button>
           </div>
-
-          {lastUpdated && (
-            <p style={{ textAlign: "center", color: "#555", marginTop: "1rem" }}>
-              Last Updated: {lastUpdated}
-            </p>
-          )}
         </div>
+      </section>
+
+      <section id="top" className="dashboard-container">
+      </section>
+
+      {/* === HOW IT WORKS === */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-5xl font-bold text-center mb-12" style={{ fontFamily: 'desyrelregular, serif' }}>How It Works</h2>
+          <div className="grid gap-6">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
+                  01
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Service Health Simulation</h3>
+                  <p className="text-gray-600 leading-relaxed">Interactive dashboard displaying AWS service status across multiple categories. Each service card shows real-time health indicators, regional information, and key performance metrics.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
+                  02
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Interactive Service Details</h3>
+                  <p className="text-gray-600 leading-relaxed">Click any service card to open a detailed modal with tabbed navigation. View service overview, monitored metrics, and simulated backend logs that demonstrate AWS CloudWatch integration patterns.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="flex items-start gap-6">
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
+                  03
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">Dynamic Dataset Management</h3>
+                  <p className="text-gray-600 leading-relaxed">Switch between different AWS service categories and trigger health checks to see real-time status updates. Demonstrates React state management and data visualization techniques.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* === INTERACTIVE DASHBOARD === */}
+      <section className="py-16 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-5xl font-bold text-center mb-12" style={{ fontFamily: 'desyrelregular, serif' }}>Interactive Dashboard</h2>
+          
+          <div className="bg-gray-50 p-6 rounded-xl mb-8">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+              <div className="flex items-center gap-4">
+                <label htmlFor="dataset-select" className="font-semibold text-gray-700">Dataset:</label>
+                <select
+                  id="dataset-select"
+                  value={selectedDataset}
+                  onChange={handleDatasetChange}
+                  className="px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="core">Core Services</option>
+                  <option value="compute_network">Compute & Network</option>
+                  <option value="security_identity">Security & Identity</option>
+                  <option value="database_analytics">Database & Analytics</option>
+                  <option value="devops_global">DevOps & Global</option>
+                </select>
+              </div>
+              
+              <button
+                onClick={refreshStatus}
+                disabled={loading}
+                className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 transition-colors font-medium"
+              >
+                {loading ? "Checking..." : "Run Health Check"}
+              </button>
+            </div>
+            
+            {lastUpdated && (
+              <p className="text-center text-gray-600 text-sm">
+                Last Updated: {lastUpdated}
+              </p>
+            )}
+          </div>
 
         {/* === DASHBOARD GRID === */}
         <div className="dashboard-grid">
@@ -182,6 +195,7 @@ export default function CloudHealthDashboard() {
               </div>
             </div>
           ))}
+        </div>
         </div>
       </section>
 
@@ -274,94 +288,37 @@ export default function CloudHealthDashboard() {
         </div>
       )}
 
-      {/* === README PREVIEW === */}
-      <section className="readme-preview-section">
-        <h3>CloudHealthDashboard README Preview</h3>
-        <div className={`readme-preview-box markdown-body ${isReadmeExpanded ? 'expanded' : 'collapsed'}`}>
-          {readmeLoading && <p style={{margin:0}}>Loading README...</p>}
-          {readmeError && <p style={{color:'#d73a49', margin:0}}>Failed to load README: {readmeError}</p>}
-          {!readmeLoading && !readmeError && readmeMarkdown && (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[
-                rehypeSlug,
-                [rehypeAutolinkHeadings, {
-                  behavior: 'append',
-                  properties: {
-                    className: ['heading-anchor-link']
-                  },
-                  content: (node) => ([
-                    {
-                      type: 'element',
-                      tagName: 'span',
-                      properties: { className: ['sr-only'] },
-                      children: [
-                        { type: 'text', value: `Permalink to ${getNodeText(node)}`.trim() }
-                      ]
-                    },
-                    {
-                      type: 'element',
-                      tagName: 'span',
-                      properties: { className: ['heading-anchor'], 'aria-hidden': 'true' },
-                      children: [{ type: 'text', value: '#' }]
-                    }
-                  ])
-                }],
-                rehypeHighlight
-              ]}
-              components={{
-                a: ({node, children, ...props}) => (
-                  <a {...props} target="_blank" rel="noopener noreferrer">
-                    {children}
-                  </a>
-                ),
-                img: ({node, ...props}) => (
-                  <img style={{ maxWidth: '100%', height: 'auto' }} {...props} alt={props.alt || ''} />
-                ),
-                code: ({inline, className, children, ...props}) => (
-                  <code
-                    className={className}
-                    style={{
-                      background: inline ? '#f6f8fa' : '#f6f8fa',
-                      padding: inline ? '2px 4px' : '12px 16px',
-                      display: inline ? 'inline' : 'block',
-                      borderRadius: 6,
-                      fontSize: '0.85rem',
-                      border: '1px solid #d0d7de',
-                      color: '#24292f'
-                    }}
-                    {...props}
-                  >
-                    {children}
-                  </code>
-                )
-              }}
-            >
-              {readmeMarkdown}
-            </ReactMarkdown>
-          )}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-          {!readmeLoading && !readmeError && readmeMarkdown && (
-            <button
-              type="button"
-              className="readme-toggle"
-              onClick={() => setIsReadmeExpanded(prev => !prev)}
-            >
-              {isReadmeExpanded ? 'Collapse README' : 'Expand Full README'}
-            </button>
-          )}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: '0.75rem' }}>
-          <a
-            href="https://github.com/dregraham/resume/blob/main/src/pages/CloudHealthDashboard/README.md"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="readme-preview-link"
-          >
-            README on GitHub ↗
-          </a>
-        </div>
+      {/* === HOW I BUILT THIS BLURB === */}
+      <div className={`how-built-blurb ${isBlurbExpanded ? 'expanded' : ''}`} onClick={() => setIsBlurbExpanded(!isBlurbExpanded)}>
+        <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
+        {isBlurbExpanded && (
+          <div className="blurb-story">
+            <p><strong>Initial Challenge:</strong> Create a realistic AWS Service Health Console simulation that feels authentic without access to real AWS Health APIs.</p>
+            
+            <p><strong>JSX Syntax Nightmare:</strong> Spent considerable time debugging unclosed ReactMarkdown components and missing closing tags that were causing compilation failures. The error messages weren't always clear about which components were malformed.</p>
+            
+            <p><strong>Data Structure Complexity:</strong> Organizing mock data across 5 different AWS service categories (Core, Compute, Security, Database, DevOps) while maintaining realistic service names, regions, and metrics was more complex than expected.</p>
+            
+            <p><strong>Modal System Issues:</strong> Building the tabbed modal system with click-outside detection proved tricky. Had to handle event propagation properly to prevent the modal from closing when clicking inside tabs or content areas.</p>
+            
+            <p><strong>State Management Challenges:</strong> Managing multiple useState hooks for dataset selection, service details, modal state, and loading states while keeping everything synchronized required careful planning of component re-renders.</p>
+            
+            <p><strong>Final Solution:</strong> JSON mock datasets organized by service category → React functional components with useState hooks → Interactive modal system with tabbed navigation → AWS-style CSS mimicking the real console. Result: Authentic-feeling dashboard that demonstrates React skills and AWS knowledge.</p>
+          </div>
+        )}
+      </div>
+
+      {/* === README LINK === */}
+      <section style={{ padding: '4rem 0', backgroundColor: 'white', textAlign: 'center' }}>
+        <a
+          href="https://github.com/dregraham/resume/blob/main/src/pages/CloudHealthDashboard/README.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center bg-gray-900 text-white px-8 py-3 rounded-lg hover:bg-gray-800 transition-colors font-medium"
+          style={{ textDecoration: 'none' }}
+        >
+          README.md →
+        </a>
       </section>
     </>
   );

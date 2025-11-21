@@ -1,0 +1,74 @@
+/* How I Built This cute blurb */
+.how-built-blurb {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 20px;
+  padding: 1.75rem 2rem;
+  max-width: 300px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+  z-index: 100;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.how-built-blurb:hover {
+  transform: translateY(-50%) scale(1.02);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+
+.how-built-blurb.expanded {
+  max-width: 600px;
+}
+
+.blurb-story {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #ddd;
+}
+
+.how-built-blurb h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #111;
+}
+
+.how-built-blurb p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.blurb-story p {
+  color: #333;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  padding: 0.75rem 0;
+  border-left: 3px solid #e5e7eb;
+  padding-left: 1rem;
+}
+
+.blurb-story p strong {
+  font-weight: 600;
+  color: #111;
+  font-size: 1.15rem;
+}
+
+.blurb-story p:last-child {
+  margin-bottom: 0;
+  border-left-color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+  .how-built-blurb {
+    display: none;
+  }
+}
