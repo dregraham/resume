@@ -80,11 +80,11 @@
         "image": "aws_azure_iac.png",
         "url": "/projects/multicloud-iac"
       },
-        {
-          "title": "Flexible Payment Scheduler App",
-          "category": "A Java application built on Spring Boot to help users manage flexible payment schedules.",
-          "image": "frs_logos.png",
-          "url": "/projects/flexible-payment-schedule"
+      {
+        "title": "Log Analyzer Toolkit",
+        "category": "A toolkit for analyzing and visualizing log data.",
+        "image": "analyze.jpg",
+        "url": "/projects/log-analyzer-toolkit"
       }
     ]
   }
