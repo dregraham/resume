@@ -1,0 +1,3 @@
+This is a placeholder for the Spring Boot server executable. 
+In a real deployment, this would be a compiled PowerShell script converted to .exe format.
+To create the actual .exe, use a PowerShell to EXE converter tool with the spring-boot-server.ps1 script.
