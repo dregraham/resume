@@ -81,10 +81,10 @@
         "url": "/projects/multicloud-iac"
       },
         {
-          "title": "Flexible Rent Scheduler App",
-          "category": "A Java application built on Spring Boot to help users manage flexible rent payments.",
+          "title": "Flexible Payment Scheduler App",
+          "category": "A Java application built on Spring Boot to help users manage flexible payment schedules.",
           "image": "frs_logos.png",
-          "url": "https://dregraham.com/FlexibleRentSchedule/static-rent-schedule.html"
+          "url": "/projects/flexible-payment-schedule"
       }
     ]
   }

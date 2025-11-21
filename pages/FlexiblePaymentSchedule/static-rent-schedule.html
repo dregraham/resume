@@ -5,31 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flexible Rent Schedule Calculator</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
-        .header { background: #2B2B2B; color: white; padding: 1rem 0; text-align: center; }
-        .header h1 { margin: 0; font-size: 1.5rem; }
-        .nav { margin-top: 0.5rem; }
-        .nav a { color: white; text-decoration: none; margin: 0 1rem; }
-        .nav a:hover { text-decoration: underline; }
-        .container { max-width: 500px; margin: 2rem auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+        body { font-family: Arial, sans-serif; margin: 2em; background: #f9f9f9; }
+        .container { max-width: 500px; margin: auto; background: #fff; padding: 2em; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
         h1 { text-align: center; }
         label { display: block; margin-top: 1em; }
         input, select, button { width: 100%; padding: 0.5em; margin-top: 0.5em; }
         .result { margin-top: 2em; font-size: 1.2em; text-align: center; }
-        .footer { background: #2B2B2B; color: white; text-align: center; padding: 1rem 0; margin-top: 2rem; }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>Dre Graham</h1>
-        <nav class="nav">
-            <a href="https://dregraham.com">Home</a>
-            <a href="https://dregraham.com/#about">About</a>
-            <a href="https://dregraham.com/#resume">Resume</a>
-            <a href="https://dregraham.com/#projects">Projects</a>
-            <a href="https://dregraham.com/#contact">Contact</a>
-        </nav>
-    </header>
     <div class="container">
         <h1>Flexible Rent Schedule Calculator</h1>
         <p>Enter a rent amount and choose a schedule option to see the monthly payment.</p>
@@ -49,9 +33,6 @@
         </form>
         <div class="result" id="result"></div>
     </div>
-    <footer class="footer">
-        <p>&copy; 2024 Dre Graham. All rights reserved.</p>
-    </footer>
     <script>
         function calculate(event) {
             event.preventDefault();
