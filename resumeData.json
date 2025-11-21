@@ -81,10 +81,10 @@
         "url": "/projects/multicloud-iac"
       },
       {
-        "title": "Log Analyzer Toolkit",
-        "category": "A toolkit for analyzing and visualizing log data.",
-        "image": "analyze.jpg",
-        "url": "/projects/log-analyzer-toolkit"
+        "title": "Flexible Payment Scheduler App",
+        "category": "Spring Boot payment calculator with React frontend and REST API integration.",
+        "image": "flexiblepaymentschedule.png",
+        "url": "/projects/flexible-payment-schedule"
       }
     ]
   }
