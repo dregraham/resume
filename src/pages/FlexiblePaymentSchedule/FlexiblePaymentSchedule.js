@@ -232,7 +232,7 @@ const FlexiblePaymentSchedule = () => {
             </div>
             <div className="space-y-4">
               <a
-                href="/src/pages/FlexiblePaymentSchedule/target/payment-calculator-1.0.0.jar"
+                href="/payment-calculator-1.0.0.jar"
                 download="payment-calculator-1.0.0.jar"
                 className="block w-full bg-blue-600 text-white px-6 py-4 rounded-md hover:bg-blue-700 transition-colors text-center font-medium"
               >
