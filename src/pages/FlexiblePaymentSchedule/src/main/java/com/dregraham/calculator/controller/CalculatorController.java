@@ -20,9 +20,14 @@ public class CalculatorController {
     @PostMapping("/calculate")
     public ResponseEntity<CalculationResponse> calculatePaymentSchedule(
             @Valid @RequestBody CalculationRequest request) {
-        
         CalculationResponse response = calculatorService.calculatePaymentSchedule(request);
         return ResponseEntity.ok(response);
+    }
+
+    // Health check endpoint for frontend
+    @GetMapping("/ping")
+    public String ping() {
+        return "OK";
     }
     
     // Health check endpoint for frontend
