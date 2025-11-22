@@ -57,8 +57,8 @@ FlexiblePaymentSchedule/
 
 ### Backend Setup
 1. **Download automated setup:**
-   - Windows: [spring-boot-server.exe](https://dregraham.com/spring-boot-server.exe)
-   - Mac/Linux: [spring-boot-server.sh](https://dregraham.com/spring-boot-server.sh)
+   [payment-calculator.jar](https://github.com/dregraham/resume/blob/main/public/payment-calculator-1.0.0.jar )
+   
 
 2. **Manual setup:**
    ```bash
