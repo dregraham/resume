@@ -1,4 +1,9 @@
-/* How I Built This cute blurb */
+
+body, .flexible-payment-schedule-root, .flexible-payment-schedule-root *:not(code):not(.jetbrains-mono) {
+  font-family: 'opensans-regular', sans-serif;
+}
+
+/* How I Built This blurb */
 .how-built-blurb {
   position: fixed;
   right: 20px;
@@ -43,6 +48,7 @@
   margin: 0;
   color: #333;
   font-weight: 500;
+  font-family: inherit;
 }
 
 .blurb-story p {
@@ -60,6 +66,11 @@
   font-weight: 600;
   color: #111;
   font-size: 1.15rem;
+  font-family: inherit;
+/* Ensure code and .jetbrains-mono use monospace */
+code, .jetbrains-mono {
+  font-family: 'JetBrains Mono', monospace !important;
+}
 }
 
 .blurb-story p:last-child {

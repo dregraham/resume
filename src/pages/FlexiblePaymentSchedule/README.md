@@ -36,12 +36,12 @@ This application calculates loan payments using standard amortization formulas w
 FlexiblePaymentSchedule/
 ├── src/main/java/com/dregraham/rentcalculator/
 │   ├── controller/
-│   │   └── RentCalculatorController.java    # REST API endpoints
+│   │   └── CalculatorController.java        # REST API endpoints
 │   ├── service/
-│   │   └── RentCalculatorService.java       # Business logic layer
+│   │   └── CalculatorService.java           # Business logic layer
 │   ├── model/
-│   │   ├── RentCalculationRequest.java      # Request DTO with validation
-│   │   └── RentCalculationResponse.java     # Response DTO
+│   │   ├── CalculationRequest.java          # Request DTO with validation
+│   │   └── CalculationResponse.java         # Response DTO
 │   └── PaymentCalculatorApplication.java    # Spring Boot main class
 ├── FlexiblePaymentSchedule.js               # React frontend component
 ├── pom.xml                                  # Maven configuration

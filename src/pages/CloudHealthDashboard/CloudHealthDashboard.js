@@ -94,7 +94,7 @@ export default function CloudHealthDashboard() {
           <div className="grid gap-6">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="flex items-start gap-6">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
+                <div className="w-14 h-14 min-w-14 min-h-14 aspect-square rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
                   01
                 </div>
                 <div className="flex-1">
@@ -106,7 +106,7 @@ export default function CloudHealthDashboard() {
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="flex items-start gap-6">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
+                <div className="w-14 h-14 min-w-14 min-h-14 aspect-square rounded-full bg-gradient-to-br from-green-400 to-green-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
                   02
                 </div>
                 <div className="flex-1">
@@ -118,7 +118,7 @@ export default function CloudHealthDashboard() {
             
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="flex items-start gap-6">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
+                <div className="w-14 h-14 min-w-14 min-h-14 aspect-square rounded-full bg-gradient-to-br from-purple-400 to-purple-600 text-white font-bold flex items-center justify-center text-xl shadow-md flex-shrink-0">
                   03
                 </div>
                 <div className="flex-1">
@@ -293,7 +293,7 @@ export default function CloudHealthDashboard() {
         <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
         {isBlurbExpanded && (
           <div className="blurb-story">
-            <p><strong>Initial Challenge:</strong> Create a realistic AWS Service Health Console simulation that feels authentic without access to real AWS Health APIs.</p>
+            <p><strong>Initial Challenge:</strong> Create a realistic AWS Service Health Console simulation that displays how a dashboard can be configured to show health from deployed resources.</p>
             
             <p><strong>JSX Syntax Nightmare:</strong> Spent considerable time debugging unclosed ReactMarkdown components and missing closing tags that were causing compilation failures. The error messages weren't always clear about which components were malformed.</p>
             

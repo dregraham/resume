@@ -1,0 +1,5 @@
+com\dregraham\rentcalculator\model\CalculationResponse.class
+com\dregraham\rentcalculator\PaymentCalculatorApplication.class
+com\dregraham\rentcalculator\service\CalculatorService.class
+com\dregraham\rentcalculator\controller\CalculatorController.class
+com\dregraham\rentcalculator\model\CalculationRequest.class
