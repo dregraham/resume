@@ -28,6 +28,7 @@ if (!document.head.querySelector('style[data-jetbrains]')) {
 
 const FlexiblePaymentSchedule = () => {
   const [serverStatus, setServerStatus] = useState(null);
+  const [isImageOpen, setIsImageOpen] = useState(false);
 
   // Health check for backend server
   useEffect(() => {
@@ -216,21 +217,59 @@ const FlexiblePaymentSchedule = () => {
                 Can be downloaded and run locally without needing to manually configure dependencies.
               </p>
               <div className="space-y-3">
-                <div className="flex items-center text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Auto-installs Java 17 + Maven
+                <div className="flex items-start text-gray-600">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2"></span>
+                  <span>
+                    <strong>1. Install Java 17 or newer:</strong><br/>
+                    <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">choco install temurin17 -y</span> <br/>
+                    or download from <a href="https://adoptium.net/temurin/releases/?version=17" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">Adoptium</a>.
+                  </span>
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Builds and initializes the application
+                <div className="flex items-start text-gray-600">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2"></span>
+                  <span>
+                    <strong>2. Open PowerShell (or Terminal) in the folder where you downloaded the .jar file and run:</strong><br/>
+                    <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">java -jar ./payment-calculator-1.0.0.jar</span>
+                  </span>
                 </div>
-                <div className="flex items-center text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
-                  Starts Spring Boot API on port 8080
+                <div className="flex items-start text-gray-600">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2"></span>
+                  <span>
+                    <strong>3. Verify the service is running:</strong><br/>
+                    Open your browser and go to <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">http://localhost:8080/</span>.<br/>
+                    You should see a message: <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">Payment Calculator API is running.</span>
+                  </span>
                 </div>
               </div>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center">
+              {/* Screenshot above download button */}
+              <img
+                src={require("./spring-boot-server.png")}
+                alt="Spring Boot server running in PowerShell"
+                style={{ maxWidth: '100%', borderRadius: 8, margin: '0 0 12px 0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', cursor: 'pointer' }}
+                onClick={() => setIsImageOpen(true)}
+                tabIndex={0}
+                aria-label="Expand Spring Boot server screenshot"
+              />
+              <span className="text-xs text-gray-500">Click image to expand</span>
+              {/* Modal for expanded image */}
+              {isImageOpen && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+                  onClick={() => setIsImageOpen(false)}
+                  style={{ cursor: 'zoom-out' }}
+                  aria-modal="true"
+                  role="dialog"
+                >
+                  <img
+                    src={require("./spring-boot-server.png")}
+                    alt="Spring Boot server running in PowerShell expanded"
+                    style={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 12, boxShadow: '0 4px 24px rgba(0,0,0,0.25)' }}
+                    onClick={e => e.stopPropagation()}
+                  />
+                </div>
+              )}
               <a
                 href="/payment-calculator-1.0.0.jar"
                 download="payment-calculator-1.0.0.jar"
@@ -420,4 +459,3 @@ const FlexiblePaymentSchedule = () => {
 };
 
 export default FlexiblePaymentSchedule;
-
