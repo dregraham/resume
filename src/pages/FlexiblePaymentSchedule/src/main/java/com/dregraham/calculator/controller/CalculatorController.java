@@ -29,10 +29,10 @@ public class CalculatorController {
     public String ping() {
         return "OK";
     }
-    
-    // Health check endpoint for frontend
-    @GetMapping("/ping")
-    public String ping() {
-        return "OK";
+
+    // Default root endpoint
+    @GetMapping("/")
+    public String home() {
+        return "Payment Calculator API is running.";
     }
 }
