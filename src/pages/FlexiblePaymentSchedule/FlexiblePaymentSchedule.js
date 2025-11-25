@@ -207,41 +207,34 @@ const FlexiblePaymentSchedule = () => {
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">Setup Spring Boot Backend</h2>
-          </div>
           <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Directions column */}
             <div>
-              <p className="text-lg text-gray-600 mb-6">
-                Fully packaged backend using Spring Boot with automated setup scripts for Java & Maven. <br/> <br/>
-                Can be downloaded and run locally without needing to manually configure dependencies.
-              </p>
-              <div className="space-y-3">
-                <div className="flex items-start text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2"></span>
-                  <span>
-                    <strong>1. Install Java 17 or newer:</strong><br/>
-                    <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">choco install temurin17 -y</span> <br/>
-                    or download from <a href="https://adoptium.net/temurin/releases/?version=17" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">Adoptium</a>.
-                  </span>
+              <div className="space-y-3 text-gray-700">
+                <div className="mb-2">
+                  <strong>Prerequisites:</strong>
+                  <ul className="list-disc ml-6">
+                    <li>Java 17 or higher (<a href="https://adoptium.net/temurin/releases/?version=17" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">Adoptium</a> or <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">choco install temurin17 -y</span>)</li>
+                  </ul>
                 </div>
-                <div className="flex items-start text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2"></span>
-                  <span>
-                    <strong>2. Open PowerShell (or Terminal) in the folder where you downloaded the .jar file and run:</strong><br/>
-                    <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">java -jar ./payment-calculator-1.0.0.jar</span>
-                  </span>
+                <div className="mb-2">
+                  <strong>Run the Backend:</strong>
+                  <ol className="list-decimal ml-6">
+                    <li>Download <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">payment-calculator-1.0.0.jar</span> (above).</li>
+                    <li>Open PowerShell or Terminal in the folder where you downloaded the .jar.</li>
+                    <li>Run: <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">java -jar ./payment-calculator-1.0.0.jar</span></li>
+                  </ol>
                 </div>
-                <div className="flex items-start text-gray-600">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3 mt-2"></span>
-                  <span>
-                    <strong>3. Verify the service is running:</strong><br/>
-                    Open your browser and go to <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">http://localhost:8080/</span>.<br/>
-                    You should see a message: <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">Payment Calculator API is running.</span>
-                  </span>
+                <div className="mb-2">
+                  <strong>Verify the Service:</strong>
+                  <ul className="list-disc ml-6">
+                    <li>Visit <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">http://localhost:8080/</span> in your browser.</li>
+                    <li>You should see: <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">Payment Calculator API is running.</span></li>
+                  </ul>
                 </div>
               </div>
             </div>
+            {/* Right column: image, download, requirements */}
             <div className="space-y-4 flex flex-col items-center">
               {/* Screenshot above download button */}
               <img
@@ -298,6 +291,7 @@ const FlexiblePaymentSchedule = () => {
                 </a>
               </p>
             </div>
+
           </div>
         </div>
       </section>
@@ -324,7 +318,7 @@ const FlexiblePaymentSchedule = () => {
               <p className="text-lg text-gray-600 mb-6">
               Enter your loan details to calculate payments. <br/>
               <br/>
-              <em>Note:</em> <br/> If the downloadable Spring Boot server (above) is running locally, the calculation is executed in Java via the backend. If not, the logic runs directly in JavaScript as a fallback.
+              <em>Note:</em> <br/> If the .jar Spring Boot server is running locally you should see  <span className="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-semibold">Local Server Running</span>. If not, the calculator uses JavaScript as a fallback.
               </p>
             </div>
 
@@ -435,10 +429,10 @@ const FlexiblePaymentSchedule = () => {
         <h3>How I Built This {isBlurbExpanded ? '−' : '+'}</h3>
         {isBlurbExpanded && (
           <div className="blurb-story">
-            <p><strong>Project Origin:</strong> Started as a simple JavaScript calculator, but I rebuilt it using Spring Boot to make it more maintainable and production-aligned.</p>
-            <p><strong>Why Transition:</strong> Java was better suited for handling calculation logic, layered structure, and data integrity.</p>
-            <p><strong>Front/Back Integration:</strong> The calculator first calls the backend API. If unavailable, it falls back to client-side logic.</p>
-            <p><strong>Result:</strong> Evolves from UI-only demo to packaged backend tool — engineered to be reusable, scalable, and structured like a real service.</p>
+            <p><strong>Project Origin:</strong> This project was always intended as a way to teach myself Spring Boot by building a real-world calculator from scratch using Java.</p>
+            <p><strong>Learning Goal:</strong> My aim was to get hands-on experience with Java, Spring Boot, and backend API design—not to transition from another language, but to learn a new toolset.</p>
+            <p><strong>Front/Back Integration:</strong> The calculator first calls the backend API. If unavailable, it falls back to client-side logic (using JavaScript).</p>
+            <p><strong>Result:</strong> The result is a packaged backend tool—engineered to be reusable, scalable, and structured like a real service, while helping me learn modern Spring Boot server development.</p>
           </div>
         )}
       </div>
