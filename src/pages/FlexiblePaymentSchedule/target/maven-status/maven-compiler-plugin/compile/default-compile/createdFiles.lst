@@ -1,3 +1,4 @@
+com\dregraham\rentcalculator\controller\RootController.class
 com\dregraham\rentcalculator\model\CalculationResponse.class
 com\dregraham\rentcalculator\PaymentCalculatorApplication.class
 com\dregraham\rentcalculator\service\CalculatorService.class
