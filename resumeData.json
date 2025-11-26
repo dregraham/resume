@@ -1,9 +1,9 @@
 {
   "main": {
     "name": "Dre Graham",
-    "description": "Cloud | DevOps | Full-Stack Engineer",
+    "description": "Cloud | DevOps | Software Engineer - \n\n\"Fail fast, succeed faster.\"",
     "image": "profilepic.jpg",
-    "bio": "I'm a Cloud, DevOps, and Full-Stack engineer with hands-on experience supporting .NET/SQL applications, troubleshooting API-driven systems, and building automation across AWS and Azure. I love working with C#, React, and cloud services—whether it's designing dashboards, deploying infrastructure as code, or streamlining CI/CD pipelines with GitHub Actions, PowerShell, Python, and Terraform. My background in technical support taught me to dig deep into distributed systems, solve tough problems, and keep environments running smoothly. I thrive on learning new tech, collaborating with others, and modernizing applications into scalable, cloud-native solutions.\n\nOutside of work, you'll find me on my bike, hiking with my dogs, or traveling with my wife. I'm always up for connecting with fellow tech enthusiasts and exploring new opportunities in the cloud space.",
+    "bio": "I’m a Cloud & Software DevOps Engineer who learns by building things, trying new tools, and intentionally pushing systems to their limits. I focus on making systems reliable, using AI and infrastructure as code to automate as many workflows as possible, and establishing pipeline stability across cloud platforms using Terraform, GitHub Actions, PowerShell, and Python. I like taking on projects end-to-end so I understand every moving part, and I document everything as I go so others can build off it without starting from scratch. I enjoy troubleshooting tough issues, cleaning up broken pipelines and environments, and securing systems through hands-on engineering.\n\nOutside of work, you'll find me on my bike, hiking with my dogs, or traveling with my wife. I'm always up for connecting with fellow tech enthusiasts and exploring new opportunities in the cloud space.",
     "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
     "email": "andre.graham709@gmail.com",
     "github": "https://github.com/dregraham",
@@ -28,13 +28,13 @@
   },
   "resume": {
     "skills": [
-  { "name": "AWS (EC2, Lambda, S3, DynamoDB, CloudWatch, IaC)", "level": "85%" },
-  { "name": "Azure & GCP (Functions, DevOps, CosmosDB, Cloud Run)", "level": "60%" },
-  { "name": "Programming & Scripting (Python, PowerShell, JavaScript, React, Bash, HTML/CSS, JSON/YAML)", "level": "85%" },
-  { "name": "Infrastructure as Code & CI/CD (Terraform, CloudFormation, GitHub Actions, Azure DevOps)", "level": "75%" },
-  { "name": "Monitoring & Observability (CloudWatch, Sumo Logic, Kibana)", "level": "85%" },
-  { "name": "Databases (SQL Server, DynamoDB, Cosmos DB, RDS)", "level": "70%" },
-  { "name": "Cross-Platform Systems (Linux, Windows, Networking, Security)", "level": "70%" }
+  { "name": "AWS", "details": "EC2, Lambda, S3, DynamoDB, CloudWatch, IaC", "level": "90%" },
+  { "name": "Azure & GCP", "details": "Functions, DevOps, CosmosDB, Cloud Run", "level": "70%" },
+  { "name": "Programming & Scripting", "details": "Python, PowerShell, Java, React, Bash, Go, JSON/YAML", "level": "85%" },
+  { "name": "Infrastructure as Code & CI/CD", "details": "Terraform, CloudFormation, GitHub Actions, Azure DevOps", "level": "75%" },
+  { "name": "Monitoring & Observability", "details": "CloudWatch, Sumo Logic, Kibana", "level": "85%" },
+  { "name": "Databases", "details": "SQL Server, DynamoDB, Cosmos DB, RDS", "level": "70%" },
+  { "name": "Cross-Platform Systems (Linux, Windows, Networking, Security)", "level": "90%" }
 ]
 ,
     "education": [
@@ -85,6 +85,12 @@
         "category": "Spring Boot payment calculator with React frontend and REST API integration.",
         "image": "flexiblepaymentschedule.png",
         "url": "/projects/flexible-payment-schedule"
+      },
+      {
+        "title": "Cloud Drift Guardrail",
+        "category": "EC2 drift detection that enforces run windows and stops idle instances automatically.",
+        "image": "cloud-drift-guardrail.png",
+        "url": "/projects/cloud-drift-guardrail"
       }
     ]
   }
