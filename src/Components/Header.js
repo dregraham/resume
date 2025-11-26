@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import ParticlesBg from "particles-bg";
 // Section IDs in order
-const SECTIONS = ["home", "about", "resume", "projects", "contact"];
+const SECTIONS = ["home", "about", "projects", "resume", "contact"];
 
 
 class Header extends Component {
@@ -116,10 +116,10 @@ class Header extends Component {
               <a className={`smoothscroll${this.state.activeSection === 'about' ? ' current' : ''}`} href="#about" onClick={e => this.handleNavClick(e, 'about')}>About</a>
             </li>
             <li>
-              <a className={`smoothscroll${this.state.activeSection === 'resume' ? ' current' : ''}`} href="#resume" onClick={e => this.handleNavClick(e, 'resume')}>Resume</a>
+              <a className={`smoothscroll${this.state.activeSection === 'projects' ? ' current' : ''}`} href="#projects" onClick={e => this.handleNavClick(e, 'projects')}>Projects</a>
             </li>
             <li>
-              <a className={`smoothscroll${this.state.activeSection === 'projects' ? ' current' : ''}`} href="#projects" onClick={e => this.handleNavClick(e, 'projects')}>Projects</a>
+              <a className={`smoothscroll${this.state.activeSection === 'resume' ? ' current' : ''}`} href="#resume" onClick={e => this.handleNavClick(e, 'resume')}>Resume</a>
             </li>
             <li>
               <a className={`smoothscroll${this.state.activeSection === 'contact' ? ' current' : ''}`} href="#contact" onClick={e => this.handleNavClick(e, 'contact')}>Contact</a>

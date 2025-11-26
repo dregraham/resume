@@ -308,22 +308,30 @@ export default function MultiCloudIAC() {
 
         {/* === HOW I BUILT THIS BLURB === */}
         <div className={`how-built-blurb ${isBlurbExpanded ? 'expanded' : ''}`} onClick={() => setIsBlurbExpanded(!isBlurbExpanded)}>
-          <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
+          <h3>The Build Story {isBlurbExpanded ? '\u2212' : '+'}</h3>
           {isBlurbExpanded && (
-            <div className="blurb-story">
-              <p><strong>Overall Challenge:</strong> Show how Terraform can be applied to create environments in AWS and Azure with automated provisioning, state management, and cost controls for live demonstrations.</p>
-              
-              <p><strong>GitHub Actions Workflow Issues:</strong> The terraform-provision.yml had YAML syntax errors with missing closing tags and indentation issues. Spent hours debugging workflow failures before discovering the malformed structure.</p>
-              
-              <p><strong>AWS Infrastructure Setup:</strong> Had to manually create the supporting AWS infrastructure - an S3 bucket for Terraform state storage, a DynamoDB table for state locking, and API Gateway endpoints. The Lambda dispatch function required careful IAM permissions to trigger GitHub workflows securely.</p>
-              
-              <p><strong>State Collision Problems:</strong> Multiple demo requests were conflicting with shared Terraform state. Had to implement unique state keys per request ID in the Terraform configuration to allow parallel deployments without conflicts.</p>
-              
-              <p><strong>Security Architecture:</strong> Initially tried putting GitHub PATs directly in the React frontend - a major security flaw. Had to build an AWS Lambda proxy with API Gateway authentication to safely trigger repository dispatch events without exposing credentials.</p>
-              
-              <p><strong>Cost Control Implementation:</strong> The biggest challenge was preventing forgotten demo environments from racking up AWS costs. Implemented an auto-destroy countdown timer with edge case handling for manual cleanup scenarios.</p>
-              
-              <p><strong>Final Architecture:</strong> Terraform modules with remote S3 state → GitHub Actions workflows → Lambda API proxy → React frontend with real-time status tracking. Result: Production-ready infrastructure automation with zero runaway costs.</p>
+            <div className="blurb-story" style={{ maxHeight: 320, overflowY: 'auto', paddingRight: 8 }}>
+              <p><strong>Overall Challenge:</strong> <br/>
+                Show how Terraform can be applied to create environments in AWS and Azure with automated provisioning, state management, and cost controls for live demonstrations.
+              </p>
+              <p><strong>GitHub Actions Workflow Issues:</strong> <br/>
+                The terraform-provision.yml had YAML syntax errors with missing closing tags and indentation issues. Spent hours debugging workflow failures before discovering the malformed structure.
+              </p>
+              <p><strong>AWS Infrastructure Setup:</strong> <br/>
+                Had to manually create the supporting AWS infrastructure - an S3 bucket for Terraform state storage, a DynamoDB table for state locking, and API Gateway endpoints. The Lambda dispatch function required careful IAM permissions to trigger GitHub workflows securely.
+              </p>
+              <p><strong>State Collision Problems:</strong> <br/>
+                Multiple demo requests were conflicting with shared Terraform state. Had to implement unique state keys per request ID in the Terraform configuration to allow parallel deployments without conflicts.
+              </p>
+              <p><strong>Security Architecture:</strong> <br/>
+                Initially tried putting GitHub PATs directly in the React frontend - a major security flaw. Had to build an AWS Lambda proxy with API Gateway authentication to safely trigger repository dispatch events without exposing credentials.
+              </p>
+              <p><strong>Cost Control Implementation:</strong> <br/>
+                The biggest challenge was preventing forgotten demo environments from racking up AWS costs. Implemented an auto-destroy countdown timer with edge case handling for manual cleanup scenarios.
+              </p>
+              <p><strong>Final Architecture:</strong> <br/>
+                Terraform modules with remote S3 state → GitHub Actions workflows → Lambda API proxy → React frontend with real-time status tracking. Result: Production-ready infrastructure automation with zero runaway costs.
+              </p>
             </div>
           )}
         </div>

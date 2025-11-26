@@ -292,18 +292,25 @@ export default function CloudHealthDashboard() {
       <div className={`how-built-blurb ${isBlurbExpanded ? 'expanded' : ''}`} onClick={() => setIsBlurbExpanded(!isBlurbExpanded)}>
         <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
         {isBlurbExpanded && (
-          <div className="blurb-story">
-            <p><strong>Initial Challenge:</strong> Create a realistic AWS Service Health Console simulation that displays how a dashboard can be configured to show health from deployed resources.</p>
-            
-            <p><strong>JSX Syntax Nightmare:</strong> Spent considerable time debugging unclosed ReactMarkdown components and missing closing tags that were causing compilation failures. The error messages weren't always clear about which components were malformed.</p>
-            
-            <p><strong>Data Structure Complexity:</strong> Organizing mock data across 5 different AWS service categories (Core, Compute, Security, Database, DevOps) while maintaining realistic service names, regions, and metrics was more complex than expected.</p>
-            
-            <p><strong>Modal System Issues:</strong> Building the tabbed modal system with click-outside detection proved tricky. Had to handle event propagation properly to prevent the modal from closing when clicking inside tabs or content areas.</p>
-            
-            <p><strong>State Management Challenges:</strong> Managing multiple useState hooks for dataset selection, service details, modal state, and loading states while keeping everything synchronized required careful planning of component re-renders.</p>
-            
-            <p><strong>Final Solution:</strong> JSON mock datasets organized by service category → React functional components with useState hooks → Interactive modal system with tabbed navigation → AWS-style CSS mimicking the real console. Result: Authentic-feeling dashboard that demonstrates React skills and AWS knowledge.</p>
+          <div className="blurb-story" style={{ maxHeight: 320, overflowY: 'auto', paddingRight: 8 }}>
+            <p><strong>Initial Challenge:</strong> <br/>
+              Create a realistic AWS Service Health Console simulation that displays how a dashboard can be configured to show health from deployed resources.
+            </p>
+            <p><strong>JSX Syntax Nightmare:</strong> <br/>
+              Spent considerable time debugging unclosed ReactMarkdown components and missing closing tags that were causing compilation failures. The error messages weren't always clear about which components were malformed.
+            </p>
+            <p><strong>Data Structure Complexity:</strong> <br/>
+              Organizing mock data across 5 different AWS service categories (Core, Compute, Security, Database, DevOps) while maintaining realistic service names, regions, and metrics was more complex than expected.
+            </p>
+            <p><strong>Modal System Issues:</strong> <br/>
+              Building the tabbed modal system with click-outside detection proved tricky. Had to handle event propagation properly to prevent the modal from closing when clicking inside tabs or content areas.
+            </p>
+            <p><strong>State Management Challenges:</strong> <br/>
+              Managing multiple useState hooks for dataset selection, service details, modal state, and loading states while keeping everything synchronized required careful planning of component re-renders.
+            </p>
+            <p><strong>Final Solution:</strong> <br/>
+              JSON mock datasets organized by service category → React functional components with useState hooks → Interactive modal system with tabbed navigation → AWS-style CSS mimicking the real console. Result: Authentic-feeling dashboard that demonstrates React skills and AWS knowledge.
+            </p>
           </div>
         )}
       </div>

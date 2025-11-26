@@ -17,6 +17,7 @@ import LogAnalyzerToolkit from './pages/LogAnalyzerToolkit/LogAnalyzerToolkit';
 import DynamoDBInventoryManager from './pages/DynamoDBInventoryManager/DynamoDBInventoryManager';
 import MultiCloudIAC from './pages/multicloud-iac/MultiCloudIAC';
 import FlexiblePaymentSchedule from './pages/FlexiblePaymentSchedule/FlexiblePaymentSchedule';
+import CloudDriftGuardrail from './pages/CloudDriftGuardrail/CloudDriftGuardrail';
 
 
 class App extends Component {
@@ -116,8 +117,8 @@ class App extends Component {
             <Route path="/" element={
               <>
                 <About data={this.state.resumeData.main} />
-                <Resume data={this.state.resumeData.resume} />
                 <Projects data={this.state.resumeData.projects} />
+                <Resume data={this.state.resumeData.resume} />
                 <Contact data={this.state.resumeData.main} />
               </>
             } />
@@ -125,8 +126,8 @@ class App extends Component {
             <Route path="*" element={
               <>
                 <About data={this.state.resumeData.main} />
-                <Resume data={this.state.resumeData.resume} />
                 <Projects data={this.state.resumeData.projects} />
+                <Resume data={this.state.resumeData.resume} />
                 <Contact data={this.state.resumeData.main} />
               </>
             } />
@@ -134,8 +135,8 @@ class App extends Component {
             <Route path="/projects" element={
               <>
                 <About data={this.state.resumeData.main} />
-                <Resume data={this.state.resumeData.resume} />
                 <Projects data={this.state.resumeData.projects} />
+                <Resume data={this.state.resumeData.resume} />
                 <Contact data={this.state.resumeData.main} />
               </>
             } />
@@ -144,6 +145,7 @@ class App extends Component {
             <Route path="/projects/dynamodb-inventory-manager" element={<DynamoDBInventoryManager />} />
             <Route path="/projects/multicloud-iac" element={<MultiCloudIAC />} />
             <Route path="/projects/flexible-payment-schedule" element={<FlexiblePaymentSchedule />} />
+            <Route path="/projects/cloud-drift-guardrail" element={<CloudDriftGuardrail />} />
           </Routes>
           <Footer data={this.state.resumeData.main} />
           </ErrorBoundary>

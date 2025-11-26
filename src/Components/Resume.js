@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { asList, asStr, lower } from "../utils/safe";
+import Projects from "./Projects";
 
 class Resume extends Component {
   constructor(props) {
@@ -47,7 +48,6 @@ class Resume extends Component {
       </div>
     ));
 
-    // Work experience mapping (restored after accidental removal)
     const work = asList(this.props.data.work).map((item) => (
       <div key={asStr(item?.company)}>
         <h3>{asStr(item?.company)}</h3>
@@ -61,40 +61,55 @@ class Resume extends Component {
 
     const skillsData = [
       {
-        name: "AWS (EC2, Lambda, S3, DynamoDB, CloudWatch, IaC)",
+        name: "AWS",
+        service: "EC2, Lambda, S3, DynamoDB, CloudWatch, IaC",
+        details:
+          "Strong hands-on AWS experience with compute, storage, monitoring, and IaC.",
         level: "85%",
-        tooltip: "Strong hands-on AWS experience with compute, storage, monitoring, and IaC."
       },
       {
-        name: "Azure & GCP (Functions, DevOps, CosmosDB, Cloud Run)",
+        name: "Azure & GCP",
+        service: "Functions, DevOps, CosmosDB, Cloud Run",
+        details:
+          "Cross-cloud understanding of Azure and GCP services for multi-cloud deployment.",
         level: "40%",
-        tooltip: "Cross-cloud understanding of Azure and GCP services for multi-cloud deployment."
       },
       {
-        name: "Programming & Scripting (Python, PowerShell, JavaScript, React, Bash, HTML/CSS, JSON/YAML)",
+        name: "Programming & Scripting",
+        service:
+          "Python, PowerShell, JavaScript, React, Bash, HTML/CSS, JSON/YAML",
         level: "85%",
-        tooltip: "Versatile in automation, web, and scripting across multiple platforms."
+        details:
+          "Versatile in automation, web, and scripting across multiple platforms.",
       },
       {
-        name: "Infrastructure as Code & CI/CD (Terraform, CloudFormation, GitHub Actions, Azure DevOps)",
+        name: "Infrastructure as Code & CI/CD",
+        service: "Terraform, CloudFormation, GitHub Actions, Azure DevOps",
         level: "75%",
-        tooltip: "Proficient in IaC and deployment pipelines for scalable cloud environments."
+        details:
+          "Proficient in IaC and deployment pipelines for scalable cloud environments.",
       },
       {
-        name: "Monitoring & Observability (CloudWatch, Sumo Logic, Kibana)",
+        name: "Monitoring & Observability",
+        service: "CloudWatch, Sumo Logic, Kibana, EventBridge",
         level: "80%",
-        tooltip: "Experienced with log analysis, telemetry, and system health automation."
+        details:
+          "Experienced with log analysis, telemetry, and system health automation.",
       },
       {
-        name: "Databases (SQL Server, DynamoDB, Cosmos DB, RDS, Redis)",
+        name: "Databases",
+        service: "SQL Server, DynamoDB, Cosmos DB, RDS, Redis",
         level: "90%",
-        tooltip: "Comfortable querying and optimizing both relational and NoSQL databases."
+        details:
+          "Comfortable querying and optimizing both relational and NoSQL databases.",
       },
       {
-        name: "Cross-Platform Systems (Linux, Windows, Networking, Security)",
+        name: "Cross-Platform Systems",
+        service: "Linux, Windows, Networking, Security",
         level: "70%",
-        tooltip: "Solid understanding of system administration, networking, and OS-level automation."
-      }
+        details:
+          "Solid understanding of system administration, networking, and OS-level automation.",
+      },
     ];
 
     const skills = skillsData.map((skill) => {
@@ -106,25 +121,37 @@ class Resume extends Component {
         <li
           key={skill.name}
           className="skill-item"
-          title={skill.tooltip}
-          style={{ flex: "1 1 48%", marginBottom: "20px" }}
+          style={{
+            flex: "1 1 48%",
+            marginBottom: "40px",
+            paddingBottom: "10px",
+            minHeight: "90px",
+          }}
         >
           <div className="skill-header">
             <span className="skill-name">{skill.name}</span>
           </div>
+          {skill.service && (
+            <span
+              className="skill-service"
+              style={{
+                display: "block",
+                fontSize: "0.95em",
+                color: "#888",
+                marginTop: "2px",
+              }}
+            >
+              {skill.service}
+            </span>
+          )}
           <div
             className="skill-track"
-            role="progressbar"
-            aria-valuenow={parseInt(width, 10)}
-            aria-valuemin="0"
-            aria-valuemax="100"
-            aria-label={skill.name + " proficiency"}
             style={{
               height: "10px",
               background: "#eee",
               borderRadius: "5px",
               overflow: "hidden",
-              marginTop: "6px"
+              marginTop: "16px",
             }}
           >
             <span
@@ -133,33 +160,36 @@ class Resume extends Component {
                 backgroundColor,
                 display: "block",
                 height: "100%",
-                borderRadius: "5px"
+                borderRadius: "5px",
               }}
               className={className}
             ></span>
           </div>
+          {skill.details && (
+            <span className="skill-details">{skill.details}</span>
+          )}
         </li>
       );
     });
 
-    // --- Certifications ---
     const certs = [
-      { file: "A+.png", label: "CompTIA A+" },
-      { file: "aws_cloud_practitioner.png", label: "AWS Cloud Practitioner" },
-      { file: "CCAP.png", label: "Certified Cloud Architecture Professional" },
-      { file: "CIOS.png", label: "Certified Information Operations Specialist" },
+      { file: "aws_cloud_practitioner.png", label: "AWS Cloud Practitioner", number: "AWSCP" },
+      { file: "microsoft-certified-associate-badge.svg", label: "Microsoft Azure Associate", number: "AZ-104" },
+      { file: "microsoft-certified-fundamentals-badge.svg", label: "Microsoft Certified Fundamentals", number: "AZ-900" },
+      { file: "CCAP.png", label: "Certified Cloud Architecture Professional", number: "CCAP" },
+      { file: "CIOS.png", label: "Certified Information Operations Specialist", number: "CIOS" },
       { file: "Cloud+.png", label: "CompTIA Cloud+" },
-      { file: "CSCP.png", label: "Cybersecurity Cloud Practitioner" },
-      { file: "CSIS.png", label: "Cybersecurity Information Specialist" },
-      { file: "microsoft-certified-associate-badge.svg", label: "Microsoft Certified Associate" },
-      { file: "microsoft-certified-fundamentals-badge.svg", label: "Microsoft Certified Fundamentals" },
+      { file: "CSCP.png", label: "Cybersecurity Cloud Practitioner", number: "CSCP" },
+      { file: "CSIS.png", label: "Cybersecurity Information Specialist", number: "CSIS" },
       { file: "Net+.png", label: "CompTIA Network+" },
       { file: "Project+.png", label: "CompTIA Project+" },
-      { file: "Sec+.png", label: "CompTIA Security+" }
-    ].sort((a, b) => a.label.localeCompare(b.label));
+      { file: "Sec+.png", label: "CompTIA Security+" },
+      { file: "A+.png", label: "CompTIA A+" },
+    ];
 
     return (
       <section id="resume">
+
         {/* Education */}
         <div className="row education">
           <div className="three columns header-col">
@@ -180,6 +210,33 @@ class Resume extends Component {
           <div className="nine columns main-col">{work}</div>
         </div>
 
+        {/* Projects */}
+        {this.props.data && this.props.data.projectdetails && (
+          <>
+            <div className="row projects">
+              <div className="three columns header-col">
+                <h1><span>Projects</span></h1>
+              </div>
+              <div className="nine columns main-col">
+                <Projects data={{ projectdetails: this.props.data.projectdetails }} />
+              </div>
+            </div>
+
+            <div className="row" style={{ margin: "0 0 24px 0" }}>
+              <div className="twelve columns">
+                <hr
+                  style={{
+                    border: 0,
+                    borderTop: "2px solid #111",
+                    margin: 0,
+                    width: "100%",
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
         {/* Skills */}
         <div className="row skill">
           <div className="three columns header-col">
@@ -187,76 +244,108 @@ class Resume extends Component {
           </div>
           <div className="nine columns main-col">
             <p>{skillmessage}</p>
-
-            {/* Two-Column Responsive Layout */}
             <ul
-              className="skills"
+              className="skills bars"
               style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-                marginBottom: "30px",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                columnGap: "64px",
+                rowGap: "18px",
+                marginBottom: "10px",
                 padding: 0,
-                listStyle: "none"
+                listStyle: "none",
               }}
             >
               {skills}
             </ul>
+          </div>
+        </div>
 
-            {/* Certification Grid */}
+        <div className="row" style={{ marginBottom: '10px' }}>
+          <div className="twelve columns">
+            <hr />
+          </div>
+        </div>
+
+        {/* Certifications */}
+        <div className="row certifications">
+          <div className="three columns header-col">
+            <h1><span>Certifications</span></h1>
+          </div>
+          <div className="nine columns main-col">
             <div
-              className="cert-grid"
+              className="cert-scroll"
               style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: "28px",
-                width: "100%",
-                padding: "0 10px"
+                overflowX: "auto",
+                overflowY: "hidden",
+                whiteSpace: "nowrap",
+                padding: "8px 0 18px 0",
+                marginBottom: "8px",
+                borderRadius: "8px",
+                background: "#fafbfc",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
               }}
             >
-              {certs.map((cert) => (
-                <div key={cert.file} style={{ textAlign: "center", flex: "0 1 110px" }}>
-                  <button
-                    onClick={() => this.setState({ openCert: cert })}
-                    style={{
-                      width: "100%",
-                      padding: 0,
-                      border: "none",
-                      background: "transparent",
-                      cursor: "zoom-in"
-                    }}
-                    aria-label={`View ${cert.label} badge full size`}
-                  >
-                    <img
-                      src={process.env.PUBLIC_URL + "/images/" + cert.file}
-                      alt={cert.label}
-                      title={cert.label}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "32px",
+                  minHeight: "100px",
+                  alignItems: "center",
+                }}
+              >
+                {certs.map((cert) => (
+                  <div key={cert.file} style={{ textAlign: "center", minWidth: "160px", maxWidth: "180px", width: "180px", flex: "0 0 auto" }}>
+                    <button
+                      onClick={() => this.setState({ openCert: cert })}
                       style={{
                         width: "100%",
-                        height: "80px",
-                        objectFit: "contain",
-                        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",
-                        transition: "transform .2s"
+                        padding: 0,
+                        border: "none",
+                        background: "transparent",
+                        cursor: "zoom-in",
                       }}
-                      loading="lazy"
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1.0)")}
-                    />
-                  </button>
-                  <div className="cert-label" style={{ marginTop: "8px" }}>{cert.label}</div>
-                </div>
-              ))}
+                    >
+                      <img
+                        src={process.env.PUBLIC_URL + "/images/" + cert.file}
+                        alt={cert.label}
+                        style={{
+                          width: "100%",
+                          height: "90px",
+                          objectFit: "contain",
+                          filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.25))",
+                          transition: "transform .2s",
+                        }}
+                        loading="lazy"
+                        onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1.0)")}
+                      />
+                    </button>
+                    <div className="cert-label" style={{
+                      marginTop: "8px",
+                      fontWeight: 600,
+                      fontSize: "0.93em",
+                      lineHeight: 1.15,
+                      whiteSpace: "normal",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      wordBreak: "break-word",
+                      width: "100%"
+                    }}>{cert.label}</div>
+                    {cert.number && (
+                      <div className="cert-number" style={{ fontSize: "0.93em", color: "#444", marginTop: "2px" }}>{cert.number}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Certification Modal */}
+        {/* Modal */}
         {this.state.openCert && (
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={this.state.openCert.label + " enlarged badge"}
             onClick={(e) => {
               if (e.target === e.currentTarget) this.setState({ openCert: null });
             }}
@@ -268,84 +357,35 @@ class Resume extends Component {
               alignItems: "center",
               justifyContent: "center",
               zIndex: 9999,
-              padding: "40px"
+              padding: "40px",
             }}
           >
-            <div
-              style={{
-                maxWidth: "600px",
-                width: "100%",
-                textAlign: "center",
-                position: "relative"
-              }}
-            >
+            <div style={{ maxWidth: "600px", width: "100%", textAlign: "center", position: "relative" }}>
               <button
                 onClick={() => this.setState({ openCert: null })}
                 style={{
                   position: "absolute",
                   top: "-26px",
                   right: "-26px",
-                  color: "#111",
                   background: "#fff",
-                  border: "none",
-                  fontSize: "30px",
-                  lineHeight: "30px",
-                  cursor: "pointer",
                   borderRadius: "50%",
                   width: "52px",
                   height: "52px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.45)",
-                  transition: "transform .15s ease, box-shadow .15s ease"
+                  fontSize: "30px",
+                  cursor: "pointer",
                 }}
-                aria-label="Close enlarged badge"
-                onMouseEnter={e => { e.currentTarget.style.transform='scale(1.08)'; e.currentTarget.style.boxShadow='0 6px 16px rgba(0,0,0,0.55)'; }}
-                onMouseLeave={e => { e.currentTarget.style.transform='scale(1.0)'; e.currentTarget.style.boxShadow='0 4px 12px rgba(0,0,0,0.45)'; }}
               >
                 ×
               </button>
               <img
                 src={process.env.PUBLIC_URL + "/images/" + this.state.openCert.file}
                 alt={this.state.openCert.label}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "65vh",
-                  objectFit: "contain",
-                  display: "block",
-                  margin: "0 auto"
-                }}
+                style={{ maxWidth: "100%", maxHeight: "65vh", objectFit: "contain" }}
               />
-              <div
-                style={{
-                  color: "#000000ff",
-                  marginTop: "16px",
-                  fontSize: "1rem",
-                  letterSpacing: "0.5px"
-                }}
-              >
-                {this.state.openCert.label}
-              </div>
-              <div style={{ marginTop: "8px" }}>
-                <button
-                  onClick={() => this.setState({ openCert: null })}
-                  style={{
-                    background: "#ffffff22",
-                    backdropFilter: "blur(4px)",
-                    border: "1px solid #ffffff55",
-                    padding: "10px 18px",
-                    borderRadius: "6px",
-                    color: "#ffffffff",
-                    cursor: "pointer"
-                  }}
-                >
-                  Close (Esc)
-                </button>
-              </div>
             </div>
           </div>
         )}
+
       </section>
     );
   }

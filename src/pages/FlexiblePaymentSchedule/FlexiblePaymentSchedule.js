@@ -62,25 +62,25 @@ const FlexiblePaymentSchedule = () => {
     {
       step: "01",
       title: "User Submits Loan Details",
-      text: "You enter the loan amount, interest rate, and payment frequency, then click 'Calculate Loan Payments'.",
+      text: "Enter the loan amount, interest rate, and payment frequency, then click 'Calculate Loan Payments'.",
       color: "from-green-400 to-teal-400",
     },
     {
       step: "02",
       title: "Frontend Validates Input",
-      text: "The React app checks your input for valid numbers and reasonable ranges before sending anything to the backend.",
+      text: "The app checks your input for valid numbers and reasonable ranges before sending anything to the Spring Boot server.",
       color: "from-blue-400 to-purple-400",
     },
     {
       step: "03",
       title: "Backend Calculation (Java)",
-      text: "If the Spring Boot API is running, your data is sent to the backend, where Java classes validate and process the request, then calculate the payment schedule using OOP logic.",
+      text: "If the Spring Boot API is running on your localhost, your data is sent to the backend, where Java classes validate and process the request, then calculate the payment schedule using OOP logic.",
       color: "from-yellow-400 to-orange-400",
     },
     {
       step: "04",
       title: "Results Returned & Displayed",
-      text: "The backend responds with the calculated payment, total paid, and interest. The React UI displays these results instantly. If the backend is offline, the calculation is done in JavaScript as a fallback.",
+      text: "The backend responds with the calculated payment, total paid, and interest. This webpage displays these results instantly. If the Spring Boot server is offline locally, the calculation is done in JavaScript as a fallback to demonstrate how the calcuator would work in a real-world environment.",
       color: "from-red-400 to-pink-400",
     }
   ];
@@ -175,7 +175,6 @@ const FlexiblePaymentSchedule = () => {
     <>
       <SimpleNav />
       <div style={{ height: 36 }} />
-
       {/* === HERO SECTION === */}
       <section className="text-center py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -203,33 +202,63 @@ const FlexiblePaymentSchedule = () => {
           </div>
         </div>
       </section>
-      {/* Step 1: Backend Setup */}
+
+      {/* === HOW IT WORKS SECTION === */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div className="md:col-span-2">
+              <h2 className="text-5xl font-bold text-center mb-12" style={{ fontFamily: 'desyrelregular, serif' }}>
+                How It Works
+              </h2>
+            </div>
+            <div className="md:col-span-2">
+              <div className="grid gap-6">
+                {howItWorksSteps.map((item) => (
+                  <div key={item.step} className="bg-white p-6 rounded-xl shadow-sm border">
+                    <div className="flex gap-6">
+                      <div className={`w-14 h-14 min-w-14 min-h-14 aspect-square rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-white font-bold`}>
+                        {item.step}
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold">{item.title}</h3>
+                        <p className="text-gray-600">{item.text}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TEST LOCALLY */}
 
       <section className="py-16 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Directions column */}
-            <div>
-              <div className="space-y-3 text-gray-700">
-                <div className="mb-2">
-                  <strong>Prerequisites:</strong>
-                  <ul className="list-disc ml-6">
-                    <li>Java 17 or higher (<a href="https://adoptium.net/temurin/releases/?version=17" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">Adoptium</a> or <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">choco install temurin17 -y</span>)</li>
-                  </ul>
-                </div>
+          <div className="md:col-span-2">
+            <h2 className="text-5xl font-bold text-center mb-12" style={{ fontFamily: 'desyrelregular, serif' }}>
+              Test Locally
+            </h2>
+          </div>
+          {/* Directions column */}
+          <div>
+              <div className="space-y-4 text-gray-700">
                 <div className="mb-2">
                   <strong>Run the Backend:</strong>
                   <ol className="list-decimal ml-6">
-                    <li>Download <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">payment-calculator-1.0.0.jar</span> (above).</li>
-                    <li>Open PowerShell or Terminal in the folder where you downloaded the .jar.</li>
-                    <li>Run: <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">java -jar ./payment-calculator-1.0.0.jar</span></li>
+                    <li className="break-words whitespace-normal">Download Spring Boot .jar file.</li>
+                    <li className="break-words whitespace-normal">Open PowerShell or Terminal in the folder where you downloaded the .jar.</li>
+                    <li className="break-words whitespace-normal">Run: <code>java -jar ./payment-calculator-1.0.0.jar</code></li>
                   </ol>
                 </div>
                 <div className="mb-2">
                   <strong>Verify the Service:</strong>
                   <ul className="list-disc ml-6">
-                    <li>Visit <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">http://localhost:8080/</span> in your browser.</li>
-                    <li>You should see: <span className="jetbrains-mono bg-gray-100 px-2 py-1 rounded">Payment Calculator API is running.</span></li>
+                    <li className="break-words whitespace-normal">Verify the Spring Boot server is running by checking the console output.</li>
+                    <li className="break-words whitespace-normal">You should see: <code>Completed initialization</code> in the console after executing the .jar file.</li>
                   </ul>
                 </div>
               </div>
@@ -399,40 +428,23 @@ const FlexiblePaymentSchedule = () => {
           </div>
         </div>
       </section>
-
-      {/* === HOW IT WORKS SECTION === */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-5xl font-bold text-center mb-12" style={{ fontFamily: 'desyrelregular, serif' }}>
-            How It Works
-          </h2>
-          <div className="grid gap-6">
-            {howItWorksSteps.map((item) => (
-              <div key={item.step} className="bg-white p-6 rounded-xl shadow-sm border">
-                <div className="flex gap-6">
-                  <div className={`w-14 h-14 min-w-14 min-h-14 aspect-square rounded-full bg-gradient-to-br ${item.color} flex items-center justify-center text-white font-bold`}>
-                    {item.step}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">{item.title}</h3>
-                    <p className="text-gray-600">{item.text}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* === BUILD STORY === */}
       <div className={`how-built-blurb ${isBlurbExpanded ? 'expanded' : ''}`} onClick={() => setIsBlurbExpanded(!isBlurbExpanded)}>
-        <h3>How I Built This {isBlurbExpanded ? '−' : '+'}</h3>
+        <h3>The Build Story {isBlurbExpanded ? '−' : '+'}</h3>
         {isBlurbExpanded && (
-          <div className="blurb-story">
-            <p><strong>Project Origin:</strong> This project was always intended as a way to teach myself Spring Boot by building a real-world calculator from scratch using Java.</p>
-            <p><strong>Learning Goal:</strong> My aim was to get hands-on experience with Java, Spring Boot, and backend API design—not to transition from another language, but to learn a new toolset.</p>
-            <p><strong>Front/Back Integration:</strong> The calculator first calls the backend API. If unavailable, it falls back to client-side logic (using JavaScript).</p>
-            <p><strong>Result:</strong> The result is a packaged backend tool—engineered to be reusable, scalable, and structured like a real service, while helping me learn modern Spring Boot server development.</p>
+          <div className="blurb-story" style={{ maxHeight: 320, overflowY: 'auto', paddingRight: 8 }}>
+            <p><strong>Project Origin:</strong> <br/>
+              This project was always intended as a way to teach myself Spring Boot by building a real-world calculator from scratch using Java.
+            </p>
+            <p><strong>Learning Goal:</strong> <br/>
+              My aim was to get hands-on experience with Java, Spring Boot, and backend API design—not to transition from another language, but to learn a new toolset.
+            </p>
+            <p><strong>Front/Back Integration:</strong> <br/>
+              The calculator first calls the backend API. If unavailable, it falls back to client-side logic (using JavaScript).
+            </p>
+            <p><strong>Result:</strong> <br/>
+              The result is a packaged backend tool—engineered to be reusable, scalable, and structured like a real service, while helping me learn modern Spring Boot server development.
+            </p>
           </div>
         )}
       </div>
