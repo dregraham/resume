@@ -85,12 +85,6 @@
         "category": "Spring Boot payment calculator with React frontend and REST API integration.",
         "image": "flexiblepaymentschedule.png",
         "url": "/projects/flexible-payment-schedule"
-      },
-      {
-        "title": "Cloud Drift Guardrail",
-        "category": "EC2 drift detection that enforces run windows and stops idle instances automatically.",
-        "image": "analyze.jpg",
-        "url": "/projects/cloud-drift-guardrail"
       }
     ]
   }
