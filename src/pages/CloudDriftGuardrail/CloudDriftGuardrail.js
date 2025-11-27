@@ -9,28 +9,75 @@ export default function CloudDriftGuardrail() {
   - plan
   - apply
 
+variables:
+  TF_WORKING_DIR: "./terraform"
+
+# ======================
+# VALIDATE
+# ======================
 validate:
   stage: validate
-  image: hashicorp/terraform:1.9
+  image:
+    name: hashicorp/terraform:1.9
+    entrypoint: ["/bin/sh", "-c"]
   script:
-    - terraform init
-    - terraform validate
+    - terraform -chdir=$TF_WORKING_DIR init
+    - terraform -chdir=$TF_WORKING_DIR validate
 
+# ======================
+# PLAN
+# ======================
 plan:
   stage: plan
-  image: hashicorp/terraform:1.9
+  image:
+    name: hashicorp/terraform:1.9
+    entrypoint: ["/bin/sh", "-c"]
   script:
-    - terraform plan
+    - terraform -chdir=$TF_WORKING_DIR plan -out=plan.out
+  artifacts:
+    paths:
+      - "$TF_WORKING_DIR/plan.out"
 
+# ======================
+# APPLY
+# ======================
 apply:
   stage: apply
-  image: hashicorp/terraform:1.9
+  when: manual
+  image:
+    name: hashicorp/terraform:1.9
+    entrypoint: ["/bin/sh", "-c"]
   script:
-    - terraform apply -auto-approve`;
+    - terraform -chdir=$TF_WORKING_DIR apply -auto-approve
 
-  const dockerCode = `docker run -e AWS_ACCESS_KEY_ID=your_key -e AWS_SECRET_ACCESS_KEY=your_secret -e AWS_REGION=us-east-1 \
-  -v $(pwd)/terraform:/workspace/terraform \
-  hashicorp/terraform:1.9 plan -chdir=/workspace/terraform`;
+# ======================
+# DEPLOY-INFRA
+# ======================
+deploy-infra:
+  stage: apply
+  when: manual
+  image:
+    name: hashicorp/terraform:1.9
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+    - aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+    - aws configure set region "$AWS_REGION"
+    - terraform -chdir=$TF_WORKING_DIR init
+    - terraform -chdir=$TF_WORKING_DIR apply -auto-approve
+`;
+
+  const dockerCode = `FROM public.ecr.aws/lambda/nodejs:18
+
+  WORKDIR /var/task
+  
+  COPY package*.json ./
+  RUN npm ci --omit=dev
+  
+  COPY index.mjs .
+  
+  CMD ["index.handler"]
+  `;
 
   const steps = [
     {
@@ -53,6 +100,12 @@ apply:
     },
     {
       number: "04",
+      title: "CONTAINERIZED FOR DEPLOYMENT",
+      desc: "Packaged as a Docker image using a custom Dockerfile for easy deployment to any environment.",
+      color: "from-indigo-400 to-indigo-600"
+    },
+    {
+      number: "05",
       title: "COST CONTROL & REPORTING",
       desc: "Sends notifications or logs actions taken, providing visibility and auditability for cloud hygiene and cost control.",
       color: "from-green-400 to-green-600"
@@ -119,7 +172,7 @@ apply:
                 className={`ml-4 px-6 py-2 font-semibold focus:outline-none ${activeTab === "docker" ? "border-b-2 border-blue-600 text-blue-700" : "text-gray-500"}`}
                 onClick={() => setActiveTab("docker")}
               >
-                Docker Run Command
+                Dockerfile
               </button>
             </div>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -139,7 +192,7 @@ apply:
                     borderBottom: '1px solid #333'
                   }}>
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{marginRight: 6}} xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="4" fill="#FCA121"/><path d="M6 14V6H8.5L10 10.5L11.5 6H14V14H12V9.5L10.75 13.5H9.25L8 9.5V14H6Z" fill="white"/></svg>
-                    .gitlab-ci.yml
+                    <a href="https://gitlab.com/dregraham-group/cloud-drift-guardrail/-/blob/0f3b129eb9263d0ac99ad01fd4bee4d2320ab58a/.gitlab-ci.yml">.gitlab-ci.yml</a>
                   </div>
                   <pre style={{ background: '#222', color: '#fff', padding: '1.1rem', borderBottomLeftRadius: '0.5rem', borderBottomRightRadius: '0.5rem', fontSize: '0.97em', overflowX: 'auto', margin: 0, minHeight: 180, maxHeight: 180 }}><code>{ciCdCode}</code></pre>
                 </>
@@ -160,7 +213,7 @@ apply:
                     borderBottom: '1px solid #333'
                   }}>
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style={{marginRight: 6}} xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" rx="4" fill="#2496ED"/><path d="M6 14V6H14V14H6Z" fill="white"/></svg>
-                    docker run
+                    <a href="https://gitlab.com/dregraham-group/cloud-drift-guardrail/-/blob/0f3b129eb9263d0ac99ad01fd4bee4d2320ab58a/lambda/drift-checker/Dockerfile">Dockerfile</a>
                   </div>
                   <pre style={{ background: '#222', color: '#fff', padding: '1.1rem', borderBottomLeftRadius: '0.5rem', borderBottomRightRadius: '0.5rem', fontSize: '0.97em', overflowX: 'auto', margin: 0, minHeight: 180, maxHeight: 180 }}><code>{dockerCode}</code></pre>
                 </>

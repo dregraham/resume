@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { asList, asStr, lower } from "../utils/safe";
-import Projects from "./Projects";
 
 class Resume extends Component {
   constructor(props) {
@@ -210,32 +209,6 @@ class Resume extends Component {
           <div className="nine columns main-col">{work}</div>
         </div>
 
-        {/* Projects */}
-        {this.props.data && this.props.data.projectdetails && (
-          <>
-            <div className="row projects">
-              <div className="three columns header-col">
-                <h1><span>Projects</span></h1>
-              </div>
-              <div className="nine columns main-col">
-                <Projects data={{ projectdetails: this.props.data.projectdetails }} />
-              </div>
-            </div>
-
-            <div className="row" style={{ margin: "0 0 24px 0" }}>
-              <div className="twelve columns">
-                <hr
-                  style={{
-                    border: 0,
-                    borderTop: "2px solid #111",
-                    margin: 0,
-                    width: "100%",
-                  }}
-                />
-              </div>
-            </div>
-          </>
-        )}
 
         {/* Skills */}
         <div className="row skill">

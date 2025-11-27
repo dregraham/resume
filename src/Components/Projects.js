@@ -1,8 +1,5 @@
-
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-
-let id = 0;
 
 class Projects extends Component {
   render() {
@@ -11,7 +8,6 @@ class Projects extends Component {
     const projects = this.props.data.projectdetails.map((project) => {
       const projectImage = "images/projects/" + project.image;
       const isExternal = /^(http|https):\/\//i.test(project.url);
-      // Title link
       const titleLink = isExternal ? (
         <a
           href={project.url}
@@ -43,14 +39,13 @@ class Projects extends Component {
           {project.title}
         </Link>
       );
-      // Image link
       const imageLink = isExternal ? (
         <a href={project.url} target="_blank" rel="noopener noreferrer">
           <img
             src={projectImage}
             alt={project.title}
             style={{
-              height: "240px",
+              height: "180px",
               width: "auto",
               maxWidth: "100%",
               objectFit: "contain",
@@ -66,7 +61,7 @@ class Projects extends Component {
             src={projectImage}
             alt={project.title}
             style={{
-              height: "240px",
+              height: "180px",
               width: "auto",
               maxWidth: "100%",
               objectFit: "contain",
@@ -79,11 +74,9 @@ class Projects extends Component {
       );
       return (
         <div
-          key={id++}
+          key={project.title}
           className="projects-item"
           style={{
-            flex: "1 1 260px",
-            maxWidth: "260px",
             textAlign: "center",
             boxSizing: "border-box",
           }}
@@ -91,55 +84,52 @@ class Projects extends Component {
           <div className="item-wrap">
             {titleLink}
             {imageLink}
-            <div style={{ fontSize: "0.9em", color: "#888" }}>
-              {project.category}
-            </div>
+            <div style={{ fontSize: "0.95em", color: "#888", marginTop: 5 }}>{project.category}</div>
           </div>
         </div>
       );
     });
 
     return (
-      <section id="projects">
+      <section id="projects" style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        minHeight: '60vh',
+      }}>
         <style>{`
+          #projects-header {
+            text-align: center;
+            margin-bottom: 20px;
+          }
+          #projects-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 32px 32px;
+            width: 100%;
+            margin: 0 auto;
+            max-width: 1200px;
+          }
+          .projects-underline {
+            display: inline-block;
+          }
           @media (max-width: 700px) {
             #projects-wrapper {
-              display: grid !important;
-              grid-template-columns: 1fr !important;
-              gap: 18px !important;
-              justify-items: center;
-            }
-            .projects-item {
-              max-width: 100% !important;
-              width: 100% !important;
-            }
-            .projects .header-col {
-              text-align: center !important;
-            }
-            .projects-underline {
-              display: inline-block;
-              margin-left: auto;
-              margin-right: auto;
+              grid-template-columns: 1fr;
+              gap: 18px;
             }
           }
         `}</style>
-        <div className="row projects">
-          <div className="three columns header-col" style={{ textAlign: 'right' }}>
-            <h1 style={{ marginBottom: 0 }}>
-              <span className="projects-underline">Projects</span>
-            </h1>
-          </div>
-          <div className="nine columns main-col">
-            <div
-              id="projects-wrapper"
-              style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '20px' }}
-            >
-              {projects}
-            </div>
-          </div>
+        {/* Removed top divider as requested */}
+        <div id="projects-header">
+          <h1 style={{ marginBottom: 10 }}>
+            <span className="projects-underline">Projects</span>
+          </h1>
         </div>
-        {/* Full-width divider below Projects, above Education */}
-        <div style={{ width: '100vw', position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw', marginTop: '0', marginBottom: '24px' }}>
+        <div id="projects-wrapper">
+          {projects}
+        </div>
+        <div style={{ width: '100vw', position: 'relative', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw', marginTop: '24px', marginBottom: '0' }}>
           <hr style={{ border: 0, borderTop: '2px solid #111', width: '100%', margin: 0 }} />
         </div>
       </section>
