@@ -101,10 +101,32 @@ class Projects extends Component {
 
     return (
       <section id="projects">
+        <style>{`
+          @media (max-width: 700px) {
+            #projects-wrapper {
+              display: grid !important;
+              grid-template-columns: 1fr !important;
+              gap: 18px !important;
+              justify-items: center;
+            }
+            .projects-item {
+              max-width: 100% !important;
+              width: 100% !important;
+            }
+            .projects .header-col {
+              text-align: center !important;
+            }
+            .projects-underline {
+              display: inline-block;
+              margin-left: auto;
+              margin-right: auto;
+            }
+          }
+        `}</style>
         <div className="row projects">
           <div className="three columns header-col" style={{ textAlign: 'right' }}>
             <h1 style={{ marginBottom: 0 }}>
-              <span style={{ borderBottom: '4px solid #23395d', paddingBottom: 4 }}>Projects</span>
+              <span className="projects-underline">Projects</span>
             </h1>
           </div>
           <div className="nine columns main-col">

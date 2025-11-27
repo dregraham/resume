@@ -437,6 +437,9 @@ ul#nav li.current a { color: #df4bf6; }
       letter-spacing: 1px;
       margin-bottom: 25px;
       text-align: center;
+      border-bottom:#000000 3px solid;
+      display: inline-block;
+      
 }
 
 /* projects Content */
