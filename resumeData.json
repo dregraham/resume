@@ -70,13 +70,13 @@
     "projectdetails": [
       {
         "title": "Cloud Health Dashboard",
-        "category": "A simulated dashboard for monitoring cloud health and metrics.",
+        "category": "A dashboard that monitors AWS resource health and metrics.",
         "image": "CloudHealthBackground.jpg",
         "url": "/projects/cloud-health-dashboard"
       },
       {
         "title": "Multi-Cloud Automation (IaC)",
-        "category": "Demonstrates infrastructure as code deployments across AWS and Azure using Terraform.",
+        "category": "Deploys resources across AWS and Azure using Infrastructure as Code with Terraform.",
         "image": "aws_azure_iac.png",
         "url": "/projects/multicloud-iac"
       },
@@ -88,7 +88,7 @@
       },
       {
         "title": "Cloud Drift Guardrail",
-        "category": "EC2 drift detection that enforces run windows and stops idle instances automatically.",
+        "category": "Drift detection, packaged as a Docker image with a custom Dockerfile for easy deployment.",
         "image": "cloud-drift-guardrail.png",
         "url": "/projects/cloud-drift-guardrail"
       }

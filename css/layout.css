@@ -220,7 +220,7 @@ ul#nav li.current a { color: #df4bf6; }
 
 #resume {
    background: #ffffff00;
-   padding-top: 90px;
+   padding-top: 10px;
    padding-bottom: 72px;
    overflow: hidden;
    color: black;
@@ -428,7 +428,7 @@ ul#nav li.current a { color: #df4bf6; }
 
 #projects {
    background: #ebeeee00;
-   padding-top: 90px;
+   padding-top: 20px;
    padding-bottom: 60px;
 }
 #projects h1 {
@@ -443,7 +443,7 @@ ul#nav li.current a { color: #df4bf6; }
 }
 
 /* projects Content */
-#projects-wrapper .columns { margin-bottom: 36px; }
+#projects-wrapper .columns { margin-bottom: 50px; }
 .projects-item .item-wrap {
    background: #fff;
    overflow: hidden;
