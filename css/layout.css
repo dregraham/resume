@@ -58,7 +58,7 @@ header .banner-text {
    padding: 10px 0;
  }
 header .banner-text h1 {
-      font: 150px 'desyrelregular', sans-serif;
+      font: 125px 'desyrelregular', sans-serif;
       letter-spacing: 0px;
       vertical-align: middle;
       text-align: center;
@@ -70,7 +70,7 @@ header .banner-text h3 {
    font: 18px/1.9em 'opensans-regular', serif;
    color: #ffffff;
    margin: 0 auto;
-   width: 80%;
+   width: 100%;
 }
 header .banner-text h3 span,
 header .banner-text h3 a {
@@ -639,12 +639,6 @@ ul#nav li.current a { color: #df4bf6; }
    color: #636363;
    font-size: 17px;
 }
-/*#
-call-to-action .button {
-	color:#fff;
-   background: #0D0D0D;
-}
-*/
 #call-to-action .button:hover,
 #call-to-action .button:active {
    background: #FFFFFF;
@@ -822,7 +816,6 @@ call-to-action .button {
     color:#000000;
     min-height: 520px; /* ensure visible area even on short mobile viewports */
 }
-/* Mobile + tablet fallback: many mobile browsers ignore or glitch with background-attachment: fixed */
 @media (max-width: 1024px) {
    #contact {
       background-attachment: scroll; /* allow image to render normally */
@@ -1057,4 +1050,17 @@ footer .social-links li:first-child { margin-left: 0; }
 }
 @media (min-width: 1200px) {
    .cert-label { font-size: 0.9rem; }
+}
+
+/* Tagline styling */
+.tagline {
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  text-align: center;
+  margin: 18px 0 18px 0;
+  opacity: 0.9;
+  font: 15px/1em 'Inter', serif;
+  font-style: italic;
+  margin: 10 auto;
+  width: 100%;
 }
