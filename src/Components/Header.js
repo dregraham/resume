@@ -1,7 +1,6 @@
 
 import React, { Component } from "react";
 import ParticlesBg from "particles-bg";
-// Section IDs in order
 const SECTIONS = ["home", "about", "projects", "resume", "contact"];
 
 
@@ -88,6 +87,7 @@ class Header extends Component {
     const github = this.props.data.github;
     const name = this.props.data.name;
     const description = this.props.data.description;
+    const tagline = this.props.data.tagline;
 
     return (
       <header id="home"
@@ -130,6 +130,9 @@ class Header extends Component {
           <div className="banner-text">
             <h1 className="responsive-headline">{name}</h1>
             <h4>{description}</h4>
+            {tagline && (
+              <div className="tagline">{tagline}</div>
+            )}
             <hr />
             <ul className="social" style={{ listStyle: 'none', display: 'flex', justifyContent: 'center', gap: '24px', padding: 0 }}>
               <li>

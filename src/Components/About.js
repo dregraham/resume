@@ -8,6 +8,7 @@ class About extends Component {
     const name = this.props.data.name;
     const profilepic = "images/" + this.props.data.image;
     const bio = this.props.data.bio;
+    const tagline = this.props.data.tagline;
     const city = this.props.data.address.city;
     const state = this.props.data.address.state;
     const email = this.props.data.email;
@@ -25,7 +26,7 @@ class About extends Component {
         </div>
         <div className="nine columns main-col">
           <h2>About Me</h2>
-
+          {/* Tagline removed as requested */}
           <p style={{ whiteSpace: 'pre-line' }}>{bio}</p> <br />
           <div className="row">
           <div className="columns contact-details">

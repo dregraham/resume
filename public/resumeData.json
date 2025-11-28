@@ -1,9 +1,10 @@
 {
   "main": {
     "name": "Dre Graham",
-    "description": "Cloud | DevOps | Software Engineer - \n\n\"Fail fast, succeed faster.\"",
+    "description": "Cloud | DevOps | Software Engineer",
+    "tagline": "\"Fail fast, succeed faster.\"",
     "image": "profilepic.jpg",
-    "bio": "I’m a Cloud & Software DevOps Engineer who learns by building things, trying new tools, and intentionally pushing systems to their limits. I focus on making systems reliable, using AI and infrastructure as code to automate as many workflows as possible, and establishing pipeline stability across cloud platforms using Terraform, GitHub Actions, PowerShell, and Python. I like taking on projects end-to-end so I understand every moving part, and I document everything as I go so others can build off it without starting from scratch. I enjoy troubleshooting tough issues, cleaning up broken pipelines and environments, and securing systems through hands-on engineering.\n\nOutside of work, you'll find me on my bike, hiking with my dogs, or traveling with my wife. I'm always up for connecting with fellow tech enthusiasts and exploring new opportunities in the cloud space.",
+    "bio": "I’m a Cloud & DevOps Engineer who learns by building things and pushing them until they break. \n\nI design systems that are reusable, automation-driven, and secure - leveraging tools like AI, Terraform, GitHub Actions, PowerShell, and Python to eliminate repetitive work and stabilize pipelines across cloud platforms. I like creating projects frontend to backend so I understand every moving piece, and I document as I go so the next engineer doesn’t have to start from zero. I’m at my best troubleshooting messy issues, fixing broken environments, and tightening gaps in reliability and security.\n\nWhen I'm not in front of computer screens or buried in pipelines, I'm usually on my bike, hiking with my dogs, or traveling with my wife. I'm always down to connect with other builders and explore what's next in the cloud space.",
     "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
     "email": "andre.graham709@gmail.com",
     "github": "https://github.com/dregraham",
