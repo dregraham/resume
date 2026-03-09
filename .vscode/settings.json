@@ -1,9 +1,0 @@
-{
-    "git.ignoreLimitWarning": true,
-    "python-envs.defaultEnvManager": "ms-python.python:system",
-    "python-envs.pythonProjects": [],
-    "github-actions.workflows.pinned.workflows": [
-        ".github/workflows/terraform-aws-deploy.yml"
-    ],
-    "java.compile.nullAnalysis.mode": "automatic"
-}
