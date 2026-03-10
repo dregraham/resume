@@ -1,7 +1,7 @@
 {
   "main": {
     "name": "Dre Graham",
-    "description": "Cloud | DevOps | Software Engineer",
+    "description": "Cloud | Software Engineer",
     "tagline": "\"Fail fast, succeed faster.\"",
     "bio": "Cloud Engineer with a B.S. in Cloud Computing, AWS Solutions Architect Associate, AZ-104, and a stack of certifications I earned while working full-time in Tier 3 production support. I consider myself a lifelong learner.\n\nFor the past decade I've had one foot in engineering and one in operations; working alongside both clients and engineers to troubleshoot everything from broken API integrations to local network failures. Some of my most recent work experience has been monitoring cloud environments, SQL and Windows Server issues, and legacy system integrations. Outside of work I've built a portfolio of cloud projects end to end: multi-cloud IaC platforms, drift detection frameworks, and observability dashboards. I use AI tools like Copilot and Claude as thinking partners to connect ideas, work through design decisions, and clear the smaller coding hurdles so I can stay focused on the bigger picture. I document everything so the next person can build on it instead of starting from zero.\n\nI thrive on teams where engineers share what they know, ask hard questions, and push each other to grow. When I'm not behind a screen, I'm on my bike , hiking with my dogs, or traveling with my wife.",
     "contactmessage": "Want to schedule a consultation or have a question? Reach out to me via email or by using the contact form below.",
