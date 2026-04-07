@@ -6,7 +6,7 @@ class About extends Component {
     if (!this.props.data) return null;
 
     const name = this.props.data.name;
-    const profilepic = process.env.PUBLIC_URL + "/images/" + this.props.data.image;
+    const profilepic = process.env.PUBLIC_URL + "/images/" + (this.props.data.image || "profilepic.jpg");
     const bio = this.props.data.bio;
     const tagline = this.props.data.tagline;
     const city = this.props.data.address.city;
